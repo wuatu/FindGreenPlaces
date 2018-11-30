@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "39387556941",
+    "firebase_url": "https://findgreenplaces.firebaseio.com",
+    "project_id": "findgreenplaces",
+    "storage_bucket": "findgreenplaces.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39387556941:android:975e18f151bf1660",
+        "android_client_info": {
+          "package_name": "com.example.cristian.findgreenplaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39387556941-3ifuer7hdqenbcc8rf4sgiumnkt9erbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4-ICbv6EH9xXa17yFC-578rqbCenTgQg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
