@@ -8,6 +8,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -41,7 +42,8 @@
         </activity>
         <activity
             android:name=".VisualizarAtractivoTuristico"
-            android:label="@string/title_activity_visualizar_atractivo_turistico"></activity>
+            android:label="@string/title_activity_visualizar_atractivo_turistico" />
+        <activity android:name=".AgregarAtractivoTuristico"></activity>
     </application>
 
 </manifest>
