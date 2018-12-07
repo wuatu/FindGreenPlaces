@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -35,6 +38,12 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_atractivo_turistico);
+        DisplayMetrics dm= new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int ancho=dm.widthPixels;
+        int alto=dm.heightPixels;
+        getWindow().setLayout((int) (ancho*.98),(int)(alto*.4));
+        getWindow().setGravity(Gravity.BOTTOM);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

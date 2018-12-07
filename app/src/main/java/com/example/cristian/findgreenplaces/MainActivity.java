@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();*/
                 Intent intent = new Intent(MainActivity.this, AgregarAtractivoTuristico.class);
                 startActivity(intent);
+                //setContentView(R.layout.activity_visualizar_atractivo_turistico);
             }
         });
 

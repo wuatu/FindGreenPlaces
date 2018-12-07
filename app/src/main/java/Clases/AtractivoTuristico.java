@@ -11,7 +11,7 @@ public class AtractivoTuristico {
     public AtractivoTuristico() {
     }
 
-    public AtractivoTuristico(String descripcion, Double latitud, Double longitud, String nombre, String ciudad, String comuna) {
+    public AtractivoTuristico(String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud) {
         this.descripcion = descripcion;
         this.latitud = latitud;
         this.longitud = longitud;

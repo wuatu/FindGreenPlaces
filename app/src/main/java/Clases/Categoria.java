@@ -6,6 +6,10 @@ public class Categoria {
     public Categoria() {
     }
 
+    public Categoria(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
     public String getEtiqueta() {
         return etiqueta;
     }

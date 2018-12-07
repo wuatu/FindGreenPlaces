@@ -9,6 +9,10 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -42,8 +46,10 @@
         </activity>
         <activity
             android:name=".VisualizarAtractivoTuristico"
-            android:label="@string/title_activity_visualizar_atractivo_turistico" />
-        <activity android:name=".AgregarAtractivoTuristico"></activity>
+            android:label="@string/title_activity_visualizar_atractivo_turistico"
+            android:theme="@style/AppTheme.CustomTheme"/>
+        <activity android:name=".AgregarAtractivoTuristico">
+        </activity>
     </application>
 
 </manifest>
