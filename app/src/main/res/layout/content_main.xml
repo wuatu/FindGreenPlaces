@@ -7,12 +7,26 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity" />
+        android:orientation="vertical"
+        android:background="#ffffff">
+
+        <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+            android:id="@+id/autocomplete_region"
+            android:layout_width="fill_parent"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            android:hint="Buscar" />
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

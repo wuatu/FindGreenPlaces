@@ -7,21 +7,25 @@
     android:gravity="center_horizontal"
     android:layout_margin="5sp"
     android:orientation="vertical"
+    android:background="#ffffff"
 
     tools:context=".AgregarAtractivoTuristico">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        tools:context=".MainActivity" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            tools:context=".MainActivity" />
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
-
         <LinearLayout
             android:id="@+id/contenedorAddAtractivoT"
             android:layout_width="match_parent"
@@ -29,16 +33,11 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-
-            <Button
-                android:id="@+id/buttonSubirImagen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Subir Imagen" />
             <ImageView
                 android:id="@+id/mostrarImagen"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="match_parent"
+                android:visibility="invisible" />
 
             <EditText
                 android:id="@+id/editTextNombre"
@@ -89,16 +88,15 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/editTextCategoria"
+
+
+                <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                     style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+                    android:id="@+id/autocomplete_region"
                     android:layout_width="283dp"
+                    android:singleLine="true"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Categoria"
-                    android:inputType="textPersonName"
-                    android:textColor="#43a047"
-                    app:backgroundTint="#43a047" />
+                    android:hint="Categoria" />
 
                 <Button
                     android:id="@+id/buttonaddCategoria"
@@ -123,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:padding="20sp"
+                    android:padding="10sp"
                     android:text="Categorias"
                     android:textColor="#43a047"
                     android:visibility="invisible" />
@@ -136,7 +134,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <com.cunoraz.tagview.TagView
+                     <com.cunoraz.tagview.TagView
                     xmlns:tagview="http://schemas.android.com/apk/res-auto"
                     android:gravity="center_horizontal"
                     android:id="@+id/tag_group"
@@ -149,7 +147,35 @@
                     tagview:textPaddingTop="5dp"
                     tagview:textPaddingRight="8dp"
                     tagview:textPaddingBottom="5dp" />
+
             </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/añadirImagenesTitulo2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/añadirImagenesTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:padding="10sp"
+                    android:text="Añadir Imagen"
+                    android:textColor="#43a047"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/buttonSubirImagen"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#ffffff"
+                android:src="@drawable/addimagen"
+                android:text="Subir Imagen" />
 
             <LinearLayout
                 android:id="@+id/contenedorBotonesAC"

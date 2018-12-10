@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +21,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,7 +46,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import Clases.AtractivoTuristico;
+import Clases.Categoria;
 
 
 public class MainActivity extends AppCompatActivity
@@ -51,13 +59,26 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient mFusedLocationClient;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
-
+    AutoCompleteTextView buscarEditText;
+    ArrayList<String> keysAtractivosTuristicos;
+    ArrayList<AtractivoTuristico> atractivoTuristicos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Referencia al elemento en la vista
+        buscarEditText = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
+        // Arreglo con las regiones
+        String[] regions = getResources().getStringArray(R.array.region_array);
+        // Le pasamos las regiones al adaptador
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, regions);
+        // finalmente le asignamos el adaptador a nuestro elemento
+        buscarEditText.setAdapter(adapter);
+        atractivoTuristicos=new ArrayList();
+        //buscarEditText=findViewById(R.id.editTextBuscar);
+        keysAtractivosTuristicos =new ArrayList();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -94,6 +115,83 @@ public class MainActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .build();
 
+    }
+
+    public void buscar(){
+        buscarEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    mMap.clear();
+                    String textoBusqueda=buscarEditText.getText().toString();
+                    getkeyAtractivoTuristico(textoBusqueda);
+                    buscarAtractivoTuristicoPorCategoria();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+    public void getkeyAtractivoTuristico(final String texto){
+        mDatabase.child("categoriaAtractivoTuristico").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    for(DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
+                        Log.v("quee",dataSnapshot2.getKey());
+                        Log.v("quee",dataSnapshot2.getValue().toString());
+                        Categoria categoria=dataSnapshot2.getValue(Categoria.class);
+                        Log.v("quee",categoria.getEtiqueta());
+                        if (texto.equalsIgnoreCase(categoria.getEtiqueta())) {
+                            keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void buscarAtractivoTuristicoPorCategoria(){
+        mDatabase.child("atractivoturistico").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(String keyAtractivoTuristico:keysAtractivosTuristicos){
+                    Query q=mDatabase.child("atractivoTuristico").child(keyAtractivoTuristico);
+                    Log.v("quee",q.getPath().toString());
+                    Log.v("quee",q.getRef().toString());
+
+                    q.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            AtractivoTuristico atractivoTuristico=dataSnapshot.getValue(AtractivoTuristico.class);
+                            repintarMapaConFiltroDeBusqueda(atractivoTuristico);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                keysAtractivosTuristicos.clear();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void repintarMapaConFiltroDeBusqueda(AtractivoTuristico atractivoTuristico){
+        double latitud,longitud;
+        latitud=atractivoTuristico.getLatitud();
+        longitud=atractivoTuristico.getLongitud();
+        LatLng sydney = new LatLng(latitud,longitud);
+        mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
     }
 
     @Override
@@ -218,7 +316,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
-
+        buscar();
     }
 
     @Override

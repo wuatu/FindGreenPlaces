@@ -1,16 +1,64 @@
 <resources>
-    <string name="app_name">FindGreenPlaces</string>
+    <string name="app_name">Nuevo Atractivo Turístico</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">FindGreenPlaces</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_visualizar_atractivo_turistico">VisualizarAtractivoTuristico
+    <string name="title_activity_visualizar_atractivo_turistico">Atractivo Turistico
     </string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Información</string>
+    <string name="title_dashboard">Comentarios</string>
+    <string name="title_notifications">Ir</string>
+    <string-array name="region_array">
+        <item>Región Metropolitana</item>
+        <item>Región de Aríca y Parinacota</item>
+        <item>Región de Tarapacá</item>
+        <item>Región de Antofagasta</item>
+        <item>Región de Atacama</item>
+        <item>Región de Coquimbo</item>
+        <item>Región de Valparaíso</item>
+        <item>Región de O\'Higgins</item>
+        <item>Región de Maule</item>
+        <item>Región del Biobío</item>
+        <item>Región de la Araucanía</item>
+        <item>Región de los Ríos</item>
+        <item>Región de los Lagos</item>
+        <item>Región de Aysén</item>
+        <item>Región de Magallanes y Antártica</item>
+        <item>Plaza</item>
+        <item>Monumento</item>
+        <item>Estadio</item>
+        <item>Alameda</item>
+        <item>Parque</item>
+        <item>Reserva Nacional</item>
+        <item>Piscina</item>
+        <item>Rio</item>
+        <item>Quinchos</item>
+        <item>Cerro</item>
+        <item>Area Verde</item>
+        <item>Observatorio</item>
+        <item>Juegos Infantiles</item>
+        <item>Centro de Eventos</item>
+        <item>Escultura</item>
+        <item>Museo</item>
+        <item>Universidad</item>
+        <item>Plaza de Armas</item>
+        <item>Plaza</item>
+        <item>Mirador</item>
+        <item>Camping</item>
+        <item>Caleta</item>
+        <item>Casona</item>
+        <item>Mural</item>
+        <item>Arte</item>
+        <item>Ocio</item>
+        <item>Puerto</item>
+        <item>Recreacion al Aire Libre</item>
+        <item>Cascadas</item>
+        <item>Playa</item>
+
+    </string-array>
 </resources>

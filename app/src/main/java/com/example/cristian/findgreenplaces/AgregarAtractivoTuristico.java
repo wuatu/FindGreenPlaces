@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,19 +18,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.allyants.chipview.ChipView;
-import com.allyants.chipview.SimpleChipAdapter;
 import com.bumptech.glide.Glide;
-import com.cunoraz.tagview.Constants;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
 import com.google.android.gms.common.ConnectionResult;
@@ -64,6 +61,7 @@ import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.Imagen;
 
 public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener {
     private GoogleMap mMap;
@@ -73,7 +71,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     StorageReference mStorageReference;
     FirebaseDatabase database;
     Button addCategoria;
-    TextView textViewCategoria;
+    AutoCompleteTextView textViewCategoria;
     LinearLayout contenedorAddAT;
     LinearLayout contenedorCategoria;
     //LinearLayout contenedorTresCategorias;
@@ -90,16 +88,26 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     ArrayList<Tag> sCategorias;
     TagView tagGroup;
     ArrayList<Categoria> categorias;
-    Button botonSubirImagen;
+    ImageButton botonSubirImagen;
     private static final int GALLERY_INTENT=1;
     private ImageView imageView;
     private ProgressDialog progressDialog;
     ArrayList imagenes;
     private static final int INTENT_EXTRA_IMAGES=1;
+    String urlImagen;
+    String keyAtractivoTuristico;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_atractivo_turistico);
+        // Referencia al elemento en la vista
+        textViewCategoria = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
+// Arreglo con las regiones
+        String[] regions = getResources().getStringArray(R.array.region_array);
+// Le pasamos las regiones al adaptador
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, regions);
+// finalmente le asignamos el adaptador a nuestro elemento
+        textViewCategoria.setAdapter(adapter);
         tituloCategoria=findViewById(R.id.categoriasTitulo);
         imagenes=new ArrayList();
         imageView=findViewById(R.id.mostrarImagen);
@@ -129,15 +137,20 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     }
 
     public void subirImagen(){
+
         botonSubirImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //imageView.setImageResource();
+                imageView.setVisibility(View.VISIBLE);
                 Intent intent=new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 //startActivityForResult(intent,GALLERY_INTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Selecciona Fotos"), 1);
+                //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);U//para subir multiples imagenes
+                //intent.setAction(Intent.ACTION_GET_CONTENT);
+                //startActivityForResult(Intent.createChooser(intent,"Selecciona Fotos"), 1);
+                //intent.putParcelableArrayListExtra("imagenes",imagenes);
+                startActivityForResult(intent,INTENT_EXTRA_IMAGES);
             }
         });
     }
@@ -150,9 +163,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             progressDialog.setMessage("Subiendo Foto a Base de Datos!");
             progressDialog.setCancelable(false);
             progressDialog.show();
-            //imagenes = data.getParcelableArrayListExtra("adsdsds");
-
+            //imagenes = data.getParcelableArrayListExtra("imagenes");
+            //Uri[] uri=new Uri[imagenes.size()];
             Uri uri=data.getData();
+            //for (int i =0 ; i < imagenes.size(); i++) {
             final StorageReference direccion=mStorageReference.child("fotos").child(uri.getLastPathSegment());
             Task<Uri> urlTask = direccion.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -168,13 +182,13 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     if (task.isSuccessful()) {
                         progressDialog.dismiss();
                         Uri downloadUri = task.getResult();
-                        String downloadURL = downloadUri.toString();
-                        Log.v("descargar",downloadURL);
+                        urlImagen = downloadUri.toString();
+                        Log.v("descargar",urlImagen);
                         Glide.with(AgregarAtractivoTuristico.this)
-                                .load(downloadURL)
+                                .load(urlImagen)
                                 .fitCenter()
                                 .centerCrop()
-                                .into(imageView);
+                                .into(botonSubirImagen);
                         Toast.makeText(AgregarAtractivoTuristico.this,"La foto se subio exitosamente!",Toast.LENGTH_SHORT).show();
                     } else {
                         // Handle failures
@@ -183,17 +197,20 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 }
             });
         }
+        //}
     }
 
     public void agregarCategorias(){
         addCategoria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textViewCategoria=(TextView) findViewById(R.id.editTextCategoria);
+                //textViewCategoria= (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
+
                 if(!textViewCategoria.getText().toString().isEmpty())
                 {
                     tituloCategoria.setVisibility(View.VISIBLE);
-                    String sCategoria=textViewCategoria.getText().toString();
+                    String sX="   x";
+                    String sCategoria=textViewCategoria.getText().toString().concat(sX);
                     Categoria categoria=new Categoria(sCategoria);
                     categorias.add(categoria);
                     Tag tag=new Tag(sCategoria);
@@ -208,6 +225,24 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 }
             }
         });
+        //set click listener
+        tagGroup.setOnTagClickListener(new TagView.OnTagClickListener() {
+            @Override
+            public void onTagClick(Tag tag, int i) {
+                tagGroup.remove(i);
+                contadorCategorias--;
+                categorias.remove(i);
+            }
+        });
+        //set delete listener
+        tagGroup.setOnTagDeleteListener(new TagView.OnTagDeleteListener() {
+            @Override
+            public void onTagDeleted(final TagView view, final Tag tag, final int position) {
+            }
+        });
+
+
+
     }
     public void mostrarAtractivoTuristico(){
         Query q=mDatabase.child("atractivoTuristico");
@@ -312,22 +347,47 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     Double latitud=marker.getPosition().latitude;
                     Double longitud=marker.getPosition().longitude;
                     AtractivoTuristico atractivoTuristico=new AtractivoTuristico(nombre,ciudad,comuna,descripcion,latitud,longitud);
-                    mDatabase.child("atractivoTuristico").push().setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
+                    DatabaseReference databaseReference= mDatabase.child("atractivoTuristico").push();
+                    keyAtractivoTuristico =databaseReference.getKey();
+                    databaseReference.setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            String key = databaseReference.getKey();
-                            Log.v("keyyy",key);
+
                             for (Categoria categoria: categorias){
-                                mDatabase.child("categoria").child(key).push().setValue(categoria);
+                                DatabaseReference dbrcategoria= mDatabase.child("keysAtractivosTuristicos").push();
+                                String keyCategoria=dbrcategoria.getKey();
+                                dbrcategoria.setValue(categoria);
+                                mDatabase.child("categoriaAtractivoTuristico").child(keyAtractivoTuristico).child(keyCategoria).setValue(categoria);
                             }
+                            Imagen imagen=new Imagen(urlImagen);
+                            Log.v("hola","sds");
+                            Log.v("hola", keyAtractivoTuristico);
+                            Log.v("hola",urlImagen);
 
-
+                            mDatabase.child("imagenes").child(keyAtractivoTuristico).push().setValue(imagen);
                         }
                     });
-
-
-
-
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this, android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this);
+                    }
+                    builder.setTitle("Nuevo Atractivo Agregado")
+                            .setMessage("Atractivo Turistico Añadido con Exito!")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(AgregarAtractivoTuristico.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
         });
@@ -420,5 +480,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         agregarCategorias();
         subirImagen();
     }
+
 
 }

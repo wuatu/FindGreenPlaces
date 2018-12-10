@@ -37,6 +37,5 @@ dependencies {
     implementation ('com.github.jakebonk:ChipView:1.0.1'){
         exclude module: 'support-v4'
     }
-
 }
 apply plugin: 'com.google.gms.google-services'
