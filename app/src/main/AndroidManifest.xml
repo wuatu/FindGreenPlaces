@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -45,11 +44,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VisualizarAtractivoTuristico"
+            android:name=".DialogoVisualizarAtractivoTuristico"
             android:label="@string/title_activity_visualizar_atractivo_turistico"
-            android:theme="@style/AppTheme.CustomTheme"/>
-        <activity android:name=".AgregarAtractivoTuristico">
-        </activity>
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".AgregarAtractivoTuristico"></activity>
+        <activity
+            android:name=".VisualizarAtractivoTuristico"
+            android:label="@string/title_activity_visualizar_atractivo_turistico"></activity>
     </application>
 
 </manifest>

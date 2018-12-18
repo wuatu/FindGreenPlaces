@@ -57,13 +57,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
 import Clases.Imagen;
 
-public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener {
+public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener,Serializable {
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -210,9 +211,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 {
                     tituloCategoria.setVisibility(View.VISIBLE);
                     String sX="   x";
-                    String sCategoria=textViewCategoria.getText().toString().concat(sX);
+                    String sCategoria=textViewCategoria.getText().toString();
                     Categoria categoria=new Categoria(sCategoria);
                     categorias.add(categoria);
+                    sCategoria=sCategoria.concat(sX);
                     Tag tag=new Tag(sCategoria);
                     tagGroup.addTag(tag);
                     contadorCategorias++;
@@ -255,7 +257,8 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     latitud=atractivoTuristico.getLatitud();
                     longitud=atractivoTuristico.getLongitud();
                     LatLng sydney = new LatLng(latitud,longitud);
-                    mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
+                    String key=atractivoTuristico.getId();
+                    mMap.addMarker(new MarkerOptions().snippet(key).position(sydney).title(atractivoTuristico.getNombre()));
                 }
             }
 
@@ -311,7 +314,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         textViewCiudad=(TextView)findViewById(R.id.editTextCiudad);
         textViewComuna=(TextView)findViewById(R.id.editTextComuna);
         textViewDescripcion=(TextView)findViewById(R.id.editTextDescripcion);
-
         buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -346,9 +348,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     String descripcion=textViewDescripcion.getText().toString();
                     Double latitud=marker.getPosition().latitude;
                     Double longitud=marker.getPosition().longitude;
-                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(nombre,ciudad,comuna,descripcion,latitud,longitud);
+
                     DatabaseReference databaseReference= mDatabase.child("atractivoTuristico").push();
                     keyAtractivoTuristico =databaseReference.getKey();
+                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(keyAtractivoTuristico,nombre,ciudad,comuna,descripcion,latitud,longitud);
                     databaseReference.setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {

@@ -1,23 +1,28 @@
 package Clases;
 
-public class AtractivoTuristico {
-    String descripcion;
-    Double latitud;
-    Double longitud;
+import java.io.Serializable;
+
+public class AtractivoTuristico implements Serializable {
+    String id;
     String nombre;
     String ciudad;
     String comuna;
+    String descripcion;
+    Double latitud;
+    Double longitud;
 
-    public AtractivoTuristico() {
-    }
 
-    public AtractivoTuristico(String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud) {
-        this.descripcion = descripcion;
-        this.latitud = latitud;
-        this.longitud = longitud;
+    public AtractivoTuristico(String id, String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud) {
+        this.id = id;
         this.nombre = nombre;
         this.ciudad = ciudad;
         this.comuna = comuna;
+        this.descripcion = descripcion;
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
+
+    public AtractivoTuristico() {
     }
 
     public String getDescripcion() {
@@ -66,5 +71,13 @@ public class AtractivoTuristico {
 
     public void setComuna(String comuna) {
         this.comuna = comuna;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

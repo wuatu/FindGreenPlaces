@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="150sp"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="10sp"
+    tools:context=".DialogoVisualizarAtractivoTuristico"
+    tools:layout_editor_absoluteY="442dp">
+
+    <LinearLayout
+        android:id="@+id/contenedorDialogoAT"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="120sp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewMiniFotoAtractivoTuristico"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="#ffffff"
+                android:src="@drawable/addimagen"
+                android:text="Subir Imagen" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="257dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10px">
+
+            <TextView
+                android:id="@+id/textViewTituloAT"
+                android:layout_width="235dp"
+                android:layout_height="32dp"
+                android:text="Titulo"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewCalificacion"
+                android:layout_width="236dp"
+                android:layout_height="29dp"
+                android:text="Calificacion" />
+
+            <TextView
+                android:id="@+id/textViewDescripcion"
+                android:layout_width="235dp"
+                android:layout_height="70dp"
+                android:text="Descripcion" />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

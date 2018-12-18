@@ -1,24 +1,26 @@
 package com.example.cristian.findgreenplaces;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.Placeholder;
 import android.support.design.widget.BottomNavigationView;
+import android.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
+import Clases.AtractivoTuristico;
+import Fragment.Informacion;
 
-public class VisualizarAtractivoTuristico extends AppCompatActivity {
+public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
     private TextView mTextMessage;
-
+    Fragment fragment;
+    FragmentTransaction transaction;
+    AtractivoTuristico atractivoTuristico;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -27,34 +29,42 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    creaFragmentViualizacionInicial2();
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
                     return true;
             }
             return false;
         }
     };
 
+    public void creaFragmentViualizacionInicial(){
+        Bundle args = new Bundle();
+        // envio el atractivo turistico serialzable al fragment
+        args.putSerializable("atractivoTuristico", atractivoTuristico);
+        fragment=new Informacion();
+        fragment.setArguments(args);
+        transaction=getFragmentManager().beginTransaction();
+        transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragment); // give your fragment container id in first parameter
+        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();
+    }
+    public void creaFragmentViualizacionInicial2(){
+        transaction=getFragmentManager().beginTransaction();
+        transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragment); // give your fragment container id in first parameter
+        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_atractivo_turistico);
-        DisplayMetrics dm= new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int ancho=dm.widthPixels;
-        int alto=dm.heightPixels;
-        getWindow().setLayout((int) (ancho*.98),(int)(alto*.4));
-        getWindow().setGravity(Gravity.BOTTOM);
-
-        mTextMessage = (TextView) findViewById(R.id.message);
+        atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        creaFragmentViualizacionInicial();
+
     }
-
-
 }

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
@@ -53,7 +55,7 @@ import Clases.Categoria;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener, Serializable {
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     AutoCompleteTextView buscarEditText;
     ArrayList<String> keysAtractivosTuristicos;
     ArrayList<AtractivoTuristico> atractivoTuristicos;
+    AtractivoTuristico atractivoTuristico;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();*/
                 Intent intent = new Intent(MainActivity.this, AgregarAtractivoTuristico.class);
                 startActivity(intent);
-                //setContentView(R.layout.activity_visualizar_atractivo_turistico);
+                //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
             }
         });
 
@@ -215,7 +218,9 @@ public class MainActivity extends AppCompatActivity
                     latitud=atractivoTuristico.getLatitud();
                     longitud=atractivoTuristico.getLongitud();
                     LatLng sydney = new LatLng(latitud,longitud);
+
                     mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
+                    atractivoTuristicos.add(atractivoTuristico);
                 }
             }
 
@@ -273,6 +278,15 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public AtractivoTuristico buscarAtractivoTuristicoEnArrayListPorNombre(Marker marker){
+        for (AtractivoTuristico atractivoTuristicos: atractivoTuristicos){
+            if(marker.getTitle().equalsIgnoreCase(atractivoTuristicos.getNombre())){
+                return atractivoTuristicos;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -280,9 +294,12 @@ public class MainActivity extends AppCompatActivity
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(MainActivity.this, VisualizarAtractivoTuristico.class);
+                AtractivoTuristico atractivoTuristico;
+                atractivoTuristico =buscarAtractivoTuristicoEnArrayListPorNombre(marker);
+                Intent intent = new Intent(MainActivity.this, DialogoVisualizarAtractivoTuristico.class);
+                Log.v("seee",atractivoTuristico.getNombre());
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
-                Log.v("s", "dasdsda");
                 return false;
             }
         });
