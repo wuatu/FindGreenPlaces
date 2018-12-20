@@ -70,7 +70,8 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
-                Log.v("vamoss",atractivoTuristico.getNombre());
+                intent.putExtra("imagenes",imagenes);
+                Log.v("vamoss",String.valueOf(imagenes.size()));
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
             }

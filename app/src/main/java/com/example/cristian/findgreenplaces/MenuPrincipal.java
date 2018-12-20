@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +27,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -54,7 +55,7 @@ import Clases.AtractivoTuristico;
 import Clases.Categoria;
 
 
-public class MainActivity extends AppCompatActivity
+public class MenuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener, Serializable {
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //if (AccessToken.getCurrentAccessToken()==null){
+          //  ejecutarLoginActivity();
+        //}
+        //
         // Referencia al elemento en la vista
         buscarEditText = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
         // Arreglo con las regiones
@@ -89,8 +94,7 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MainActivity.this, AgregarAtractivoTuristico.class);
+                Intent intent = new Intent(MenuPrincipal.this, AgregarAtractivoTuristico.class);
                 startActivity(intent);
                 //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
             }
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -118,6 +122,17 @@ public class MainActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .build();
 
+    }
+
+    private void logout() {
+        LoginManager.getInstance().logOut();
+        ejecutarLoginActivity();
+    }
+
+    private void ejecutarLoginActivity() {
+        Intent intent=new Intent(this,Login.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void buscar(){
@@ -270,7 +285,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -296,7 +311,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMarkerClick(Marker marker) {
                 AtractivoTuristico atractivoTuristico;
                 atractivoTuristico =buscarAtractivoTuristicoEnArrayListPorNombre(marker);
-                Intent intent = new Intent(MainActivity.this, DialogoVisualizarAtractivoTuristico.class);
+                Intent intent = new Intent(MenuPrincipal.this, DialogoVisualizarAtractivoTuristico.class);
                 Log.v("seee",atractivoTuristico.getNombre());
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);

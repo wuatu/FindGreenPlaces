@@ -380,7 +380,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                             .setMessage("Atractivo Turistico Añadido con Exito!")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(AgregarAtractivoTuristico.this, MainActivity.class);
+                                    Intent intent = new Intent(AgregarAtractivoTuristico.this, MenuPrincipal.class);
                                     startActivity(intent);
                                 }
                             })
@@ -406,11 +406,11 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 } else {
                     builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this);
                 }
-                builder.setTitle("Delete entry")
+                builder.setTitle("Información")
                         .setMessage("Seguro Quieres Cancelar?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(AgregarAtractivoTuristico.this, MainActivity.class);
+                                Intent intent = new Intent(AgregarAtractivoTuristico.this, MenuPrincipal.class);
                                 startActivity(intent);
                             }
                         })

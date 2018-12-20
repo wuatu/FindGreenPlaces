@@ -1,6 +1,8 @@
 package Clases;
 
-public class Imagen {
+import java.io.Serializable;
+
+public class Imagen implements Serializable {
     String url;
 
     public Imagen() {

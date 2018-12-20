@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import Clases.AtractivoTuristico;
+import Clases.Imagen;
 import Fragment.Informacion;
 
 public class VisualizarAtractivoTuristico extends AppCompatActivity{
@@ -21,6 +24,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
     Fragment fragment;
     FragmentTransaction transaction;
     AtractivoTuristico atractivoTuristico;
+    ArrayList<Imagen> imagenes;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -44,6 +48,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         Bundle args = new Bundle();
         // envio el atractivo turistico serialzable al fragment
         args.putSerializable("atractivoTuristico", atractivoTuristico);
+        args.putSerializable("imagenes",imagenes);
         fragment=new Informacion();
         fragment.setArguments(args);
         transaction=getFragmentManager().beginTransaction();
@@ -62,6 +67,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_atractivo_turistico);
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
+        imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         creaFragmentViualizacionInicial();
