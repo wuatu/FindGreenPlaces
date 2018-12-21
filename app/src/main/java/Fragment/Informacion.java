@@ -1,8 +1,10 @@
 package Fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +17,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cristian.findgreenplaces.R;
+import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.CalificacionPromedio;
 import Clases.CalificacionUsuarioAtractivoTuristico;
+import Clases.IdUsuario;
 import Clases.Imagen;
+import Clases.Referencias;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,11 +50,12 @@ public class Informacion extends Fragment implements View.OnClickListener {
     private RatingBar ratingBar;
     private ImageView imageView;
     private TextView textViewratingBar;
+    private TextView textViewOpiniones;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     ArrayList<Imagen> imagenes;
     View view;
-    Button button;
+    Button buttonCalificar;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -94,7 +103,7 @@ public class Informacion extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_informacion, container, false);
@@ -109,25 +118,39 @@ public class Informacion extends Fragment implements View.OnClickListener {
         textViewratingBar=view.findViewById(R.id.textViewRatingBar);
         textViewratingBar.setOnClickListener(this);
         ratingBar=view.findViewById(R.id.rating);
-        button=view.findViewById(R.id.buttonas);
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonCalificar=view.findViewById(R.id.buttonCalificar);
+        textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
+        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-
-                if (ratingBar.isIndicator()){
-
-                    float calificacion = ratingBar.getRating();
-                    CalificacionUsuarioAtractivoTuristico calificacionUsuarioAtractivoTuristico=new CalificacionUsuarioAtractivoTuristico(calificacion);
-                    Query q=mDatabase.child("usuario").child(atractivoTuristico.getId()).push();
-                    String calificacionKey=((DatabaseReference) q).getKey();
-                   // ((DatabaseReference) q).setValue();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
+                if(calificacionPromedio!=null){
+                    String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
+                    textViewratingBar.setText(calificacion.substring(0,3));
+                    ratingBar.setRating(Float.parseFloat(calificacion));
+                    textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
+                    ratingBar.setEnabled(false);
                 }
-
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+        buttonCalificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Informacion.this.getActivity(),SetCalificacionAtractivoTuristico.class);
+                intent.putExtra("imagenes",imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
+
+
 
 
     // TODO: Rename method, update argument and hook method into UI event

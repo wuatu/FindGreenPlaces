@@ -41,7 +41,7 @@
 
         <activity
             android:name=".MenuPrincipal"
-            android:label="@string/title_activity_main"></activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login">
@@ -85,7 +85,8 @@
         <activity
             android:name=".Registrar"
             android:label="@string/title_activity_registrar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SetCalificacionAtractivoTuristico"></activity>
     </application>
 
 </manifest>

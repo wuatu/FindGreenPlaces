@@ -3,6 +3,7 @@ package com.example.cristian.findgreenplaces;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Clases.IdUsuario;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -80,13 +84,21 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     LoginButton loginFacebookButton;
     FirebaseAuth.AuthStateListener mAuthListener;
     TextView registrar;
-    private static final String USUARIOPREFERENCE ="as";
-
+    private static String PREFS_KEY = "mispreferencias";
+    private static String SESIONINICIADA = "estado.sesion";
+    private static String IDUSUARIO = "mispreferencias2";
+    private boolean sesionIniciada=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        if(leerValorBoolean(Login.this,SESIONINICIADA)){
+            String key=leerValorString(Login.this,IDUSUARIO);
+            IdUsuario idUsuario=new IdUsuario(key);
+            ejecutarMainActivity();
+        }
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -153,30 +165,17 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user=firebaseAuth.getCurrentUser();
-                if (user!=null){
-                    Toast.makeText(Login.this,"Sesion Iniciada!",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(Login.this,"Usuario Autentificado!",Toast.LENGTH_SHORT).show();
-                }
             }
         };
-
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
     }
-
-
-
-    private void servicioInicioSesion(){
-        SharedPreferences sharedPreferences=getSharedPreferences(USUARIOPREFERENCE,MODE_PRIVATE);
-        //sharedPreferences.edit().putString("id",C);
-    }
-
-
 
     private void ejecutarMainActivity() {
         Intent intent=new Intent(Login.this,MenuPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -257,7 +256,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -295,6 +294,11 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(Login.this,"Sesion iniciada con exito!",Toast.LENGTH_SHORT).show();
+                        String keyUsuario=task.getResult().getUser().getUid();
+                        IdUsuario idUsuario=new IdUsuario(keyUsuario);
+                        sesionIniciada=true;
+                        guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
+                        guardarValorString(Login.this,IDUSUARIO,keyUsuario);
                         ejecutarMainActivity();
                     }else{
                         Toast.makeText(Login.this,"Error, usuario o contraseña incorrecta!",Toast.LENGTH_SHORT).show();
@@ -303,6 +307,29 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             });
 
         }
+    }
+    public static void guardarValorBoolean(Context context, String keyPref, boolean valor) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor editor;
+        editor = settings.edit();
+        editor.putBoolean(keyPref, valor);
+        editor.commit();
+    }
+    public static void guardarValorString(Context context, String keyPref, String valor) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor editor;
+        editor = settings.edit();
+        editor.putString(keyPref, valor);
+        editor.commit();
+    }
+
+    public static String leerValorString(Context context, String keyPref) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE);
+        return  preferences.getString(keyPref, "");
+    }
+    public static boolean leerValorBoolean(Context context, String keyPref) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE);
+        return  preferences.getBoolean(keyPref, false);
     }
 
     private boolean isEmailValid(String email) {
@@ -325,7 +352,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
+            //mLoginFormView=findViewById(R.id.progress_bar);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {

@@ -20,7 +20,10 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/login_form">
     <LinearLayout
         android:id="@+id/email_login_form"
         android:layout_width="match_parent"
@@ -104,5 +107,5 @@
             android:text="Registrarse" />
 
     </LinearLayout>
-
+</LinearLayout>
 </LinearLayout>

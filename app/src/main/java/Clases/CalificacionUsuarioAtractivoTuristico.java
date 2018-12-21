@@ -1,20 +1,20 @@
 package Clases;
 
 public class CalificacionUsuarioAtractivoTuristico {
-    float calificacion;
+    double calificacion;
 
-    public CalificacionUsuarioAtractivoTuristico(float calificacion) {
+    public CalificacionUsuarioAtractivoTuristico(double calificacion) {
         this.calificacion = calificacion;
     }
 
     public CalificacionUsuarioAtractivoTuristico() {
     }
 
-    public float getCalificacion() {
+    public double getCalificacion() {
         return calificacion;
     }
 
-    public void setCalificacion(float calificacion) {
+    public void setCalificacion(double calificacion) {
         this.calificacion = calificacion;
     }
 }

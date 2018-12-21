@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
+import Clases.IdUsuario;
 import Clases.Usuario;
 
 public class Registrar extends AppCompatActivity {

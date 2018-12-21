@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +28,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
+import Clases.CalificacionPromedio;
 import Clases.Imagen;
+import Clases.Referencias;
 
 public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity implements Serializable {
 
@@ -40,6 +43,9 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     ArrayList<Imagen> imagenes;
+    private RatingBar ratingBar;
+    private TextView textViewratingBar;
+    private TextView textViewOpiniones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,6 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         imagenes=new ArrayList();
-        Log.v("seee",getIntent().getSerializableExtra("atractivoTuristico").toString());
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         getImagenesAtractivoTuristico();
         linearLayout=findViewById(R.id.contenedorDialogoAT);
@@ -64,6 +69,27 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         descripcion=findViewById(R.id.textViewDescripcion);
         descripcion.setText(atractivoTuristico.getDescripcion());
         foto=findViewById(R.id.imageViewMiniFotoAtractivoTuristico);
+        textViewOpiniones=findViewById(R.id.textViewOpinionesn);
+        ratingBar=findViewById(R.id.rating);
+        textViewratingBar=findViewById(R.id.textViewRatingBar);
+        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
+                if(calificacionPromedio!=null){
+                    String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
+                    textViewratingBar.setText(calificacion.substring(0,3));
+                    Log.v("esooo",String.valueOf(Float.parseFloat(calificacion)));
+                    ratingBar.setRating(Float.parseFloat(calificacion));
+                    textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
+                    ratingBar.setEnabled(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
     private void linearLayout(){
         linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +97,6 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
             public void onClick(View v) {
                 Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
                 intent.putExtra("imagenes",imagenes);
-                Log.v("vamoss",String.valueOf(imagenes.size()));
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
             }

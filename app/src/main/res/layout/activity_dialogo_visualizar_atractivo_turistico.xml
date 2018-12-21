@@ -40,17 +40,68 @@
             <TextView
                 android:id="@+id/textViewTituloAT"
                 android:layout_width="235dp"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:text="Titulo"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewCalificacion"
-                android:layout_width="236dp"
-                android:layout_height="29dp"
-                android:text="Calificacion" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="@style/Widget.AppCompat.RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:numStars="5"
+                    android:scaleX="0.5"
+                    android:scaleY="0.4"
+                    android:stepSize="0.1"
+                    android:translationX="-60dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewRatingBarPromedio"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Promedio:"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textViewRatingBar"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5px"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textViewOpiniones"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Opiniones:"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textViewOpinionesn"
+                        android:layout_width="102dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5px"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewDescripcion"

@@ -1,30 +1,40 @@
 package Clases;
 
 public class CalificacionPromedio {
-    String promedioCalificacion;
-    String totalPersonas;
+    double promedioCalificacion;
+    int totalPersonas;
+    double sumaDeCalificaciones;
 
-    public CalificacionPromedio(String promedioCalificacion, String totalPersonas) {
+    public CalificacionPromedio(double promedioCalificacion, int totalPersonas, double sumaDeCalificaciones) {
         this.promedioCalificacion = promedioCalificacion;
         this.totalPersonas = totalPersonas;
+        this.sumaDeCalificaciones = sumaDeCalificaciones;
+    }
+
+    public double getSumaDeCalificaciones() {
+        return sumaDeCalificaciones;
+    }
+
+    public void setSumaDeCalificaciones(double sumaDeCalificaciones) {
+        this.sumaDeCalificaciones = sumaDeCalificaciones;
     }
 
     public CalificacionPromedio() {
     }
 
-    public String getPromedioCalificacion() {
+    public double getPromedioCalificacion() {
         return promedioCalificacion;
     }
 
-    public void setPromedioCalificacion(String promedioCalificacion) {
+    public void setPromedioCalificacion(double promedioCalificacion) {
         this.promedioCalificacion = promedioCalificacion;
     }
 
-    public String getTotalPersonas() {
+    public int getTotalPersonas() {
         return totalPersonas;
     }
 
-    public void setTotalPersonas(String totalPersonas) {
+    public void setTotalPersonas(int totalPersonas) {
         this.totalPersonas = totalPersonas;
     }
 }
