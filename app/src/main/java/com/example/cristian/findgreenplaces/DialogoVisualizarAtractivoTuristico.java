@@ -55,6 +55,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         mDatabase=database.getReference();
         imagenes=new ArrayList();
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
+
         getImagenesAtractivoTuristico();
         linearLayout=findViewById(R.id.contenedorDialogoAT);
         getSupportActionBar().hide();
@@ -97,6 +98,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
             public void onClick(View v) {
                 Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
                 intent.putExtra("imagenes",imagenes);
+                Log.v("ooooh",String.valueOf(imagenes.size()));
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
             }

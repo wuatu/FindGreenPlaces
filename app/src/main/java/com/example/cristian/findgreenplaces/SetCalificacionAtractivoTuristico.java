@@ -1,5 +1,9 @@
 package com.example.cristian.findgreenplaces;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,6 +53,8 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
+        imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         imagenes=new ArrayList();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -107,6 +113,31 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                             getSumaCalificaciones=calificacionPromedio.getSumaDeCalificaciones();
                         }
                         calculaNuevaCalificacionPromedio(getTotlaPersonas,getSumaCalificaciones,calificacionUsuario);
+                        AlertDialog.Builder builder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this, android.R.style.Theme_Material_Dialog);
+                        } else {
+                            builder = new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this);
+                        }
+                        builder.setTitle("Calificacion Enviada")
+                                .setMessage("Calificacion Enviada con Exito!")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(SetCalificacionAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
+                                        intent.putExtra("imagenes",imagenes);
+                                        Log.v("ooooh",String.valueOf(imagenes.size()));
+                                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
 
                     @Override
@@ -126,5 +157,6 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).setValue(calificacionPromedio);
         Log.v("rating",String.valueOf(ratingBar.getRating()));
         textViewratingBar.setText(String.valueOf(nuevoPromedio).substring(0,3));
+        textViewOpiniones.setText(String.valueOf(nuevoTotalPersonas));
     }
 }

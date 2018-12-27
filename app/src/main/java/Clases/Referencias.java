@@ -8,6 +8,7 @@ public class Referencias {
     public static final String IMAGENES="imagenes";
     public static final String KEYSATRACTIVOTURISTICO="keysAtractivosTuristicos";
     public static final String USUARIO="usuario";
+    public static final String CONTRIBUCIONES="contribuciones";
 
 
 }

@@ -41,7 +41,7 @@
 
         <activity
             android:name=".MenuPrincipal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login">
@@ -86,7 +86,16 @@
             android:name=".Registrar"
             android:label="@string/title_activity_registrar"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SetCalificacionAtractivoTuristico"></activity>
+        <activity
+            android:name=".SetCalificacionAtractivoTuristico"
+            android:label="Cambiar Calificación" />
+        <activity
+            android:name=".SetCategoriasAtractivoTuristico"
+            android:label="Actualizar Categorias"
+            />
+        <activity
+            android:name=".VisualizarContribucionAtractivoTuristico"
+            android:label="Atractivos Turísticos Contribuidos"></activity>
     </application>
 
 </manifest>

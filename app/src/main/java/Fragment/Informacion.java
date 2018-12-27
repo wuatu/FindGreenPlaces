@@ -16,8 +16,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cunoraz.tagview.Tag;
+import com.cunoraz.tagview.TagView;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
+import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import Clases.AtractivoTuristico;
 import Clases.CalificacionPromedio;
 import Clases.CalificacionUsuarioAtractivoTuristico;
+import Clases.Categoria;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
@@ -44,6 +48,7 @@ import Clases.Referencias;
  */
 public class Informacion extends Fragment implements View.OnClickListener {
     AtractivoTuristico atractivoTuristico;
+    ArrayList<Categoria> categorias;
     private TextView titulo;
     private TextView descripcion;
     private LinearLayout linearLayoutCategorias;
@@ -55,7 +60,11 @@ public class Informacion extends Fragment implements View.OnClickListener {
     FirebaseDatabase database;
     ArrayList<Imagen> imagenes;
     View view;
-    Button buttonCalificar;
+    //Button buttonCalificar;
+    TextView calificar;
+    LinearLayout linearLayoutcategorias;
+    TagView tagGroup;
+    TextView textViewModificarCategorias;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -118,7 +127,10 @@ public class Informacion extends Fragment implements View.OnClickListener {
         textViewratingBar=view.findViewById(R.id.textViewRatingBar);
         textViewratingBar.setOnClickListener(this);
         ratingBar=view.findViewById(R.id.rating);
-        buttonCalificar=view.findViewById(R.id.buttonCalificar);
+        calificar=view.findViewById(R.id.textViewCalificar);
+        linearLayoutcategorias=view.findViewById(R.id.linearLatyoutCategorias);
+        tagGroup = (TagView)view.findViewById(R.id.tag_group2);
+        textViewModificarCategorias=view.findViewById(R.id.textViewModificarCategorias);
         textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -137,7 +149,32 @@ public class Informacion extends Fragment implements View.OnClickListener {
 
             }
         });
-        buttonCalificar.setOnClickListener(new View.OnClickListener() {
+        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    Categoria categoria=dataSnapshot1.getValue(Categoria.class);
+                    Tag tag=new Tag(categoria.getEtiqueta());
+                    tagGroup.addTag(tag);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        textViewModificarCategorias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Informacion.this.getActivity(),SetCategoriasAtractivoTuristico.class);
+                intent.putExtra("imagenes",imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
+            }
+        });
+        calificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Informacion.this.getActivity(),SetCalificacionAtractivoTuristico.class);

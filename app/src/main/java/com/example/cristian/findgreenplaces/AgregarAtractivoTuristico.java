@@ -58,19 +58,22 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.Serializable;
+import java.sql.Ref;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.IdUsuario;
 import Clases.Imagen;
+import Clases.Referencias;
 
 public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener,Serializable {
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
     DatabaseReference mDatabase;
-    StorageReference mStorageReference;
     FirebaseDatabase database;
+    StorageReference mStorageReference;
     Button addCategoria;
     AutoCompleteTextView textViewCategoria;
     LinearLayout contenedorAddAT;
@@ -97,10 +100,17 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     private static final int INTENT_EXTRA_IMAGES=1;
     String urlImagen;
     String keyAtractivoTuristico;
+    private final int REQUEST_ACCESS_READ_EXTERNAL_STORAGE=0;
+    private final int REQUEST_ACCESS_WRITE_EXTERNAL_STORAGE=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_atractivo_turistico);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_ACCESS_READ_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_ACCESS_WRITE_EXTERNAL_STORAGE);
+
+        }
         // Referencia al elemento en la vista
         textViewCategoria = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
 // Arreglo con las regiones
@@ -355,24 +365,27 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     databaseReference.setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-
                             for (Categoria categoria: categorias){
-                                DatabaseReference dbrcategoria= mDatabase.child("keysAtractivosTuristicos").push();
+                                /*DatabaseReference dbrcategoria= mDatabase.child("keysAtractivosTuristicos").push();
                                 String keyCategoria=dbrcategoria.getKey();
                                 dbrcategoria.setValue(categoria);
-                                mDatabase.child("categoriaAtractivoTuristico").child(keyAtractivoTuristico).child(keyCategoria).setValue(categoria);
+                                categoria.setId(keyCategoria);
+                                mDatabase.child("categoriaAtractivoTuristico").child(keyAtractivoTuristico).child(keyCategoria).setValue(categoria);*/
+                                DatabaseReference dbrcategoria= mDatabase.child(Referencias.KEYSATRACTIVOTURISTICO).child(categoria.getEtiqueta()).push();
+                                String keyCategoria2=dbrcategoria.getKey();
+                                dbrcategoria.setValue(categoria);
+                                categoria.setId(keyCategoria2);
+                                mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(keyAtractivoTuristico).child(keyCategoria2).setValue(categoria);
                             }
                             Imagen imagen=new Imagen(urlImagen);
-                            Log.v("hola","sds");
-                            Log.v("hola", keyAtractivoTuristico);
-                            Log.v("hola",urlImagen);
-
                             mDatabase.child("imagenes").child(keyAtractivoTuristico).push().setValue(imagen);
                         }
                     });
+                    mDatabase.child(Referencias.CONTRIBUCIONES).child(IdUsuario.getIdUsuario()).child(Referencias.ATRACTIVOTURISTICO).child(keyAtractivoTuristico).setValue(atractivoTuristico);
+                    //mDatabase.child(Referencias.)
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this, android.R.style.Theme_Material_Dialog_Alert);
+                        builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this, android.R.style.Theme_Material_Dialog);
                     } else {
                         builder = new AlertDialog.Builder(AgregarAtractivoTuristico.this);
                     }
