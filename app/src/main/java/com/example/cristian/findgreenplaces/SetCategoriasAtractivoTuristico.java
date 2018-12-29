@@ -118,11 +118,11 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
                         .setMessage("Categorias Actualizadas con Exito!")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(SetCategoriasAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
+                                /*Intent intent = new Intent(SetCategoriasAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
                                 intent.putExtra("imagenes",imagenes);
                                 Log.v("ooooh",String.valueOf(imagenes.size()));
                                 intent.putExtra("atractivoTuristico", atractivoTuristico);
-                                startActivity(intent);
+                                startActivity(intent);*/
                                 finish();
                             }
                         })

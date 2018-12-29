@@ -91,11 +91,11 @@
             android:label="Cambiar Calificación" />
         <activity
             android:name=".SetCategoriasAtractivoTuristico"
-            android:label="Actualizar Categorias"
-            />
+            android:label="Actualizar Categorias" />
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
-            android:label="Atractivos Turísticos Contribuidos"></activity>
+            android:label="Atractivos Turísticos Contribuidos" />
+        <activity android:name=".Buscar"></activity>
     </application>
 
 </manifest>

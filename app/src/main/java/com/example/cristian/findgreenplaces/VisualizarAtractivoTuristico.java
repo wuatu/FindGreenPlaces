@@ -84,32 +84,8 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
-        //imagenes=new ArrayList();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         creaFragmentViualizacionInicial();
-        //finish();
-    }
-    private void getImagenesAtractivoTuristico(){
-
-        Query q=mDatabase.child("imagenes").child(atractivoTuristico.getId());
-        Log.v("oooh",q.getRef().toString());
-
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    Imagen imagen=dataSnapshot1.getValue(Imagen.class);
-                    imagenes.add(imagen);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        /**/
     }
 }

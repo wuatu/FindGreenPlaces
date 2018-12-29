@@ -106,10 +106,9 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
     }
     private void getImagenesAtractivoTuristico(){
 
-        Query q=mDatabase.child("imagenes").child(atractivoTuristico.getId());
+        Query q=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId());
         Log.v("oooh",q.getRef().toString());
-
-                q.addListenerForSingleValueEvent(new ValueEventListener() {
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){

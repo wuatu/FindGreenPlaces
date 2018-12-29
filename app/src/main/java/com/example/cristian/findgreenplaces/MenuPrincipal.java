@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -23,11 +27,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
@@ -50,8 +62,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
@@ -60,7 +74,8 @@ import Clases.IdUsuario;
 
 public class MenuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener, Serializable {
-
+    Address addres=null;
+    boolean buscarPorCategoria=false;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -74,7 +89,8 @@ public class MenuPrincipal extends AppCompatActivity
     private static String SESIONINICIADA = "estado.sesion";
     private static String IDUSUARIO = "mispreferencias2";
     private final int REQUEST_ACCESS_FINE=0;
-    boolean bandera;
+    Spinner spinner;
+    LinearLayout linearLayoutFocus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -84,9 +100,21 @@ public class MenuPrincipal extends AppCompatActivity
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_ACCESS_FINE);
 
         }
+        linearLayoutFocus=findViewById(R.id.layoutfocus);
+        spinner=findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter1=ArrayAdapter.createFromResource(this,R.array.opciones,android.R.layout.simple_spinner_item);
+        spinner.setAdapter(adapter1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        buscarEditText = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
+        final float density=getResources().getDisplayMetrics().density;
+        final Drawable drawable= getResources().getDrawable(R.drawable.lupa);
+        final int width=Math.round(25*density);
+        final int height=Math.round(25*density);
+        drawable.setBounds(0,0,width,height);
+        buscarEditText.setCompoundDrawables(drawable,null,null,null);
+        //drawable.setBounds(0,0,50,50);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,9 +139,39 @@ public class MenuPrincipal extends AppCompatActivity
         if (IdUsuario.getIdUsuario() ==null){
             ejecutarLoginActivity();
         }
-        //
-        // Referencia al elemento en la vista
-        buscarEditText = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
+        /*buscarEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    buscar();
+                    buscarEditText.clearFocus();
+                    linearLayoutFocus.requestFocus();
+                    //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    dismissKeyboard(buscarEditText,MenuPrincipal.this);
+                    Toast.makeText(MenuPrincipal.this,"Ciudad encontrada!",Toast.LENGTH_SHORT).show();
+                    //buscarEditText.setCursorVisible(false);
+                    buscarEditText.setFocusable(false);
+                    buscarEditText.setFocusableInTouchMode(true);
+                    return true;
+                }
+                return false;
+            }
+
+        });*/
+        buscarEditText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    buscarEditText.setFocusable(false);
+                    buscarEditText.setFocusableInTouchMode(true);
+                    buscar();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         // Arreglo con las regiones
         String[] regions = getResources().getStringArray(R.array.region_array);
         // Le pasamos las regiones al adaptador
@@ -134,8 +192,11 @@ public class MenuPrincipal extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-       // bandera= (getIntent().getExtras().getBoolean("bandera"));
 
+    }
+    public static void dismissKeyboard(EditText editText, Context context) {
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     private void logout() {
@@ -178,20 +239,62 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
     public void buscar(){
+        if (spinner.getSelectedItem().toString().equalsIgnoreCase("por ciudad")){
+            Geocoder geo = new Geocoder(MenuPrincipal.this);
+            int maxResultados = 1;
+            List<Address> adress = null;
+            try {
+                adress = geo.getFromLocationName(buscarEditText.getText().toString(), maxResultados);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(adress!=null) {
+                if(adress.size()>0){
+                    LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
+                    addres = adress.get(0);
+                }
+                else{
+                    Toast.makeText(MenuPrincipal.this,"No se encuenta ciudad!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+        if(spinner.getSelectedItem().toString().equalsIgnoreCase("categoria/etiqueta")){
+            mMap.clear();
+            String textoBusqueda=buscarEditText.getText().toString();
+            getkeyAtractivoTuristico(textoBusqueda);
+            buscarAtractivoTuristicoPorCategoria();
+            if(!buscarPorCategoria){
+                Toast.makeText(MenuPrincipal.this,"No existen categorias asociadas!",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+    /*public Address buscarPorNombreCiudad(){
         buscarEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            LatLng latLng=null;
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    mMap.clear();
-                    String textoBusqueda=buscarEditText.getText().toString();
-                    getkeyAtractivoTuristico(textoBusqueda);
-                    buscarAtractivoTuristicoPorCategoria();
-                        return true;
+                Geocoder geo = new Geocoder(MenuPrincipal.this);
+                int maxResultados = 1;
+                List<Address> adress = null;
+                try {
+                    adress = geo.getFromLocationName(buscarEditText.getText().toString(), maxResultados);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(adress!=null) {
+                    latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
+                    addres = adress.get(0);
+                    return true;
                 }
                 return false;
             }
         });
-    }
+        return addres;
+    }*/
     public void getkeyAtractivoTuristico(final String texto){
         mDatabase.child("categoriaAtractivoTuristico").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -252,6 +355,9 @@ public class MenuPrincipal extends AppCompatActivity
         longitud=atractivoTuristico.getLongitud();
         LatLng sydney = new LatLng(latitud,longitud);
         mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
+        if(atractivoTuristico!=null){
+            buscarPorCategoria=true;
+        }
     }
 
 
@@ -310,7 +416,7 @@ public class MenuPrincipal extends AppCompatActivity
             }
         });
 
-        buscar();
+
         mostrarAtractivoTuristico();
         // Add a marker in Sydney and move the camera
         /*LatLng sydney = new LatLng(-34, 151);
