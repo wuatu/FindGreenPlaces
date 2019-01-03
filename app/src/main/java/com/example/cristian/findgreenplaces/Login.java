@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,11 +46,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Clases.IdUsuario;
+import Clases.Referencias;
+import Clases.Usuario;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -82,11 +90,14 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private View mLoginFormView;
     CallbackManager callbackManager;
     LoginButton loginFacebookButton;
+    Button botonInvitado;
     FirebaseAuth.AuthStateListener mAuthListener;
     TextView registrar;
     private static String PREFS_KEY = "mispreferencias";
     private static String SESIONINICIADA = "estado.sesion";
     private static String IDUSUARIO = "mispreferencias2";
+    private static String NOMBRE = "nombre";
+    private static String APELLIDO = "apellido";
     private boolean sesionIniciada=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +107,15 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
         if(leerValorBoolean(Login.this,SESIONINICIADA)){
             String key=leerValorString(Login.this,IDUSUARIO);
-            IdUsuario idUsuario=new IdUsuario(key);
+            String nombre=leerValorString(Login.this,NOMBRE);
+            String apellido=leerValorString(Login.this,APELLIDO);
+            IdUsuario idUsuario=new IdUsuario(key,nombre,apellido);
             ejecutarMainActivity();
         }
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        botonInvitado=findViewById(R.id.boton_invitado);
 
         callbackManager = CallbackManager.Factory.create();
         loginFacebookButton = (LoginButton) findViewById(R.id.login_button);
@@ -150,8 +164,14 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                 return false;
             }
         });
-
+        botonInvitado.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iniciarSesionInvitado();
+            }
+        });
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +189,15 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         };
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void iniciarSesionInvitado() {
+        String keyUsuario="invitado";
+        IdUsuario idUsuario=new IdUsuario(keyUsuario);
+        sesionIniciada=true;
+        //guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
+        //guardarValorString(Login.this,IDUSUARIO,keyUsuario);
+        ejecutarMainActivity();
     }
 
     private void ejecutarMainActivity() {
@@ -295,11 +324,30 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                     if(task.isSuccessful()){
                         Toast.makeText(Login.this,"Sesion iniciada con exito!",Toast.LENGTH_SHORT).show();
                         String keyUsuario=task.getResult().getUser().getUid();
-                        IdUsuario idUsuario=new IdUsuario(keyUsuario);
-                        sesionIniciada=true;
-                        guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
-                        guardarValorString(Login.this,IDUSUARIO,keyUsuario);
-                        ejecutarMainActivity();
+                        FirebaseDatabase database;
+                        DatabaseReference mDatabase;
+                        database=FirebaseDatabase.getInstance();
+                        mDatabase=database.getReference();
+                        mDatabase.child(Referencias.USUARIO).child(keyUsuario).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Usuario usuario=dataSnapshot.getValue(Usuario.class);
+                                IdUsuario idUsuario=new IdUsuario(usuario.getId(),usuario.getNombre(),usuario.getApellido());
+                                sesionIniciada=true;
+                                guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
+                                guardarValorString(Login.this,IDUSUARIO,usuario.getId());
+                                guardarValorString(Login.this,NOMBRE,usuario.getNombre());
+                                guardarValorString(Login.this,APELLIDO,usuario.getApellido());
+                                ejecutarMainActivity();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
                     }else{
                         Toast.makeText(Login.this,"Error, usuario o contraseña incorrecta!",Toast.LENGTH_SHORT).show();
                     }

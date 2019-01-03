@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="50dp"
     tools:context=".Registrar">
 
     <LinearLayout
@@ -28,6 +29,7 @@
                 android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -42,6 +44,7 @@
                 android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -73,7 +76,7 @@
                     android:layout_width="50sp"
                     android:layout_height="wrap_content"
                     android:hint="Dia"
-                    android:inputType="textEmailAddress"
+                    android:inputType="date"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -88,7 +91,7 @@
                     android:layout_width="50sp"
                     android:layout_height="wrap_content"
                     android:hint="Mes"
-                    android:inputType="textEmailAddress"
+                    android:inputType="date"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -102,7 +105,7 @@
                     android:layout_width="100sp"
                     android:layout_height="wrap_content"
                     android:hint="Año"
-                    android:inputType="textEmailAddress"
+                    android:inputType="date"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
@@ -125,6 +128,7 @@
                 android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -146,6 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/cancelar"
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -154,6 +159,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Cancelar"
                 android:textStyle="bold" />
+
             <Button
                 android:id="@+id/registrar"
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -163,7 +169,6 @@
                 android:text="Registrar"
                 android:textStyle="bold" />
         </LinearLayout>
-
 
 
     </LinearLayout>

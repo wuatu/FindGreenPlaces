@@ -9,11 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cunoraz.tagview.Tag;
@@ -21,19 +24,20 @@ import com.cunoraz.tagview.TagView;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
+import com.example.cristian.findgreenplaces.SetDescripcionAtractivoTuristico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import Clases.AdapterListViewComentarioAT;
 import Clases.AtractivoTuristico;
 import Clases.CalificacionPromedio;
-import Clases.CalificacionUsuarioAtractivoTuristico;
 import Clases.Categoria;
+import Clases.Comentario;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
@@ -50,7 +54,7 @@ public class Informacion extends Fragment implements View.OnClickListener {
     AtractivoTuristico atractivoTuristico;
     ArrayList<Categoria> categorias;
     private TextView titulo;
-    private TextView descripcion;
+    private TextView textViewDescripcionAT;
     private LinearLayout linearLayoutCategorias;
     private RatingBar ratingBar;
     private ImageView imageView;
@@ -61,10 +65,14 @@ public class Informacion extends Fragment implements View.OnClickListener {
     ArrayList<Imagen> imagenes;
     View view;
     //Button buttonCalificar;
-    TextView calificar;
+    TextView textViewButtonModificarCalificacion;
+    TextView textViewButtonModificarDescripcion;
     LinearLayout linearLayoutcategorias;
     TagView tagGroup;
-    TextView textViewModificarCategorias;
+    TextView textViewButtonModificarCategorias;
+    private ListView lista;
+    private Adapter adapter;
+    ArrayList<Comentario> model;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -118,21 +126,61 @@ public class Informacion extends Fragment implements View.OnClickListener {
         view= inflater.inflate(R.layout.fragment_informacion, container, false);
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+        lista=view.findViewById(R.id.ma_lv_lista);
+        model=new ArrayList<>();
+        lista=(ListView)view.findViewById(R.id.ma_lv_lista);
+        mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                model.removeAll(model);
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    model.add(dataSnapshot1.getValue(Comentario.class));
+                }
+                /*Comentario comentario=new Comentario("sdsd","dsds","cris","far");
+                model.add(comentario);
+                Comentario comentario2=new Comentario("wewerfew","dsds","cris","far");
+                model.add(comentario2);
+                Comentario comentario3=new Comentario("qqqqqqqqqq","dsds","cris","far");
+                model.add(comentario3);*/
+                adapter=new AdapterListViewComentarioAT(getActivity(),model);
+                lista.setAdapter((ListAdapter) adapter);
+                Log.v("taza3",String.valueOf(model.size()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         titulo = (TextView) view.findViewById(R.id.textViewTituloAT2);
         titulo.setText(atractivoTuristico.getNombre());
-        descripcion=view.findViewById(R.id.textViewDescripcionAT);
-        descripcion.setText(atractivoTuristico.getDescripcion());
+        textViewDescripcionAT =view.findViewById(R.id.textViewDescripcionAT);
+        //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         imageView=view.findViewById(R.id.imageViewVAT);
+        textViewButtonModificarDescripcion =view.findViewById(R.id.textViewModificarDescripcion);
         getImagenesAtractivoTuristico();
         textViewratingBar=view.findViewById(R.id.textViewRatingBar);
         textViewratingBar.setOnClickListener(this);
         ratingBar=view.findViewById(R.id.rating);
-        calificar=view.findViewById(R.id.textViewCalificar);
+        textViewButtonModificarCalificacion =view.findViewById(R.id.textViewCalificar);
         linearLayoutcategorias=view.findViewById(R.id.linearLatyoutCategorias);
         tagGroup = (TagView)view.findViewById(R.id.tag_group2);
-        textViewModificarCategorias=view.findViewById(R.id.textViewModificarCategorias);
+        textViewButtonModificarCategorias =view.findViewById(R.id.textViewModificarCategorias);
         textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
-        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
+                textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
@@ -149,41 +197,60 @@ public class Informacion extends Fragment implements View.OnClickListener {
 
             }
         });
-        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tagGroup.removeAll();
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     Categoria categoria=dataSnapshot1.getValue(Categoria.class);
                     Tag tag=new Tag(categoria.getEtiqueta());
                     tagGroup.addTag(tag);
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-        textViewModificarCategorias.setOnClickListener(new View.OnClickListener() {
+        textViewButtonModificarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Informacion.this.getActivity(),SetCategoriasAtractivoTuristico.class);
-                intent.putExtra("imagenes",imagenes);
-                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para modificar descripción de atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(Informacion.this.getActivity(), SetDescripcionAtractivoTuristico.class);
+                    intent.putExtra("imagenes", imagenes);
+                    intent.putExtra("atractivoTuristico", atractivoTuristico);
+                    startActivity(intent);
+                }
             }
         });
-        calificar.setOnClickListener(new View.OnClickListener() {
+        textViewButtonModificarCategorias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Informacion.this.getActivity(),SetCalificacionAtractivoTuristico.class);
-                intent.putExtra("imagenes",imagenes);
-                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para modificar categorias de atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(Informacion.this.getActivity(), SetCategoriasAtractivoTuristico.class);
+                    intent.putExtra("imagenes", imagenes);
+                    intent.putExtra("atractivoTuristico", atractivoTuristico);
+                    startActivity(intent);
+                }
             }
         });
-
+        textViewButtonModificarCalificacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para textViewButtonModificarCalificacion atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(Informacion.this.getActivity(), SetCalificacionAtractivoTuristico.class);
+                    intent.putExtra("imagenes", imagenes);
+                    intent.putExtra("atractivoTuristico", atractivoTuristico);
+                    startActivity(intent);
+                }
+            }
+        });
         return view;
     }
 

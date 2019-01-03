@@ -73,7 +73,19 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         ratingBar=findViewById(R.id.rating);
         textViewratingBar=findViewById(R.id.textViewRatingBar);
-        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
+                descripcion.setText(atractivoTuristico.getDescripcion());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);

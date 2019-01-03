@@ -95,7 +95,10 @@
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
             android:label="Atractivos Turísticos Contribuidos" />
-        <activity android:name=".Buscar"></activity>
+        <activity android:name=".Buscar" />
+        <activity
+            android:name=".SetDescripcionAtractivoTuristico"
+            android:label="Actualizar Descripción" />
     </application>
 
 </manifest>

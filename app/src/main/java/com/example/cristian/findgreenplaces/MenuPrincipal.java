@@ -118,11 +118,15 @@ public class MenuPrincipal extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(MenuPrincipal.this,"Debe registrarse para agregar atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MenuPrincipal.this, AgregarAtractivoTuristico.class);
-                startActivity(intent);
-                //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
+                    Intent intent = new Intent(MenuPrincipal.this, AgregarAtractivoTuristico.class);
+                    startActivity(intent);
+                    //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
+                }
             }
         });
 
@@ -134,7 +138,7 @@ public class MenuPrincipal extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        Log.v("taza2",IdUsuario.getNombreUsuario());
 
         if (IdUsuario.getIdUsuario() ==null){
             ejecutarLoginActivity();

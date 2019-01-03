@@ -80,4 +80,7 @@
     <string name="permission_rationale">"Se requiere permisos de contactos para acceder a sus email."
     </string>
     <string name="title_activity_registrar">Registrar</string>
+    <string name="title_activity_set_descripcion_atractivo_turistico2">
+        SetDescripcionAtractivoTuristico2
+    </string>
 </resources>

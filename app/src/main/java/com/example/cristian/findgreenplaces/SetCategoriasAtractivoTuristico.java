@@ -44,6 +44,7 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
     ArrayList<Categoria> categoriasEliminadas;
     Button addCategoria;
     ArrayList<Imagen> imagenes;
+    Categoria categoriaEliminada;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,11 +85,21 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
         });
         tagGroup.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
-            public void onTagClick(Tag tag, int i) {
+            public void onTagClick(final Tag tag, int i) {
+                categoriaEliminada=null;
+                for (int j=0;j<categoriasAñadidas.size();j++){
+                    if((categoriasAñadidas.get(j).getEtiqueta()+"   x").equalsIgnoreCase(tag.text)){
+                        categoriaEliminada=categoriasAñadidas.get(j);
+                        break;
+                    }
+                }
                 tagGroup.remove(i);
-                Categoria categoria=categorias.get(i);
-                categoriasEliminadas.add(categoria);
-                categorias.remove(i);
+                if(i<categorias.size()) {
+                    categoriaEliminada = categorias.get(i);
+                    categorias.remove(i);
+                }
+                categoriasEliminadas.add(categoriaEliminada);
+
             }
         });
         buttonEnviarCalificacion.setOnClickListener(new View.OnClickListener() {

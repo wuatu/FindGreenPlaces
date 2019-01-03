@@ -39,64 +39,75 @@
                 android:layout_height="match_parent"
                 android:visibility="invisible" />
 
-            <EditText
-                android:id="@+id/editTextNombre"
-                style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Nombre"
-                android:inputType="textPersonName"
-                android:singleLine="true"
-                android:textColor="#43a047"
-                app:backgroundTint="#43a047" />
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombre"
+                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editTextCiudad"
-                style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Ciudad"
-                android:inputType="textPersonName"
-                android:textColor="#43a047"
-                app:backgroundTint="#43a047" />
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextCiudad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ciudad"
+                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editTextComuna"
-                style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Comuna"
-                android:inputType="textPersonName"
-                android:textColor="#43a047"
-                app:backgroundTint="#43a047" />
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextComuna"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Comuna"
+                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editTextDescripcion"
-                style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Descripcion"
-                android:inputType="textMultiLine"
-                android:textColor="#43a047" />
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Descripción"
+                    android:inputType="textCapSentences|textMultiLine|textAutoComplete"/>
+            </android.support.design.widget.TextInputLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-
-
-                <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
-                    style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
-                    android:id="@+id/autocomplete_region"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="283dp"
-                    android:singleLine="true"
-                    android:layout_height="wrap_content"
-                    android:hint="Categoria" />
+                    android:layout_height="wrap_content">
+                    <AutoCompleteTextView
+                        android:id="@+id/autocomplete_region"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Categoría"
+                        android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
 
                 <Button
                     android:id="@+id/buttonaddCategoria"
