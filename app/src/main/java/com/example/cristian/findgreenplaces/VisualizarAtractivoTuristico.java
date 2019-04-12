@@ -1,34 +1,22 @@
 package com.example.cristian.findgreenplaces;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.Placeholder;
 import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Imagen;
-import Fragment.Informacion;
+import Fragment.VisualizarAtractivoTuristicoFragment;
 
 public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
@@ -62,7 +50,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         // envio el atractivo turistico serialzable al fragment
         args.putSerializable("atractivoTuristico", atractivoTuristico);
         args.putSerializable("imagenes",imagenes);
-        fragment=new Informacion();
+        fragment=new VisualizarAtractivoTuristicoFragment();
         fragment.setArguments(args);
         transaction=getFragmentManager().beginTransaction();
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragment); // give your fragment container id in first parameter

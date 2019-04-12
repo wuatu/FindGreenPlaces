@@ -69,7 +69,7 @@ public class VisualizarContribucionAtractivoTuristico extends AppCompatActivity 
 /*        linearLayoutItemAtractivoTuristico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(VisualizarContribucionAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
+                Intent intent = new Intent(VisualizarContribucionAtractivoTuristico.this, VisualizarAtractivoTuristicoFragment.class);
                 //intent.putExtra("bandera", bandera);
                 startActivity(intent);
             }

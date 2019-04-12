@@ -99,6 +99,19 @@
         <activity
             android:name=".SetDescripcionAtractivoTuristico"
             android:label="Actualizar Descripción" />
+        <activity
+            android:name=".BuscarMainActivity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SugerirCambioAtractivoTuristico"
+            android:label="@string/title_activity_sugerir_cambio_atractivo_turistico"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InformacionAdicionalAtractivoTuristico"
+            android:label="@string/title_activity_informacion_adicional_atractivo_turistico"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".InformacionAdicionalAT"></activity>
     </application>
 
 </manifest>

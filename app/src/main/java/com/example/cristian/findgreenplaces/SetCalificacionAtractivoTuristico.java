@@ -128,7 +128,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         finish();
-                                        /*Intent intent = new Intent(SetCalificacionAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
+                                        /*Intent intent = new Intent(SetCalificacionAtractivoTuristico.this, VisualizarAtractivoTuristicoFragment.class);
                                         intent.putExtra("imagenes",imagenes);
                                         Log.v("ooooh",String.valueOf(imagenes.size()));
                                         intent.putExtra("atractivoTuristico", atractivoTuristico);

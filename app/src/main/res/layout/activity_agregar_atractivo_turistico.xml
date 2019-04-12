@@ -8,30 +8,64 @@
     android:layout_margin="5sp"
     android:orientation="vertical"
     android:background="#ffffff"
-
     tools:context=".AgregarAtractivoTuristico">
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="3">
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            tools:context=".MenuPrincipal" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            tools:context=".MenuPrincipal"/>
+
+
+        <ImageButton
+            android:id="@+id/buttonSubirImagen2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:paddingBottom="37dp"
+            app:srcCompat="@drawable/marcadorpalo"
+            tools:srcCompat="@drawable/marcadorpalo" />
+
+
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="2"
         android:gravity="center_horizontal">
+
         <LinearLayout
             android:id="@+id/contenedorAddAtractivoT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/com_facebook_button_background_color_disabled" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
+                android:text="Datos Atractivo Turístico"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/mostrarImagen"
@@ -42,11 +76,43 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <AutoCompleteTextView
                     android:id="@+id/editTextNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre"
+                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editTextDireccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Dirección"
+                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editTextComuna"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Región"
                     android:inputType="textCapWords|textAutoComplete|textEmailSubject"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -55,6 +121,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <AutoCompleteTextView
                     android:id="@+id/editTextCiudad"
                     android:layout_width="match_parent"
@@ -68,27 +135,14 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <AutoCompleteTextView
-                    android:id="@+id/editTextComuna"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Comuna"
-                    android:inputType="textCapWords|textAutoComplete|textEmailSubject"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <AutoCompleteTextView
                     android:id="@+id/editTextDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Descripción"
-                    android:inputType="textCapSentences|textMultiLine|textAutoComplete"/>
+                    android:inputType="textMultiLine" />
             </android.support.design.widget.TextInputLayout>
-
 
 
             <LinearLayout
@@ -97,8 +151,9 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="283dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <AutoCompleteTextView
                         android:id="@+id/autocomplete_region"
                         android:layout_width="match_parent"
@@ -109,15 +164,17 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
-                <Button
-                    android:id="@+id/buttonaddCategoria"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#43a047"
-                    android:text="Añadir" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonaddCategoria"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#43a047"
+                android:text="Añadir"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/contenedorTitulo"
@@ -145,22 +202,27 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                     <com.cunoraz.tagview.TagView
-                    xmlns:tagview="http://schemas.android.com/apk/res-auto"
-                    android:gravity="center_horizontal"
+                <com.cunoraz.tagview.TagView xmlns:tagview="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/tag_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
+                    android:gravity="center_horizontal"
                     tagview:lineMargin="5dp"
                     tagview:tagMargin="5dp"
+                    tagview:textPaddingBottom="5dp"
                     tagview:textPaddingLeft="8dp"
-                    tagview:textPaddingTop="5dp"
                     tagview:textPaddingRight="8dp"
-                    tagview:textPaddingBottom="5dp" />
+                    tagview:textPaddingTop="5dp" />
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/com_facebook_button_background_color_disabled" />
 
             <LinearLayout
                 android:id="@+id/añadirImagenesTitulo2"
@@ -174,10 +236,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:padding="10sp"
                     android:text="Añadir Imagen"
-                    android:textColor="#43a047"/>
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ImageButton
@@ -190,34 +252,36 @@
 
             <LinearLayout
                 android:id="@+id/contenedorBotonesAC"
-                android:layout_width="295dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:padding="20sp">
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+
+
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/buttonCancelar"
                     style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="Cancelar" />
+                    android:background="@drawable/my_button_bg"
+                    android:text="Cancelar"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
 
                 <Button
                     android:id="@+id/buttonAceptar"
                     style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="Aceptar" />
+                    android:background="@drawable/my_button_green"
+                    android:text="Aceptar"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

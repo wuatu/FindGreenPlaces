@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
@@ -58,9 +60,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Ref;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
@@ -79,6 +84,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     AutoCompleteTextView textViewCategoria;
     LinearLayout contenedorAddAT;
     LinearLayout contenedorCategoria;
+    Marker currentMarker;
     //LinearLayout contenedorTresCategorias;
     int i=0;
     int contadorCategorias=0;
@@ -86,6 +92,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     TextView textViewCiudad;
     TextView textViewComuna;
     TextView textViewDescripcion;
+    TextView textViewDireccion;
     MarkerOptions marker;
     Button buttonAceptar;
     Button buttonCancelar;
@@ -282,11 +289,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
@@ -326,6 +328,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         textViewCiudad=(TextView)findViewById(R.id.editTextCiudad);
         textViewComuna=(TextView)findViewById(R.id.editTextComuna);
         textViewDescripcion=(TextView)findViewById(R.id.editTextDescripcion);
+        textViewDireccion=(TextView)findViewById(R.id.editTextDireccion);
         buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -440,6 +443,33 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         });
     }
 
+    public void getStringAddress(Double lat,Double lng){
+        String direccion="";
+        String ciudad="";
+        String region="";
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder=new Geocoder(this,Locale.getDefault());
+        try {
+            addresses=geocoder.getFromLocation(lat,lng,1);
+            //addres=addresses.get(0).getAddressLine(0);
+            ciudad=addresses.get(0).getLocality();//curico
+            //city=addresses.get(0).getCountryName();//Chile
+            region=addresses.get(0).getAdminArea();//Region
+            direccion=addresses.get(0).getThoroughfare()+" "+addresses.get(0).getFeatureName();//Region
+            textViewCiudad.setText(ciudad);
+            textViewComuna.setText(region);
+            textViewDireccion.setText(direccion);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -451,15 +481,36 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             }
         });
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        /*mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 mMap.clear();
                 mostrarAtractivoTuristico();
                 mMap.addMarker(marker.position(latLng));
             }
-        });
+        });*/
 
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                LatLng center=mMap.getCameraPosition().target;
+
+                if(currentMarker==null){
+                    currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
+                }
+                else{
+                    currentMarker.remove();
+                    currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
+                    LatLng latLng=currentMarker.getPosition();
+                    getStringAddress(latLng.latitude,latLng.longitude);
+
+                }
+
+
+
+            }
+        });
 
 
 

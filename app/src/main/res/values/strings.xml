@@ -83,4 +83,11 @@
     <string name="title_activity_set_descripcion_atractivo_turistico2">
         SetDescripcionAtractivoTuristico2
     </string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_sugerir_cambio_atractivo_turistico">
+        SugerirCambioAtractivoTuristico
+    </string>
+    <string name="title_activity_informacion_adicional_atractivo_turistico">
+        InformacionAdicionalAtractivoTuristico
+    </string>
 </resources>

@@ -1,6 +1,9 @@
 package Fragment;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,10 +24,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
+import com.example.cristian.findgreenplaces.InformacionAdicionalAT;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetDescripcionAtractivoTuristico;
+import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
+import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,17 +51,19 @@ import Clases.Referencias;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Informacion.OnFragmentInteractionListener} interface
+ * {@link VisualizarAtractivoTuristicoFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Informacion#newInstance} factory method to
+ * Use the {@link VisualizarAtractivoTuristicoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Informacion extends Fragment implements View.OnClickListener {
+public class VisualizarAtractivoTuristicoFragment extends Fragment implements View.OnClickListener {
     AtractivoTuristico atractivoTuristico;
     ArrayList<Categoria> categorias;
     private TextView titulo;
     private TextView textViewDescripcionAT;
-    private LinearLayout linearLayoutCategorias;
+    private TextView textViewSugerirCambio;
+    private TextView textViewAñadirInformacionAdicional;
+    private LinearLayout linearLayoutAñadirInformacionAdicional;
     private RatingBar ratingBar;
     private ImageView imageView;
     private TextView textViewratingBar;
@@ -64,12 +72,10 @@ public class Informacion extends Fragment implements View.OnClickListener {
     FirebaseDatabase database;
     ArrayList<Imagen> imagenes;
     View view;
-    //Button buttonCalificar;
-    TextView textViewButtonModificarCalificacion;
-    TextView textViewButtonModificarDescripcion;
+
     LinearLayout linearLayoutcategorias;
     TagView tagGroup;
-    TextView textViewButtonModificarCategorias;
+
     private ListView lista;
     private Adapter adapter;
     ArrayList<Comentario> model;
@@ -84,7 +90,7 @@ public class Informacion extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
-    public Informacion() {
+    public VisualizarAtractivoTuristicoFragment() {
         // Required empty public constructor
     }
 
@@ -94,11 +100,11 @@ public class Informacion extends Fragment implements View.OnClickListener {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Informacion.
+     * @return A new instance of fragment VisualizarAtractivoTuristicoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Informacion newInstance(String param1, String param2) {
-        Informacion fragment = new Informacion();
+    public static VisualizarAtractivoTuristicoFragment newInstance(String param1, String param2) {
+        VisualizarAtractivoTuristicoFragment fragment = new VisualizarAtractivoTuristicoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -123,9 +129,11 @@ public class Informacion extends Fragment implements View.OnClickListener {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view= inflater.inflate(R.layout.fragment_informacion, container, false);
+        view= inflater.inflate(R.layout.fragment_visualizar_atractivo_turistico, container, false);
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+        linearLayoutAñadirInformacionAdicional=view.findViewById(R.id.linearLatyoutInformacionAdicional);
+        textViewAñadirInformacionAdicional=view.findViewById(R.id.textViewAñadirInformacionAdicional);
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
         lista=(ListView)view.findViewById(R.id.ma_lv_lista);
@@ -136,12 +144,6 @@ public class Informacion extends Fragment implements View.OnClickListener {
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     model.add(dataSnapshot1.getValue(Comentario.class));
                 }
-                /*Comentario comentario=new Comentario("sdsd","dsds","cris","far");
-                model.add(comentario);
-                Comentario comentario2=new Comentario("wewerfew","dsds","cris","far");
-                model.add(comentario2);
-                Comentario comentario3=new Comentario("qqqqqqqqqq","dsds","cris","far");
-                model.add(comentario3);*/
                 adapter=new AdapterListViewComentarioAT(getActivity(),model);
                 lista.setAdapter((ListAdapter) adapter);
                 Log.v("taza3",String.valueOf(model.size()));
@@ -152,21 +154,21 @@ public class Informacion extends Fragment implements View.OnClickListener {
 
             }
         });
-
+        textViewSugerirCambio=(TextView) view.findViewById(R.id.textViewSugerirCambio);
         titulo = (TextView) view.findViewById(R.id.textViewTituloAT2);
         titulo.setText(atractivoTuristico.getNombre());
         textViewDescripcionAT =view.findViewById(R.id.textViewDescripcionAT);
         //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         imageView=view.findViewById(R.id.imageViewVAT);
-        textViewButtonModificarDescripcion =view.findViewById(R.id.textViewModificarDescripcion);
+
         getImagenesAtractivoTuristico();
         textViewratingBar=view.findViewById(R.id.textViewRatingBar);
         textViewratingBar.setOnClickListener(this);
         ratingBar=view.findViewById(R.id.rating);
-        textViewButtonModificarCalificacion =view.findViewById(R.id.textViewCalificar);
+
         linearLayoutcategorias=view.findViewById(R.id.linearLatyoutCategorias);
         tagGroup = (TagView)view.findViewById(R.id.tag_group2);
-        textViewButtonModificarCategorias =view.findViewById(R.id.textViewModificarCategorias);
+
         textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -212,50 +214,58 @@ public class Informacion extends Fragment implements View.OnClickListener {
 
             }
         });
-        textViewButtonModificarDescripcion.setOnClickListener(new View.OnClickListener() {
+        textViewSugerirCambio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
-                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para modificar descripción de atractivo turistico!",Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(Informacion.this.getActivity(), SetDescripcionAtractivoTuristico.class);
-                    intent.putExtra("imagenes", imagenes);
-                    intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SugerirCambioAtractivoTuristico.class);
+                intent.putExtra("imagenes", imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
             }
         });
-        textViewButtonModificarCategorias.setOnClickListener(new View.OnClickListener() {
+
+        if(!atractivoTuristico.getTelefono().equals("")){
+            creaInformacionAdicional("Teléfono",atractivoTuristico.getTelefono());
+        }
+        if(!atractivoTuristico.getHorarioDeAtencion().equals("")){
+            creaInformacionAdicional("Horario de Atención",atractivoTuristico.getHorarioDeAtencion());
+        }
+        if(!atractivoTuristico.getPaginaWeb().equals("")){
+            creaInformacionAdicional("Página Web",atractivoTuristico.getPaginaWeb());
+        }
+        if(!atractivoTuristico.getRedesSociales().equals("")){
+            creaInformacionAdicional("Redes Sociales",atractivoTuristico.getRedesSociales());
+        }
+
+        textViewAñadirInformacionAdicional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
-                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para modificar categorias de atractivo turistico!",Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(Informacion.this.getActivity(), SetCategoriasAtractivoTuristico.class);
-                    intent.putExtra("imagenes", imagenes);
-                    intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
-                }
-            }
-        });
-        textViewButtonModificarCalificacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
-                    Toast.makeText(Informacion.this.getActivity(),"Debe registrarse para textViewButtonModificarCalificacion atractivo turistico!",Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(Informacion.this.getActivity(), SetCalificacionAtractivoTuristico.class);
-                    intent.putExtra("imagenes", imagenes);
-                    intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), InformacionAdicionalAT.class);
+                intent.putExtra("imagenes", imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
             }
         });
         return view;
     }
 
 
-
+    public void creaInformacionAdicional(String titulo,String contenido){
+        LinearLayout linearLayout=new LinearLayout(VisualizarAtractivoTuristicoFragment.this.getActivity());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(params);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        TextView textView= new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
+        textView.setText(titulo);
+        textView.setTextColor(Color.BLACK);
+        textView.setTypeface(null, Typeface.BOLD);
+        TextView textView1= new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
+        textView1.setText(contenido);
+        linearLayout.addView(textView);
+        linearLayout.addView(textView1);
+        linearLayoutAñadirInformacionAdicional.addView(linearLayout);
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -295,7 +305,7 @@ public class Informacion extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
     private void getImagenesAtractivoTuristico(){
-                Glide.with(Informacion.this)
+                Glide.with(VisualizarAtractivoTuristicoFragment.this)
                         .load(imagenes.get(0).getUrl())
                         .fitCenter()
                         .centerCrop()
