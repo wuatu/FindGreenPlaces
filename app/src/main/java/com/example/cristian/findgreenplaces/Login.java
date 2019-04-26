@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private static String IDUSUARIO = "mispreferencias2";
     private static String NOMBRE = "nombre";
     private static String APELLIDO = "apellido";
+    private static String CORREO = "correo";
     private boolean sesionIniciada=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             String key=leerValorString(Login.this,IDUSUARIO);
             String nombre=leerValorString(Login.this,NOMBRE);
             String apellido=leerValorString(Login.this,APELLIDO);
-            IdUsuario idUsuario=new IdUsuario(key,nombre,apellido);
+            String correo=leerValorString(Login.this,CORREO);
+            IdUsuario idUsuario=new IdUsuario(key,nombre,apellido,correo);
             ejecutarMainActivity();
         }
         // Set up the login form.
@@ -332,7 +334,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                                IdUsuario idUsuario=new IdUsuario(usuario.getId(),usuario.getNombre(),usuario.getApellido());
+                                IdUsuario idUsuario=new IdUsuario(usuario.getId(),usuario.getNombre(),usuario.getApellido(),usuario.getEmail());
                                 sesionIniciada=true;
                                 guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
                                 guardarValorString(Login.this,IDUSUARIO,usuario.getId());

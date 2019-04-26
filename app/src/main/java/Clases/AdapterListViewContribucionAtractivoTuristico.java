@@ -1,15 +1,18 @@
 package Clases;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.PopupMenu;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,5 +60,11 @@ public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter {
         ciudad.setText(atractivoTuristicos.get(position).getCiudad());
         comuna.setText(atractivoTuristicos.get(position).getComuna());
         return convertView;
+    }
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(AdapterListViewContribucionAtractivoTuristico.this.context, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.main, popup.getMenu());
+        popup.show();
     }
 }

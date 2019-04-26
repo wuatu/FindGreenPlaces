@@ -116,12 +116,70 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/contenedorMegustaEIr"
                     android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/contenedorIr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/textViewIr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Ir"
+                            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+                        <ImageView
+                            android:id="@+id/imageViewIr"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ir" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contenedorMeGusta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="Me Gusta"
+                            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+                        <ImageView
+                            android:id="@+id/imageViewLike"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/likeoff"
+                            android:tag="dislikeoff" />
+
+                        <TextView
+                            android:id="@+id/contadorLikes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+            </LinearLayout>
             </LinearLayout>
 
             <View
@@ -392,9 +450,10 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@color/com_facebook_button_background_color_disabled" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
                     android:background="@color/com_facebook_button_background_color_focused"
                     android:orientation="vertical"
@@ -410,38 +469,55 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <ListView
-                        android:id="@+id/ma_lv_lista"
+                    <LinearLayout
+                        android:id="@+id/comentario"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="40dp"
-                        android:background="@color/com_facebook_button_background_color_focused">
-                        android:layout_marginTop="40dp" />
-                    </ListView>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/com_facebook_button_background_color_disabled" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="Ver mas comentarios"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/com_facebook_button_background_color_disabled" />
+                        <LinearLayout
+                            android:id="@+id/comentario2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+                        <View
+                            android:id="@+id/divideComentario"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/com_facebook_button_background_color_disabled" />
+                    </LinearLayout>
+
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/com_facebook_button_background_color_disabled" />
+
+                <TextView
+                    android:id="@+id/textViewVerMasComentarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="Ver mas comentarios"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/com_facebook_button_background_color_disabled" />
 
             </LinearLayout>
         </LinearLayout>

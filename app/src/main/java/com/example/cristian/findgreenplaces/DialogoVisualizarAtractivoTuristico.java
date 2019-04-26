@@ -128,7 +128,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
                     imagenes.add(imagen);
 
                 }
-                Glide.with(DialogoVisualizarAtractivoTuristico.this)
+                Glide.with(getApplicationContext())
                         .load(imagenes.get(0).getUrl())
                         .fitCenter()
                         .centerCrop()

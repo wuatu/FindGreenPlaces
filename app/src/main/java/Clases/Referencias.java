@@ -1,7 +1,5 @@
 package Clases;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class Referencias {
     public static final String ATRACTIVOTURISTICO="atractivoTuristico";
@@ -13,4 +11,13 @@ public class Referencias {
     public static final String USUARIO="usuario";
     public static final String CONTRIBUCIONES="contribuciones";
     public static final String ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO="atractivoTuristicoEsComentadoPorUsuario";
+    public static final String CONTADORLIKE="contadorLike";
+    public static final String CONTADORDISLIKE="contadorDislike";
+    public static final String COMENTARIOMEGUSTA="comentarioMeGusta";
+    public static final String MEGUSTA="meGusta";
+    public static final String NOMEGUSTA="noMeGusta";
+    public static final String MEGUSTACOMENTARIO="meGustaComentario";
+    public static final String USUARIOLEGUSTAATRACTIVOTURISTICO="usuarioLeGustaAtractivoTuristico";
+    public static final String CONTADORMEGUSTAATRACTIVOTURISTICO="contadorMeGustaAtractivoTuristico";
+
 }

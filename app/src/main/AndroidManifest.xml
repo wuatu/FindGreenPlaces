@@ -111,7 +111,11 @@
             android:name=".InformacionAdicionalAtractivoTuristico"
             android:label="@string/title_activity_informacion_adicional_atractivo_turistico"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".InformacionAdicionalAT"></activity>
+        <activity android:name=".InformacionAdicionalAT" />
+        <activity android:name=".HorarioDeAtencion" />
+        <activity android:name=".TelefonoAT" />
+        <activity android:name=".PaginaWebAT" />
+        <activity android:name=".RedesSocialesAT"></activity>
     </application>
 
 </manifest>

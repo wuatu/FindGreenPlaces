@@ -137,6 +137,12 @@ public class MenuPrincipal extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        /*TextView textViewNombre=navigationView.findViewById(R.id.textViewNombre);
+        TextView textViewCorreo=navigationView.findViewById(R.id.textViewCorreo);
+        textViewNombre.setText("as");
+        textViewCorreo.setText(IdUsuario.getCorreo());*/
+
         navigationView.setNavigationItemSelectedListener(this);
         Log.v("taza2",IdUsuario.getNombreUsuario());
 

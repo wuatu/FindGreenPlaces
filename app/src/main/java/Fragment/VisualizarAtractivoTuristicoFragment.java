@@ -1,18 +1,25 @@
 package Fragment;
 
+import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -31,6 +38,7 @@ import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetDescripcionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +49,11 @@ import java.util.ArrayList;
 
 import Clases.AdapterListViewComentarioAT;
 import Clases.AtractivoTuristico;
+import Clases.AtractivoTuristicoMeGusta;
 import Clases.CalificacionPromedio;
 import Clases.Categoria;
 import Clases.Comentario;
+import Clases.ContadorMeGustaAtractivoTuristico;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
@@ -56,8 +66,8 @@ import Clases.Referencias;
  * Use the {@link VisualizarAtractivoTuristicoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VisualizarAtractivoTuristicoFragment extends Fragment implements View.OnClickListener {
-    AtractivoTuristico atractivoTuristico;
+public class VisualizarAtractivoTuristicoFragment extends Fragment implements View.OnClickListener, LocationListener {
+
     ArrayList<Categoria> categorias;
     private TextView titulo;
     private TextView textViewDescripcionAT;
@@ -65,13 +75,19 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private TextView textViewAñadirInformacionAdicional;
     private LinearLayout linearLayoutAñadirInformacionAdicional;
     private RatingBar ratingBar;
+    private RatingBar ratingBar2;
     private ImageView imageView;
     private TextView textViewratingBar;
+    private TextView textViewratingBar2;
     private TextView textViewOpiniones;
+    private TextView textViewOpiniones2;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     ArrayList<Imagen> imagenes;
+    AtractivoTuristico atractivoTuristico;
     View view;
+    TextView textViewVerMasComentarios;
+    Button botonCalificar;
 
     LinearLayout linearLayoutcategorias;
     TagView tagGroup;
@@ -79,6 +95,12 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private ListView lista;
     private Adapter adapter;
     ArrayList<Comentario> model;
+    ListView listView;
+    Fragment fragmentComentariosAT;
+    FragmentTransaction transaction;
+    LinearLayout linearLayoutComentario;
+
+    LatLng currentLatLng;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -126,7 +148,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_visualizar_atractivo_turistico, container, false);
@@ -134,19 +156,50 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         mDatabase=database.getReference();
         linearLayoutAñadirInformacionAdicional=view.findViewById(R.id.linearLatyoutInformacionAdicional);
         textViewAñadirInformacionAdicional=view.findViewById(R.id.textViewAñadirInformacionAdicional);
+        textViewVerMasComentarios=view.findViewById(R.id.textViewVerMasComentarios);
+        linearLayoutComentario=view.findViewById(R.id.comentario);
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
-        lista=(ListView)view.findViewById(R.id.ma_lv_lista);
-        mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        botonCalificar=view.findViewById(R.id.botonCalificar);
+
+        //setListViewHeightBasedOnChildren(lista);
+        ImageView imageViewIr=view.findViewById(R.id.imageViewIr);
+        imageViewIr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+atractivoTuristico.getLatitud()+","+atractivoTuristico.getLongitud()+"&travelmode=driving"));
+                startActivity(intent);
+            }
+        });
+//https://www.google.com/maps/dir/?api=1&origin=47.5951518,-122.3316393&destination=47.5951518,-112.3316393&travelmode=driving
+        mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 model.removeAll(model);
+                int i=0;
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+
                     model.add(dataSnapshot1.getValue(Comentario.class));
+                    Comentario comentario=dataSnapshot1.getValue(Comentario.class);
+                    LinearLayout layoutNombreApellido = view.findViewById(R.id.comentario2);
+
+                    TextView textViewNombreApellido=new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
+                    textViewNombreApellido.setTextColor(Color.BLACK);
+                    textViewNombreApellido.setText(comentario.getNombreUsuario()+" "+comentario.getApellidoUsuario());
+
+                    TextView textViewComentario=new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
+                    textViewComentario.setText(comentario.getComentario());
+
+                    layoutNombreApellido.addView(textViewNombreApellido);
+                    layoutNombreApellido.addView(textViewComentario);
+
+                    if(i==1){
+                        break;
+                    }
+                    i++;
                 }
-                adapter=new AdapterListViewComentarioAT(getActivity(),model);
-                lista.setAdapter((ListAdapter) adapter);
-                Log.v("taza3",String.valueOf(model.size()));
+
             }
 
             @Override
@@ -163,13 +216,18 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
         getImagenesAtractivoTuristico();
         textViewratingBar=view.findViewById(R.id.textViewRatingBar);
+        textViewratingBar2=view.findViewById(R.id.textViewRatingBar2);
         textViewratingBar.setOnClickListener(this);
+        textViewratingBar2.setOnClickListener(this);
         ratingBar=view.findViewById(R.id.rating);
+        ratingBar2=view.findViewById(R.id.rating2);
 
         linearLayoutcategorias=view.findViewById(R.id.linearLatyoutCategorias);
         tagGroup = (TagView)view.findViewById(R.id.tag_group2);
 
         textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
+        textViewOpiniones2=view.findViewById(R.id.textViewOpiniones2);
+
         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -177,23 +235,6 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
-                if(calificacionPromedio!=null){
-                    String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
-                    textViewratingBar.setText(calificacion.substring(0,3));
-                    ratingBar.setRating(Float.parseFloat(calificacion));
-                    textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
-                    ratingBar.setEnabled(false);
-                }
-            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -223,20 +264,26 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 startActivity(intent);
             }
         });
-
+        int i=0;
         if(!atractivoTuristico.getTelefono().equals("")){
+            i++;
             creaInformacionAdicional("Teléfono",atractivoTuristico.getTelefono());
         }
         if(!atractivoTuristico.getHorarioDeAtencion().equals("")){
+            i++;
             creaInformacionAdicional("Horario de Atención",atractivoTuristico.getHorarioDeAtencion());
         }
         if(!atractivoTuristico.getPaginaWeb().equals("")){
+            i++;
             creaInformacionAdicional("Página Web",atractivoTuristico.getPaginaWeb());
         }
         if(!atractivoTuristico.getRedesSociales().equals("")){
+            i++;
             creaInformacionAdicional("Redes Sociales",atractivoTuristico.getRedesSociales());
         }
-
+        if (i==4){
+            textViewAñadirInformacionAdicional.setVisibility(view.GONE);
+        }
         textViewAñadirInformacionAdicional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +293,111 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 startActivity(intent);
             }
         });
+        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
+                if(calificacionPromedio!=null){
+                    String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
+                    textViewratingBar.setText(calificacion.substring(0,3));
+                    ratingBar.setRating(Float.parseFloat(calificacion));
+                    textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
+                    ratingBar.setEnabled(false);
+
+                    textViewratingBar2.setText(calificacion.substring(0,3));
+                    ratingBar2.setRating(Float.parseFloat(calificacion));
+                    textViewOpiniones2.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
+                    ratingBar2.setEnabled(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        textViewVerMasComentarios();
+        botonCalificar();
+        ImageView imageViewLike=view.findViewById(R.id.imageViewLike);
+        imageViewLike.setTag("likeoff");
+        //comprobar like del usuario al atractivo turistico
+        if(mDatabase.child(Referencias.USUARIOLEGUSTAATRACTIVOTURISTICO).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).getPath().toString()!=null){
+            imageViewLike.setTag("likeon");
+            imageViewLike.setImageResource(R.drawable.likeon);
+        }
+
+
+        TextView textViewContadorLike=view.findViewById(R.id.contadorLikes);
+        textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
+        setImageView(imageViewLike, textViewContadorLike);
         return view;
+    }
+
+    public void setImageView(final ImageView imageViewLike, final TextView textViewContadorLike){
+        imageViewLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imageViewLike.getTag().equals("likeon")){
+                    imageViewLike.setImageResource(R.drawable.likeoff);
+                    imageViewLike.setTag("likeoff");
+                    //elimina el me gusta de un usuario con un atractivo turistico
+                    mDatabase.child(Referencias.USUARIOLEGUSTAATRACTIVOTURISTICO).
+                            child(IdUsuario.getIdUsuario()).
+                            child(atractivoTuristico.getId()).removeValue();
+                    String a=String.valueOf(Integer.valueOf(atractivoTuristico.getContadorMeGusta())-1);
+                    atractivoTuristico.setContadorMeGusta(a);
+                    textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
+
+                    //aumetar en 1 el me gusta del atractivo turistico en la base de datos
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+
+                }else{
+                    imageViewLike.setImageResource(R.drawable.likeon);
+                    imageViewLike.setTag("likeon");
+
+                    DatabaseReference databaseReference=mDatabase.push();
+                    String id=databaseReference.getKey();
+                    AtractivoTuristicoMeGusta atractivoTuristicoMeGusta=new AtractivoTuristicoMeGusta(id,IdUsuario.getIdUsuario(),atractivoTuristico.getId());
+
+                    //añade y vincula el me gusta de un usuario con un atractivo turistico
+                    mDatabase.child(Referencias.USUARIOLEGUSTAATRACTIVOTURISTICO).
+                            child(IdUsuario.getIdUsuario()).
+                            child(atractivoTuristico.getId()).
+                            child(id).
+                            setValue(atractivoTuristicoMeGusta);
+                    String a=String.valueOf(Integer.valueOf(atractivoTuristico.getContadorMeGusta())+1);
+                    atractivoTuristico.setContadorMeGusta(a);
+                    textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
+
+                    //aumetar en 1 el me gusta del atractivo turistico en la base de datos
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                }
+            }
+        });
+    }
+
+    public void botonCalificar(){
+        botonCalificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SetCalificacionAtractivoTuristico.class);
+                intent.putExtra("imagenes", imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
+            }
+        });
+    }
+    public void verComentarios(Comentario comentario){
+
+    }
+
+    public void textViewVerMasComentarios(){
+        textViewVerMasComentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((VisualizarAtractivoTuristico)getActivity()).performStreamClick();
+               // ((VisualizarAtractivoTuristico)getActivity()).mOnNavigationItemSelectedListener(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
+        });
     }
 
 
@@ -288,6 +439,33 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
             break;
         }
+        switch (v.getId()) {
+            case R.id.textViewRatingBar2:
+
+                break;
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLatLng=null;
+
+                location.getLatitude();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     /**
@@ -312,4 +490,13 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         .into(imageView);
 
     }
+
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
+    }
+
 }

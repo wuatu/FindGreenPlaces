@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,7 +70,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
         titulo = (TextView) findViewById(R.id.textViewTituloAT2);
         titulo.setText(atractivoTuristico.getNombre());
         imageView=findViewById(R.id.imageViewVAT);
-        textViewratingBar=findViewById(R.id.textViewRatingBar);
+
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         editTextComentar=findViewById(R.id.editTextComentar);
         textViewTituloComentar=findViewById(R.id.textViewTituloComentarios);
@@ -82,8 +83,10 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                 CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
                 if(calificacionPromedio!=null){
                     String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
-                    textViewratingBar.setText(calificacion.substring(0,3));
-                    ratingBar.setRating(Float.parseFloat(calificacion));
+                    //textViewratingBar.setText(calificacion.substring(0,3));
+                    //ratingBar.setRating(Float.parseFloat(calificacion));
+                    textViewratingBar.setText("5.0");
+                    ratingBar.setRating(Float.parseFloat("5.0"));
                     textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
                 }
             }
@@ -152,12 +155,34 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                 });
                 Query q2=mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
                 String keyComentario=((DatabaseReference) q2).getKey();
-                Comentario comentario=new Comentario(editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario());
+                Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0");
                 ((DatabaseReference) q2).setValue(comentario);
 
             }
         });
 
+        ratingBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    float touchPositionX = event.getX();
+                    float width = ratingBar.getWidth();
+                    float starsf = (touchPositionX / width) * 5.0f;
+                    int stars = (int)starsf + 1;
+                    ratingBar.setRating(stars);
+                    v.setPressed(false);
+                    textViewratingBar.setText(String.valueOf(stars)+".0");
+                }
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setPressed(true);
+                }
+
+                if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    v.setPressed(false);
+                }
+                return true;
+            }
+        });
     }
     private void calculaNuevaCalificacionPromedio(int getTotlaPersonas, double getSumaCalificaciones, float calificacionUsuario) {
         double nuevaSumaCalificaciones=getSumaCalificaciones+calificacionUsuario;

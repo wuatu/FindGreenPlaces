@@ -16,6 +16,7 @@ public class AtractivoTuristico implements Serializable {
     String paginaWeb="";
     String redesSociales="";
     String descripcionCorta="";
+    String contadorMeGusta="0";
 
     public AtractivoTuristico(String id, String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud) {
         this.id = id;
@@ -25,6 +26,14 @@ public class AtractivoTuristico implements Serializable {
         this.descripcion = descripcion;
         this.latitud = latitud;
         this.longitud = longitud;
+    }
+
+    public String getContadorMeGusta() {
+        return contadorMeGusta;
+    }
+
+    public void setContadorMeGusta(String contadorMeGusta) {
+        this.contadorMeGusta = contadorMeGusta;
     }
 
     public String getDescripcionCorta() {

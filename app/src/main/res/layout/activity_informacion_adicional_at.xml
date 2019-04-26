@@ -18,9 +18,15 @@
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="18sp"
         android:textStyle="bold" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/com_facebook_button_background_color_disabled" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewHorario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -30,24 +36,15 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <android.support.design.widget.TextInputLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <AutoCompleteTextView
-            android:id="@+id/editTextHorario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Horario de Atención"
-            android:inputType="textCapWords|textAutoComplete|textEmailSubject"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="14sp" />
-
-    </android.support.design.widget.TextInputLayout>
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/com_facebook_button_background_color_disabled" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textViewTelefono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -57,23 +54,21 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/com_facebook_button_background_color_disabled" />
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/editTextTelefono"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Teléfono"
-            android:inputType="textCapWords|textAutoComplete|textEmailSubject"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="14sp" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewPagina"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -83,22 +78,21 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/com_facebook_button_background_color_disabled" />
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/editTextPagina"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Página Web"
-            android:inputType="textCapWords|textAutoComplete|textEmailSubject"
-            android:maxLines="1"
-            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewRedesSociales"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -108,18 +102,17 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/com_facebook_button_background_color_disabled" />
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/editTextRedes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Redes Sociales"
-            android:inputType="textCapWords|textAutoComplete|textEmailSubject"
-            android:maxLines="1"
-            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout

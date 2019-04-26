@@ -181,7 +181,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         if(requestCode==GALLERY_INTENT && resultCode==RESULT_OK){
             progressDialog.setTitle("Subiendo Foto");
             progressDialog.setMessage("Subiendo Foto a Base de Datos!");
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
             progressDialog.show();
             //imagenes = data.getParcelableArrayListExtra("imagenes");
             //Uri[] uri=new Uri[imagenes.size()];
@@ -271,13 +271,14 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    Log.v("leylaa", dataSnapshot1.getValue().toString());
                     AtractivoTuristico atractivoTuristico =dataSnapshot1.getValue(AtractivoTuristico.class);
                     double latitud,longitud;
                     latitud=atractivoTuristico.getLatitud();
                     longitud=atractivoTuristico.getLongitud();
                     LatLng sydney = new LatLng(latitud,longitud);
                     String key=atractivoTuristico.getId();
-                    mMap.addMarker(new MarkerOptions().snippet(key).position(sydney).title(atractivoTuristico.getNombre()));
+                    mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
                 }
             }
 
@@ -498,10 +499,13 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
                 if(currentMarker==null){
                     currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
+                    currentMarker.setVisible(false);
                 }
                 else{
+
                     currentMarker.remove();
                     currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
+                    currentMarker.setVisible(false);
                     LatLng latLng=currentMarker.getPosition();
                     getStringAddress(latLng.latitude,latLng.longitude);
 

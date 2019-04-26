@@ -31,18 +31,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10sp">
 
 
             <TextView
                 android:id="@+id/textViewTituloAT2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10sp"
                 android:layout_marginBottom="20sp"
                 android:text="Titulo"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -60,12 +59,12 @@
                         android:id="@+id/textViewRatingBar"
                         android:layout_width="115dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5px"
+                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
                         android:text="0"
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                        android:textSize="60sp" />
+                        android:textSize="40sp" />
 
                 </LinearLayout>
 
@@ -76,6 +75,7 @@
                 style="@style/Widget.AppCompat.RatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:layout_marginBottom="10dp"
                 android:numStars="5"
                 android:stepSize="1" />
 
@@ -93,7 +93,7 @@
                     android:gravity="center_horizontal"
                     android:text="0"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textSize="30sp" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -116,14 +116,15 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <AutoCompleteTextView
                         android:id="@+id/editTextComentar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Comentar"
-                        android:inputType="textCapWords|textAutoComplete|textEmailSubject"
+                        android:inputType="textCapWords|textAutoComplete|textMultiLine|textEmailSubject"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="false" />
                 </android.support.design.widget.TextInputLayout>
 
 
@@ -132,7 +133,7 @@
             <Button
                 android:id="@+id/buttonEnviarCalificacion"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Enviar Calificacion" />
         </LinearLayout>

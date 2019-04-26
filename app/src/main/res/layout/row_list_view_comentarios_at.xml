@@ -8,6 +8,7 @@
     android:padding="10dp">
 
     <LinearLayout
+        android:id="@+id/as"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -19,16 +20,28 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="Nombre"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textStyle="bold" />
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         <TextView
             android:id="@+id/textViewApellido"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Apellido"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textStyle="bold" />
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="showPopup"
+                android:src="@drawable/ic_action_more_vert" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <TextView
@@ -36,5 +49,79 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Comentario"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+        android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewReportar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:textColor="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageViewLike"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:tag="likeoff"
+                    android:src="@drawable/likeoff" />
+
+                <TextView
+                    android:id="@+id/textViewNLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="28" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageViewDislike"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:tag="dislikeoff"
+                    android:src="@drawable/dislikeoff" />
+
+                <TextView
+                    android:id="@+id/textViewNDislike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="9" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
