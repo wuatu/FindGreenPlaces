@@ -5,7 +5,7 @@ public class ComentarioMeGusta {
     String idUsuario;
     String idAtractivoTuristico;
     String idComentario;
-    String meGustaComentario;
+    String meGustaComentario="";
 
     public ComentarioMeGusta(){
 

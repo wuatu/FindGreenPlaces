@@ -21,13 +21,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Clases.AdapterListViewComentarioAT;
 import Clases.AtractivoTuristico;
 import Clases.Comentario;
+import Clases.ComentarioMeGusta;
+import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
 
@@ -48,6 +52,7 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
     View view;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
+    HashMap<String,ComentarioMeGusta> comentarioMeGustas=new HashMap<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,16 +110,62 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
         lista=(ListView)view.findViewById(R.id.ma_lv_lista);
 
         //imagenLikeOn
-        mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 model.removeAll(model);
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     model.add(dataSnapshot1.getValue(Comentario.class));
                 }
-                adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico);
-                lista.setAdapter((ListAdapter) adapter);
-                Log.v("taza3",String.valueOf(model.size()));
+                //consulta para saber si el usuario dio like a un comentario
+                ComentarioMeGusta comentarioMeGusta;
+                Query q=mDatabase.child(Referencias.COMENTARIOMEGUSTA).
+                        child(IdUsuario.getIdUsuario()).
+                        child(atractivoTuristico.getId());
+                q.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+
+                            ComentarioMeGusta comentarioMeGusta = dataSnapshot1.getValue(ComentarioMeGusta.class);
+                            comentarioMeGustas.put(comentarioMeGusta.getId(),comentarioMeGusta);
+                        }
+
+                        for ( Comentario comentario : model)
+                        {
+                            //comentario.contexto(ComentariosATFrafment.this.getActivity());
+                            comentario.setImageViewLike(R.drawable.likeoff);
+                            comentario.setImageViewDislike(R.drawable.dislikeoff);
+                            //comentario.getImageViewDislike().setTag(R.drawable.dislikeoff);
+                            if(comentarioMeGustas.get(comentario.getId())!=null){
+                                if(comentarioMeGustas.get(comentario.getId()).getMeGustaComentario().equals(Referencias.MEGUSTA)) {
+                                    /*comentario.getImageViewLike().setImageResource(R.drawable.likeon);
+                                    comentario.getImageViewLike().setTag(R.drawable.likeon);
+                                    comentario.getImageViewDislike().setImageResource(R.drawable.dislikeoff);
+                                    comentario.getImageViewDislike().setTag(R.drawable.dislikeoff);*/
+                                    comentario.setImageViewLike(R.drawable.likeon);
+                                    comentario.setImageViewDislike(R.drawable.dislikeoff);
+                                }
+                                if(comentarioMeGustas.get(comentario.getId()).getMeGustaComentario().equals(Referencias.NOMEGUSTA)) {
+                                    /*comentario.getImageViewDislike().setImageResource(R.drawable.dislikeon);
+                                    comentario.getImageViewDislike().setTag(R.drawable.dislikeon);
+                                    comentario.getImageViewLike().setImageResource(R.drawable.likeoff);
+                                    comentario.getImageViewLike().setTag(R.drawable.likeoff);*/
+                                    comentario.setImageViewLike(R.drawable.likeoff);
+                                    comentario.setImageViewDislike(R.drawable.dislikeon);
+                                }
+
+                            }
+
+                        }
+                        adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico,comentarioMeGustas,view);
+                        lista.setAdapter((ListAdapter) adapter);
+                        Log.v("taza3",String.valueOf(model.size()));
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                });
+
             }
 
             @Override

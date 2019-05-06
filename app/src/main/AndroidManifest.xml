@@ -56,6 +56,10 @@
             android:label="@string/title_activity_visualizar_atractivo_turistico"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
+            android:name=".DialogoReportarComentario"
+            android:label="@string/title_activity_visualizar_atractivo_turistico"
+            android:theme="@style/AppTheme.CustomTheme2" />
+        <activity
             android:name=".AgregarAtractivoTuristico"
             android:label="@string/title_activity_agregar_atractivo_turistico" />
         <activity
@@ -115,7 +119,9 @@
         <activity android:name=".HorarioDeAtencion" />
         <activity android:name=".TelefonoAT" />
         <activity android:name=".PaginaWebAT" />
-        <activity android:name=".RedesSocialesAT"></activity>
+        <activity android:name=".RedesSocialesAT" />
+        <activity android:name=".FotoPerfil" />
+        <activity android:name=".PerfilUsuario"></activity>
     </application>
 
 </manifest>

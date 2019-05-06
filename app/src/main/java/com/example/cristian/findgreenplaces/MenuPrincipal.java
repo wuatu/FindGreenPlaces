@@ -35,12 +35,14 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -137,6 +139,32 @@ public class MenuPrincipal extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.textViewNombre);
+        nav_user.setText(IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario());
+        TextView correo=hView.findViewById(R.id.textViewCorreo);
+        correo.setText(IdUsuario.getCorreo());
+        ImageView imageViewFotoPerfil=hView.findViewById(R.id.imageViewFotoPerfil);
+        if(IdUsuario.getUrl().equals("")) {
+            Glide.with(getApplicationContext())
+                    .load(R.drawable.com_facebook_profile_picture_blank_square)
+                    .fitCenter()
+                    .into(imageViewFotoPerfil);
+        }else{
+            Glide.with(getApplicationContext())
+                    .load(IdUsuario.getUrl())
+                    .fitCenter()
+                    .into(imageViewFotoPerfil);
+
+        }
+        imageViewFotoPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MenuPrincipal.this,FotoPerfil.class);
+                startActivity(intent);
+
+            }
+        });
 
         /*TextView textViewNombre=navigationView.findViewById(R.id.textViewNombre);
         TextView textViewCorreo=navigationView.findViewById(R.id.textViewCorreo);
@@ -383,8 +411,10 @@ public class MenuPrincipal extends AppCompatActivity
                     latitud=atractivoTuristico.getLatitud();
                     longitud=atractivoTuristico.getLongitud();
                     LatLng sydney = new LatLng(latitud,longitud);
+                    Marker marker;
+                    marker=mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
+                    marker.showInfoWindow();
 
-                    mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
                     atractivoTuristicos.add(atractivoTuristico);
                 }
             }
@@ -529,10 +559,11 @@ public class MenuPrincipal extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
+            Intent intent=new Intent(MenuPrincipal.this,PerfilUsuario.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-
+            Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

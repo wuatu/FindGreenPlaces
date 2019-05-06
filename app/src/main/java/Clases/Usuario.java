@@ -9,6 +9,7 @@ public class Usuario {
     int mes;
     int año;
     String password;
+    String urlFotoPerfil="@drawable/com_facebook_profile_picture_blank_square";
 
     public Usuario(String id,String nombre, String apellido, String email, int dia, int mes, int año, String password) {
         this.id=id;
@@ -22,6 +23,14 @@ public class Usuario {
     }
 
     public Usuario() {
+    }
+
+    public String getUrlFotoPerfil() {
+        return urlFotoPerfil;
+    }
+
+    public void setUrlFotoPerfil(String urlFotoPerfil) {
+        this.urlFotoPerfil = urlFotoPerfil;
     }
 
     public String getId() {

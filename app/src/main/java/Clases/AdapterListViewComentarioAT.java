@@ -1,6 +1,8 @@
 package Clases;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,12 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cristian.findgreenplaces.DialogoReportarComentario;
+import com.example.cristian.findgreenplaces.DialogoVisualizarAtractivoTuristico;
+import com.example.cristian.findgreenplaces.MenuPrincipal;
 import com.example.cristian.findgreenplaces.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,21 +28,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Fragment.ComentariosATFrafment;
 
-public class AdapterListViewComentarioAT extends BaseAdapter {
+public class AdapterListViewComentarioAT extends BaseAdapter implements Serializable{
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference mDatabase=database.getReference();
     String comentarioMeGusta;
     Context context;
     ArrayList<Comentario> comentarios;
+    HashMap<String,ComentarioMeGusta> comentarioMeGustas;
     AtractivoTuristico atractivoTuristico;
-    public AdapterListViewComentarioAT(Context context, ArrayList<Comentario> comentarios, AtractivoTuristico atractivoTuristico){
+    View view;
+
+    int i=0;
+    public AdapterListViewComentarioAT(Context context, ArrayList<Comentario> comentarios, AtractivoTuristico atractivoTuristico,HashMap<String,ComentarioMeGusta> comentarioMeGustas,View view){
         this.context=context;
         this.comentarios=comentarios;
         this.atractivoTuristico=atractivoTuristico;
+        this.comentarioMeGustas=comentarioMeGustas;
+        this.view= view;
     }
     @Override
     public int getCount() {
@@ -62,73 +76,85 @@ public class AdapterListViewComentarioAT extends BaseAdapter {
         }
         final TextView nombre=(TextView) convertView.findViewById(R.id.textViewNombre);
         TextView apellido=(TextView)convertView.findViewById(R.id.textViewApellido);
-        TextView comentario=(TextView)convertView.findViewById(R.id.textViewComentario);
+        final TextView comentario=(TextView)convertView.findViewById(R.id.textViewComentario);
         final TextView contadorLike=(TextView)convertView.findViewById(R.id.textViewNLike);
         final TextView contadorDislike=(TextView)convertView.findViewById(R.id.textViewNDislike);
 
+        final ImageView imageViewLike=(ImageView)convertView.findViewById(R.id.imageViewLike);
+        final ImageView imageViewDislike=(ImageView)convertView.findViewById(R.id.imageViewDislike);
+        final ImageView imageViewBotonPuntos=(ImageView)convertView.findViewById(R.id.botonPuntos);
 
         nombre.setText(comentarios.get(position).getNombreUsuario());
         apellido.setText(comentarios.get(position).getApellidoUsuario());
         comentario.setText(comentarios.get(position).getComentario());
         contadorLike.setText(comentarios.get(position).getContadorLike());
         contadorDislike.setText(comentarios.get(position).getContadorDislike());
+        imageViewLike.setImageResource((comentarios.get(position).getImageViewLike()));
+        imageViewDislike.setImageResource((comentarios.get(position).getImageViewDislike()));
+        imageViewBotonPuntos.setTag(comentarios.get(position).getId());
 
-        final ImageView imageViewLike=(ImageView)convertView.findViewById(R.id.imageViewLike);
-        final ImageView imageViewDislike=(ImageView)convertView.findViewById(R.id.imageViewDislike);
+        //Log.v("leyla", comentarios.get(position).getImageViewLike().getTag()+"TTT");
 
+            if (comentarioMeGustas.get(comentarios.get(position).getId()) != null) {
+                ComentarioMeGusta comentarioMeGusta1 = comentarioMeGustas.get(comentarios.get(position).getId());
+                String meGustaComentario = comentarioMeGusta1.getMeGustaComentario();
+                String idComentario = comentarioMeGusta1.getIdComentario();
 
-        //consulta para saber si el usuario dio like a un comentario
-        ComentarioMeGusta comentarioMeGusta;
-        Query q=mDatabase.child(Referencias.COMENTARIOMEGUSTA).
-                child(IdUsuario.getIdUsuario()).
-                child(atractivoTuristico.getId());
+                if (meGustaComentario.equals(Referencias.MEGUSTA) && idComentario.equals(comentarios.get(position).getId())) {
 
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-                    Log.v("leyla", dataSnapshot1.getValue().toString());
-                        ComentarioMeGusta comentarioMeGusta = dataSnapshot1.getValue(ComentarioMeGusta.class);
-
-                        String meGustaComentario = comentarioMeGusta.getMeGustaComentario();
-                        String idComentario=comentarioMeGusta.getIdComentario();
-
-                        if (meGustaComentario.equals(Referencias.MEGUSTA) && idComentario.equals(comentarios.get(position).getId())) {
-                            imageViewLike.setImageResource(R.drawable.likeon);
-                            imageViewLike.setTag("likeon");
-                        }
-                        if (meGustaComentario.equals(Referencias.NOMEGUSTA)&& idComentario.equals(comentarios.get(position).getId())) {
-                            imageViewDislike.setImageResource(R.drawable.dislikeon);
-                            imageViewDislike.setTag("dislikeon");
-                        }
-                    }
-
+                    imageViewLike.setImageResource(R.drawable.likeon);
+                    imageViewLike.setTag(R.drawable.likeon);
+                }
+                if (meGustaComentario.equals(Referencias.NOMEGUSTA) && idComentario.equals(comentarios.get(position).getId())) {
+                    imageViewDislike.setImageResource(R.drawable.dislikeon);
+                    imageViewDislike.setTag(R.drawable.dislikeon);
+                }
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
         imageViewLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imageViewLike.getTag().toString().equals("likeon")) {
+                Log.v("leyla", imageViewLike.getTag().toString()+"1");
+                if(comentarios.get(position).getImageViewLike()==(R.drawable.likeon)) {
+                    disminuyeContadorLikesYEliminaRegistro(position,contadorLike);
+                    Log.v("leyla", imageViewLike.getTag().toString()+"2");
+
+//                    for (int i=0;i<2;i++){
+                    comentarios.get(position).setImageViewLike(R.drawable.likeoff);
+                    comentarioMeGustas.remove(comentarios.get(position).getId());
+                    imageViewLike.setTag(R.drawable.likeoff);
                     imageViewLike.setImageResource(R.drawable.likeoff);
-                    imageViewLike.setTag("likeoff");
-                    disminuyeContadorLikesYEliminaRegistro(position);
+
+                    comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
+                    imageViewDislike.setTag(R.drawable.dislikeoff);
+                    imageViewDislike.setImageResource(R.drawable.dislikeoff);
+  //                  }
+                    //imageViewLike.setImageResource((Integer) (comentarios.get(position).getImageViewLike().getTag()));
+                    /*comentarios.get(position).imageViewLike.setTag(R.drawable.likeoff);
+                    comentarios.get(position).setImageViewLike(imageViewLike);
+                    imageViewLike.setImageResource((Integer) (comentarios.get(position).getImageViewLike().getTag()));*/
+
                 }
-                else {
-                    if(imageViewDislike.getTag().toString().equals("dislikeon")) {
+                else{
+                    Log.v("leyla", imageViewLike.getTag().toString()+"3");
+                    if(comentarios.get(position).getImageViewDislike()==(R.drawable.dislikeon)) {
+                        disminuyeContadorDislikesYEliminaRegistro(position,contadorDislike);
+                        comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
+                        //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.MEGUSTA);
+                        imageViewDislike.setTag(R.drawable.dislikeoff);
                         imageViewDislike.setImageResource(R.drawable.dislikeoff);
-                        imageViewDislike.setTag("dislikeoff");
-                        disminuyeContadorDislikesYEliminaRegistro(position);
+
+                        //imageViewDislike.setImageResource(R.drawable.dislikeoff);
+                        //imageViewDislike.setTag("dislikeoff");
+
                     }
                     //cambio el contador de like de la base de datos y del objeto
                     int a=(Integer.parseInt(comentarios.get(position).getContadorLike())+1);
                     comentarios.get(position).setContadorLike(String.valueOf(a));
                     contadorLike.setText(comentarios.get(position).getContadorLike());
+
+
                     mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).
                             child(comentarios.get(position).getId()).child(Referencias.CONTADORLIKE).setValue(comentarios.get(position).getContadorLike());
 
@@ -143,8 +169,13 @@ public class AdapterListViewComentarioAT extends BaseAdapter {
                             child(comentarioMeGusta.getId()).
                             setValue(comentarioMeGusta);
 
+                    comentarios.get(position).setImageViewLike(R.drawable.likeon);
+                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.MEGUSTA);
+                    imageViewLike.setTag(R.drawable.likeon);
                     imageViewLike.setImageResource(R.drawable.likeon);
-                    imageViewLike.setTag("likeon");
+
+                    //imageViewLike.setImageResource(R.drawable.likeon);
+                    //imageViewLike.setTag(R.drawable.likeon);
                 }
                 //Toast.makeText(AdapterListViewComentarioAT.this.context, imageViewLike.getTag().toString(), Toast.LENGTH_SHORT).show();
 
@@ -154,17 +185,31 @@ public class AdapterListViewComentarioAT extends BaseAdapter {
         imageViewDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imageViewDislike.getTag().toString().equals("dislikeon")) {
+                if(comentarios.get(position).getImageViewDislike()==(R.drawable.dislikeon)) {
+                    disminuyeContadorDislikesYEliminaRegistro(position,contadorDislike);
+                    comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
+                    comentarioMeGustas.remove(comentarios.get(position).getId());
+                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
+                    imageViewDislike.setTag(R.drawable.dislikeoff);
                     imageViewDislike.setImageResource(R.drawable.dislikeoff);
-                    imageViewDislike.setTag("dislikeoff");
-                    disminuyeContadorDislikesYEliminaRegistro(position);
+
+
+                    //imageViewDislike.setImageResource(R.drawable.dislikeoff);
+                    //imageViewDislike.setTag("dislikeoff");
+
 
                 }
                 else{
-                    if(imageViewLike.getTag().toString().equals("likeon")) {
+                    if(comentarios.get(position).getImageViewLike()==(R.drawable.likeon)) {
+                        disminuyeContadorLikesYEliminaRegistro(position,contadorLike);
+                        comentarios.get(position).setImageViewLike(R.drawable.likeoff);
+                        //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
+                        imageViewLike.setTag(R.drawable.likeoff);
                         imageViewLike.setImageResource(R.drawable.likeoff);
-                        imageViewLike.setTag("likeoff");
-                        disminuyeContadorLikesYEliminaRegistro(position);
+
+                        //imageViewLike.setImageResource(R.drawable.likeoff);
+                        //imageViewLike.setTag(R.drawable.likeoff);
+
                     }
 
 
@@ -187,41 +232,66 @@ public class AdapterListViewComentarioAT extends BaseAdapter {
                             setValue(comentarioMeGusta);
 
 
+                    comentarios.get(position).setImageViewDislike(R.drawable.dislikeon);
+                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
+                    imageViewDislike.setTag(R.drawable.dislikeon);
                     imageViewDislike.setImageResource(R.drawable.dislikeon);
-                    imageViewDislike.setTag("dislikeon");
+
+                    //imageViewDislike.setImageResource(R.drawable.dislikeon);
+                    //imageViewDislike.setTag("dislikeon");
                 }
 
+            }
+        });
+
+        imageViewBotonPuntos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //view.setBackgroundColor(context.getResources().getColor(R.color.com_facebook_button_login_silver_background_color_pressed));
+                Intent intent = new Intent(context, DialogoReportarComentario.class);
+                Comentario comentario1 =comentarios.get(position);
+                intent.putExtra("comentario", (Comentario)comentario1);
+              //intent.putExtra("position", position);
+//                intent.putExtra("comentarios", comentarios);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                context.startActivity(intent);
+                //view.setBackgroundColor(context.getResources().getColor(R.color.com_facebook_button_background_color_focused));
             }
         });
         return convertView;
     }
 
-    public void disminuyeContadorLikesYEliminaRegistro(final int position){
+    public void disminuyeContadorLikesYEliminaRegistro(final int position,TextView contadorLike){
         //cambio el contador de like de la base de datos y del objeto
-                   int a=(Integer.parseInt(comentarios.get(position).getContadorLike())-1);
-                    comentarios.get(position).setContadorLike(String.valueOf(a));
-                    mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).
-                            child(comentarios.get(position).getId()).child(Referencias.CONTADORLIKE).setValue(comentarios.get(position).getContadorLike());
+        if(Integer.parseInt(comentarios.get(position).getContadorLike())>0) {
+            int a = (Integer.parseInt(comentarios.get(position).getContadorLike()) - 1);
+            comentarios.get(position).setContadorLike(String.valueOf(a));
+            contadorLike.setText(comentarios.get(position).getContadorLike());
+            mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).
+                    child(comentarios.get(position).getId()).child(Referencias.CONTADORLIKE).setValue(comentarios.get(position).getContadorLike());
 
-                    //eliminar registro me gusta comentario
-                    mDatabase.child(Referencias.COMENTARIOMEGUSTA).
-                            child(IdUsuario.getIdUsuario()).
-                            child(atractivoTuristico.getId()).
-                            child(comentarios.get(position).getId()).removeValue();
+            //eliminar registro me gusta comentario
+            mDatabase.child(Referencias.COMENTARIOMEGUSTA).
+                    child(IdUsuario.getIdUsuario()).
+                    child(atractivoTuristico.getId()).
+                    child(comentarios.get(position).getId()).removeValue();
+        }
     }
-    public void disminuyeContadorDislikesYEliminaRegistro(final int position) {
-
+    public void disminuyeContadorDislikesYEliminaRegistro(final int position, TextView contadorDislike) {
+        if(Integer.parseInt(comentarios.get(position).getContadorDislike())>0){
         //cambio el contador de like de la base de datos y del objeto
         int a = (Integer.parseInt(comentarios.get(position).getContadorDislike()) - 1);
         comentarios.get(position).setContadorDislike(String.valueOf(a));
+        contadorDislike.setText(comentarios.get(position).getContadorDislike());
         mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).
                 child(comentarios.get(position).getId()).child(Referencias.CONTADORDISLIKE).setValue(comentarios.get(position).getContadorDislike());
 
         //eliminar registro me gusta comentario
-        mDatabase.child(Referencias.COMENTARIOMEGUSTA).
+       mDatabase.child(Referencias.COMENTARIOMEGUSTA).
                 child(IdUsuario.getIdUsuario()).
                 child(atractivoTuristico.getId()).
                 child(comentarios.get(position).getId()).removeValue();
+    }
     }
 }
 

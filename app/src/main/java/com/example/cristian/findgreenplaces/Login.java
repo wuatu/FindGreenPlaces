@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private static String IDUSUARIO = "mispreferencias2";
     private static String NOMBRE = "nombre";
     private static String APELLIDO = "apellido";
+    private static String URL = "url";
     private static String CORREO = "correo";
     private boolean sesionIniciada=false;
     @Override
@@ -111,7 +112,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             String nombre=leerValorString(Login.this,NOMBRE);
             String apellido=leerValorString(Login.this,APELLIDO);
             String correo=leerValorString(Login.this,CORREO);
-            IdUsuario idUsuario=new IdUsuario(key,nombre,apellido,correo);
+            String url=leerValorString(Login.this,URL);
+            IdUsuario idUsuario=new IdUsuario(key,nombre,apellido,correo,url);
             ejecutarMainActivity();
         }
         // Set up the login form.
@@ -334,12 +336,14 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                                IdUsuario idUsuario=new IdUsuario(usuario.getId(),usuario.getNombre(),usuario.getApellido(),usuario.getEmail());
+                                IdUsuario idUsuario=new IdUsuario(usuario.getId(),usuario.getNombre(),usuario.getApellido(),usuario.getEmail(),usuario.getUrlFotoPerfil());
                                 sesionIniciada=true;
                                 guardarValorBoolean(Login.this,SESIONINICIADA,sesionIniciada);
                                 guardarValorString(Login.this,IDUSUARIO,usuario.getId());
                                 guardarValorString(Login.this,NOMBRE,usuario.getNombre());
                                 guardarValorString(Login.this,APELLIDO,usuario.getApellido());
+                                guardarValorString(Login.this,CORREO,usuario.getEmail());
+                                guardarValorString(Login.this,URL,IdUsuario.getUrl());
                                 ejecutarMainActivity();
                             }
 

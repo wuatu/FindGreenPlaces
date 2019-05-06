@@ -63,7 +63,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int ancho=dm.widthPixels;
         int alto=dm.heightPixels;
-        getWindow().setLayout((int) (ancho*.95),(int)(alto*.25));
+        getWindow().setLayout((int) (ancho*.99),(int)(alto*.25));
         getWindow().setGravity(Gravity.BOTTOM);
         titulo = (TextView) findViewById(R.id.textViewTituloAT);
         titulo.setText(atractivoTuristico.getNombre());

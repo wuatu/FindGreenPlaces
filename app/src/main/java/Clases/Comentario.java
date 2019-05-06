@@ -1,8 +1,15 @@
 package Clases;
 
+import android.content.Context;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Comentario {
+import com.example.cristian.findgreenplaces.R;
+
+import java.io.Serializable;
+
+public class Comentario implements Serializable {
     String id;
     String comentario;
     String idUsuario;
@@ -10,6 +17,10 @@ public class Comentario {
     String apellidoUsuario;
     String contadorLike;
     String contadorDislike;
+    public int imageViewLike=0;
+    public int imageViewDislike=0;
+    String contadorReportes="0";
+
     public Comentario() {
     }
 
@@ -21,6 +32,30 @@ public class Comentario {
         this.apellidoUsuario=apellidoUsuario;
         this.contadorLike=contadorLike;
         this.contadorDislike=contadorDislike;
+    }
+
+    public String getContadorReportes() {
+        return contadorReportes;
+    }
+
+    public void setContadorReportes(String contadorReportes) {
+        this.contadorReportes = contadorReportes;
+    }
+
+    public int getImageViewLike() {
+        return imageViewLike;
+    }
+
+    public void setImageViewLike(int imageViewLike) {
+        this.imageViewLike = imageViewLike;
+    }
+
+    public int getImageViewDislike() {
+        return imageViewDislike;
+    }
+
+    public void setImageViewDislike(int imageViewDislike) {
+        this.imageViewDislike = imageViewDislike;
     }
 
     public String getId() {

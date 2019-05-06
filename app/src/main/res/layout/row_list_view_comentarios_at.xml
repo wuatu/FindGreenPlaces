@@ -35,7 +35,8 @@
             android:gravity="right"
             android:orientation="horizontal">
 
-            <ImageButton
+            <ImageView
+                android:id="@+id/botonPuntos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="showPopup"
