@@ -1,12 +1,21 @@
 package Fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -14,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cristian.findgreenplaces.R;
@@ -52,6 +63,7 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
     View view;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
+    View progressBar;
     HashMap<String,ComentarioMeGusta> comentarioMeGustas=new HashMap<>();
 
     // TODO: Rename parameter arguments, choose names that match
@@ -103,12 +115,21 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_comentarios_at, container, false);
+        Toolbar toolbar=view.findViewById(R.id.toolbar_camera);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        textView.setText("Comentarios");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
+
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
-        lista=(ListView)view.findViewById(R.id.ma_lv_lista);
-
+        //lista=(ListView)view.findViewById(R.id.ma_lv_lista);
+        progressBar=view.findViewById(R.id.progress_bar);
+        showProgress(true);
         //imagenLikeOn
         mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -158,6 +179,7 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                             }
 
                         }
+                        showProgress(false);
                         adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico,comentarioMeGustas,view);
                         lista.setAdapter((ListAdapter) adapter);
                         Log.v("taza3",String.valueOf(model.size()));
@@ -177,11 +199,39 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
         return view;
     }
 
-    public void setImageViewLike(){
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.camara, menu);
+        return;
     }
 
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            //mLoginFormView=findViewById(R.id.progress_bar);
 
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressBar.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
 
 
 

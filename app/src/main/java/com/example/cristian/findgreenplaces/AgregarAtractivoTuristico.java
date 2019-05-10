@@ -64,11 +64,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Ref;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.CurrentDate;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
@@ -166,10 +169,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 Intent intent=new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 //startActivityForResult(intent,GALLERY_INTENT);
-                //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);U//para subir multiples imagenes
+                //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);U//para subir multiples item_photo
                 //intent.setAction(Intent.ACTION_GET_CONTENT);
                 //startActivityForResult(Intent.createChooser(intent,"Selecciona Fotos"), 1);
-                //intent.putParcelableArrayListExtra("imagenes",imagenes);
+                //intent.putParcelableArrayListExtra("item_photo",item_photo);
                 startActivityForResult(intent,INTENT_EXTRA_IMAGES);
             }
         });
@@ -180,13 +183,13 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==GALLERY_INTENT && resultCode==RESULT_OK){
             progressDialog.setTitle("Subiendo Foto");
-            progressDialog.setMessage("Subiendo Foto a Base de Datos!");
+            progressDialog.setMessage("Subiendo Foto a Base de Datos");
             progressDialog.setCancelable(true);
             progressDialog.show();
-            //imagenes = data.getParcelableArrayListExtra("imagenes");
-            //Uri[] uri=new Uri[imagenes.size()];
+            //item_photo = data.getParcelableArrayListExtra("item_photo");
+            //Uri[] uri=new Uri[item_photo.size()];
             Uri uri=data.getData();
-            //for (int i =0 ; i < imagenes.size(); i++) {
+            //for (int i =0 ; i < item_photo.size(); i++) {
             final StorageReference direccion=mStorageReference.child("fotos").child(uri.getLastPathSegment());
             Task<Uri> urlTask = direccion.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -365,9 +368,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     Double latitud=marker.getPosition().latitude;
                     Double longitud=marker.getPosition().longitude;
 
+
                     DatabaseReference databaseReference= mDatabase.child("atractivoTuristico").push();
                     keyAtractivoTuristico =databaseReference.getKey();
-                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(keyAtractivoTuristico,nombre,ciudad,comuna,descripcion,latitud,longitud);
+                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(keyAtractivoTuristico,nombre,ciudad,comuna,descripcion,latitud,longitud,"0");
                     databaseReference.setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -383,8 +387,12 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                                 categoria.setId(keyCategoria2);
                                 mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(keyAtractivoTuristico).child(keyCategoria2).setValue(categoria);
                             }
-                            Imagen imagen=new Imagen(urlImagen);
-                            mDatabase.child("imagenes").child(keyAtractivoTuristico).push().setValue(imagen);
+                            DatabaseReference databaseReference2=mDatabase.child(Referencias.IMAGENES).child(keyAtractivoTuristico).push();
+                            String key =databaseReference2.getKey();
+                            Date c = Calendar.getInstance().getTime();
+                            String fecha=CurrentDate.CurrentDate(c);
+                            Imagen imagen=new Imagen(key,urlImagen,fecha,IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario(),"0","0");
+                            databaseReference2.setValue(imagen);
                         }
                     });
                     mDatabase.child(Referencias.CONTRIBUCIONES).child(IdUsuario.getIdUsuario()).child(Referencias.ATRACTIVOTURISTICO).child(keyAtractivoTuristico).setValue(atractivoTuristico);

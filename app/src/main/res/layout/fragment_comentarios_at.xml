@@ -2,15 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:background="@color/com_facebook_button_background_color_focused"
     tools:context="Fragment.ComentariosATFrafment">
+    <include
+        layout="@layout/toolbar_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="?attr/actionBarSize"
+
+        >
+
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"
@@ -20,6 +27,7 @@
             android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="24sp"
             android:textStyle="bold" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,16 +35,33 @@
             android:layout_marginBottom="5dp"
             android:background="@color/com_facebook_button_background_color_disabled" />
 
+
     </LinearLayout>
 
 
     <ListView
+
         android:id="@+id/ma_lv_lista"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:background="@color/com_facebook_button_background_color_focused">
-        android:layout_marginTop="40dp" />
-    </ListView>
+        android:layout_marginTop="?attr/actionBarSize"
+
+        android:background="@color/com_facebook_button_background_color_focused">/></ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </RelativeLayout>

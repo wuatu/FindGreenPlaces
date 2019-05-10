@@ -16,8 +16,14 @@ public class Referencias {
     public static final String COMENTARIOMEGUSTA="comentarioMeGusta";
     public static final String MEGUSTA="meGusta";
     public static final String NOMEGUSTA="noMeGusta";
+    public static final String MEGUSTAOFF="meGustaOff";
     public static final String MEGUSTACOMENTARIO="meGustaComentario";
     public static final String USUARIOLEGUSTAATRACTIVOTURISTICO="usuarioLeGustaAtractivoTuristico";
     public static final String CONTADORMEGUSTAATRACTIVOTURISTICO="contadorMeGustaAtractivoTuristico";
+    public static final String FOTOMEGUSTA="fotoMeGusta";
+    public static final String CONTADORVISUALIZACIONES="contadorVisualizaciones";
+    public static final String CONTRIBUCIONESAT="contribucionesAT";
+
+
 
 }

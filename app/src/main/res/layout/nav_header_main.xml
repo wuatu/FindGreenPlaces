@@ -39,7 +39,7 @@
                 android:gravity="bottom"
                 android:text="@string/nav_header_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
             <TextView
                 android:id="@+id/textViewCorreo"
@@ -48,7 +48,7 @@
                 android:gravity="bottom"
                 android:paddingBottom="10dp"
                 android:text="@string/nav_header_subtitle"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
         </LinearLayout>
     </LinearLayout>

@@ -1,26 +1,17 @@
 package Clases;
 
-public class AtractivoTuristicoMeGusta {
+public class MeGustaImagen {
     String id;
     String idUsuario;
     String idAtractivoTuristico;
-    String meGusta;
+    String idImagen;
+    String meGusta="";
 
-    public AtractivoTuristicoMeGusta() {
-    }
-
-    public AtractivoTuristicoMeGusta(String id, String idUsuario, String idAtractivoTuristico, String meGusta) {
+    public MeGustaImagen(String id, String idUsuario, String idAtractivoTuristico, String idImagen, String meGusta) {
         this.id = id;
         this.idUsuario = idUsuario;
         this.idAtractivoTuristico = idAtractivoTuristico;
-        this.meGusta=meGusta;
-    }
-
-    public String getMeGusta() {
-        return meGusta;
-    }
-
-    public void setMeGusta(String meGusta) {
+        this.idImagen = idImagen;
         this.meGusta = meGusta;
     }
 
@@ -46,5 +37,21 @@ public class AtractivoTuristicoMeGusta {
 
     public void setIdAtractivoTuristico(String idAtractivoTuristico) {
         this.idAtractivoTuristico = idAtractivoTuristico;
+    }
+
+    public String getIdImagen() {
+        return idImagen;
+    }
+
+    public void setIdImagen(String idImagen) {
+        this.idImagen = idImagen;
+    }
+
+    public String getMeGusta() {
+        return meGusta;
+    }
+
+    public void setMeGusta(String meGusta) {
+        this.meGusta = meGusta;
     }
 }

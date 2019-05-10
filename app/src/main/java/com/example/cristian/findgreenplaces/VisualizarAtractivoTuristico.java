@@ -19,12 +19,14 @@ import Clases.AtractivoTuristico;
 import Clases.Imagen;
 import Fragment.VisualizarAtractivoTuristicoFragment;
 import Fragment.ComentariosATFrafment;
+import Fragment.FotosATFragment;
 
 public class VisualizarAtractivoTuristico extends AppCompatActivity{
     BottomNavigationView navigation;
     private TextView mTextMessage;
     Fragment fragmentComentariosAT;
     Fragment fragmentVisualizaAT;
+    Fragment fragmentFotosAT;
     FragmentTransaction transaction;
     AtractivoTuristico atractivoTuristico;
     ArrayList<Imagen> imagenes;
@@ -43,7 +45,9 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
                     creaFragmentComentarios();
                     return true;
                 case R.id.navigation_notifications:
+                    creaFragmentFotos();
                     return true;
+
             }
             return false;
         }
@@ -67,6 +71,9 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
         fragmentComentariosAT=new ComentariosATFrafment();
         fragmentComentariosAT.setArguments(args);
+
+        fragmentFotosAT=new FotosATFragment();
+        fragmentFotosAT.setArguments(args);
     }
 
 
@@ -86,6 +93,18 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
         transaction=getFragmentManager().beginTransaction();
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentComentariosAT); // give your fragment container id in first parameter
+        //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();
+        //finish();
+    }
+    public void creaFragmentFotos(){
+        Bundle args = new Bundle();
+        // envio el atractivo turistico serialzable al fragment
+        args.putSerializable("atractivoTuristico", atractivoTuristico);
+        args.putSerializable("imagenes",imagenes);
+
+        transaction=getFragmentManager().beginTransaction();
+        transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentFotosAT); // give your fragment container id in first parameter
         //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();
         //finish();

@@ -25,7 +25,7 @@ public class GetImagenes {
     }
 
     /*public void buscaImagenes(AtractivoTuristico atractivoTuristico){
-        imagenes=new ArrayList<>();
+        item_photo=new ArrayList<>();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         Query q=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId());
@@ -35,8 +35,8 @@ public class GetImagenes {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     Imagen imagen=dataSnapshot1.getValue(Imagen.class);
-                    imagenes.add(imagen);
-                    Log.v("bkn",String.valueOf(imagenes.size()));
+                    item_photo.add(imagen);
+                    Log.v("bkn",String.valueOf(item_photo.size()));
                 }
             }
             @Override

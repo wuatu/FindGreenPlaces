@@ -6,6 +6,11 @@
     android:orientation="vertical"
     tools:context="Fragment.VisualizarAtractivoTuristicoFragment">
 
+    <include
+        layout="@layout/toolbar_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
@@ -15,17 +20,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/imageViewVAT"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:src="@drawable/addimagen" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageViewVAT"
-                android:layout_width="wrap_content"
-                android:layout_height="200dp"
-                android:layout_weight="1"
-                android:src="@drawable/addimagen" />
         </LinearLayout>
 
         <LinearLayout
@@ -34,152 +40,55 @@
             android:orientation="vertical"
             android:padding="10sp">
 
-            <TextView
-                android:id="@+id/textViewTituloAT2"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5sp"
-                android:text="Titulo"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewTituloAT2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Titulo"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/contenedorIr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewIr"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ir" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="106dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginBottom="0dp"
                 android:gravity="left"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="135dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="195dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewRatingBar"
-                                android:layout_width="243dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="5px"
-                                android:layout_weight="1"
-                                android:gravity="center_horizontal"
-                                android:text="4.5"
-                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                                android:textSize="50sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <RatingBar
-                        android:id="@+id/rating"
-                        style="@style/Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5" />
-                    <!--android:scaleX=".6"
-                        android:scaleY=".6"
-                        android:stepSize="0.1"
-                        android:translationX="-50dp"-->
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textViewOpinionesn"
-                            android:layout_width="115dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5px"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:text="0"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/contenedorMegustaEIr"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/contenedorIr"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textViewIr"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="Ir"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
-
-                        <ImageView
-                            android:id="@+id/imageViewIr"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ir" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/contenedorMeGusta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:text="Me Gusta"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
-
-                        <ImageView
-                            android:id="@+id/imageViewLike"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginBottom="10dp"
-                            android:src="@drawable/likeoff"
-                            android:tag="dislikeoff" />
-
-                        <TextView
-                            android:id="@+id/contadorLikes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-            </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <View
@@ -483,13 +392,6 @@
                             android:orientation="vertical">
 
                         </LinearLayout>
-                        <View
-                            android:id="@+id/divideComentario"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@color/com_facebook_button_background_color_disabled" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -518,6 +420,101 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@color/com_facebook_button_background_color_disabled" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutLike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+
+                            <ImageView
+                                android:id="@+id/imageViewLike"
+                                android:layout_width="30dp"
+                                android:layout_height="20dp"
+                                android:layout_marginRight="5dp"
+                                android:src="@drawable/likeoff"
+                                android:tag="likeoff" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Me gusta" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="right"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="Visualizaciones" />
+
+                                <TextView
+                                    android:id="@+id/textViewVisualizacion"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="28" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="Me gusta" />
+
+                                <TextView
+                                    android:id="@+id/contadorLikes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="100" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

@@ -93,6 +93,9 @@ public class MenuPrincipal extends AppCompatActivity
     private final int REQUEST_ACCESS_FINE=0;
     Spinner spinner;
     LinearLayout linearLayoutFocus;
+    NavigationView navigationView;
+    View hView;
+    ImageView imageViewFotoPerfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -138,13 +141,13 @@ public class MenuPrincipal extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView =  navigationView.getHeaderView(0);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        hView =  navigationView.getHeaderView(0);
         TextView nav_user = (TextView)hView.findViewById(R.id.textViewNombre);
         nav_user.setText(IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario());
         TextView correo=hView.findViewById(R.id.textViewCorreo);
         correo.setText(IdUsuario.getCorreo());
-        ImageView imageViewFotoPerfil=hView.findViewById(R.id.imageViewFotoPerfil);
+        imageViewFotoPerfil=hView.findViewById(R.id.imageViewFotoPerfil);
         if(IdUsuario.getUrl().equals("")) {
             Glide.with(getApplicationContext())
                     .load(R.drawable.com_facebook_profile_picture_blank_square)
@@ -162,7 +165,6 @@ public class MenuPrincipal extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent=new Intent(MenuPrincipal.this,FotoPerfil.class);
                 startActivity(intent);
-
             }
         });
 
@@ -565,6 +567,8 @@ public class MenuPrincipal extends AppCompatActivity
             Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
+            Intent intent=new Intent(MenuPrincipal.this,AdaptadorImagenes.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 

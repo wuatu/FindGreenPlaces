@@ -61,7 +61,7 @@ public class RedesSocialesAT extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 /*Intent intent = new Intent(HorarioDeAtencion.this, VisualizarAtractivoTuristico.class);
-                                intent.putExtra("imagenes", imagenes);
+                                intent.putExtra("item_photo", item_photo);
                                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                                 startActivity(intent);*/
                                 Toast.makeText(RedesSocialesAT.this,"Datos enviados correctamente!",Toast.LENGTH_SHORT).show();

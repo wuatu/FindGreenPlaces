@@ -80,10 +80,10 @@ public class FotoPerfil extends AppCompatActivity {
             progressDialog.setMessage("Subiendo Foto a Base de Datos!");
             progressDialog.setCancelable(true);
             progressDialog.show();
-            //imagenes = data.getParcelableArrayListExtra("imagenes");
-            //Uri[] uri=new Uri[imagenes.size()];
+            //item_photo = data.getParcelableArrayListExtra("item_photo");
+            //Uri[] uri=new Uri[item_photo.size()];
             Uri uri=data.getData();
-            //for (int i =0 ; i < imagenes.size(); i++) {
+            //for (int i =0 ; i < item_photo.size(); i++) {
             final StorageReference direccion=mStorageReference.child(IdUsuario.getIdUsuario()).child(uri.getLastPathSegment());
             Task<Uri> urlTask = direccion.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override

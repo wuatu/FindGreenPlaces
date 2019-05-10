@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cristian.findgreenplaces">
 
     <!--
@@ -7,11 +8,16 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -121,7 +127,26 @@
         <activity android:name=".PaginaWebAT" />
         <activity android:name=".RedesSocialesAT" />
         <activity android:name=".FotoPerfil" />
-        <activity android:name=".PerfilUsuario"></activity>
+        <activity android:name=".PerfilUsuario" />
+        <activity android:name=".AdaptadorImagenes" />
+        <activity android:name=".SpaceGalleryActivity" />
+        <activity android:name=".SpacePhotoActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.com.vansuita.pickimage.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/picker_provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".SubirFoto"
+            android:label="@string/title_activity_subir_foto"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

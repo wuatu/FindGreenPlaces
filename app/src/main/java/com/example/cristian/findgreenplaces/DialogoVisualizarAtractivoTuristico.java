@@ -58,7 +58,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
 
         getImagenesAtractivoTuristico();
         linearLayout=findViewById(R.id.contenedorDialogoAT);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         DisplayMetrics dm= new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int ancho=dm.widthPixels;
@@ -119,7 +119,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
     private void getImagenesAtractivoTuristico(){
 
         Query q=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId());
-        Log.v("oooh",q.getRef().toString());
+        Log.v("oooh", q.getRef().toString());
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -128,12 +128,16 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
                     imagenes.add(imagen);
 
                 }
-                Glide.with(getApplicationContext())
-                        .load(imagenes.get(0).getUrl())
-                        .fitCenter()
-                        .centerCrop()
-                        .into(foto);
-                linearLayout();
+                if(imagenes.size()>0) {
+
+                    Glide.with(getApplicationContext())
+                            .load(imagenes.get(0).getUrl())
+                            .fitCenter()
+                            .centerCrop()
+                            .into(foto);
+                }
+                    linearLayout();
+
             }
 
             @Override

@@ -4,24 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     tools:context=".VisualizarContribucionAtractivoTuristico">
-
+    <include
+        layout="@layout/toolbar_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:gravity="center_horizontal"
+
         android:text="Atractivos Turisticos"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <ListView
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/listViewVisualizarAtractivoTuristico"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp" />
+        android:layout_height="match_parent" />
 
 
 </RelativeLayout>

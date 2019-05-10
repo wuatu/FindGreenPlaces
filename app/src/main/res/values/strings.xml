@@ -90,4 +90,5 @@
     <string name="title_activity_informacion_adicional_atractivo_turistico">
         InformacionAdicionalAtractivoTuristico
     </string>
+    <string name="title_activity_subir_foto">SubirFoto</string>
 </resources>

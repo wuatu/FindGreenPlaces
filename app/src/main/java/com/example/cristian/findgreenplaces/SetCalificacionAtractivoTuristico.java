@@ -132,8 +132,8 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         finish();
                                         /*Intent intent = new Intent(SetCalificacionAtractivoTuristico.this, VisualizarAtractivoTuristicoFragment.class);
-                                        intent.putExtra("imagenes",imagenes);
-                                        Log.v("ooooh",String.valueOf(imagenes.size()));
+                                        intent.putExtra("item_photo",item_photo);
+                                        Log.v("ooooh",String.valueOf(item_photo.size()));
                                         intent.putExtra("atractivoTuristico", atractivoTuristico);
                                         startActivity(intent);
                                         finish();*/
