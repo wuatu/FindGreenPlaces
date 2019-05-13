@@ -4,51 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MenuPrincipal"
-    tools:showIn="@layout/app_bar_main">
+    android:background="#00ffffff"
+    tools:context=".Buscar_Maps">
+
+    <include
+        layout="@layout/toolbar_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:theme="@style/AppTheme.AppBarOverlay"></include>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#ffffff">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusableInTouchMode="true"
-            android:focusable="true"
-            android:id="@+id/layoutfocus">
-
-            <AutoCompleteTextView
-                android:id="@+id/autocomplete_region"
-                style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
-                android:layout_width="214dp"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/lupa"
-                android:hint="Buscar"
-                android:nextFocusLeft="@id/autocomplete_region"
-                android:nextFocusUp="@id/autocomplete_region"
-                android:paddingLeft="20dp"
-                android:singleLine="true" />
-
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="98dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+        android:orientation="vertical">
 
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MenuPrincipal"
-            app:uiMapToolbar="false"/>
+            app:uiMapToolbar="false"
+            tools:context=".Buscar_Maps"
+            tools:layout_editor_absoluteY="60dp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00ffffff"
+        android:orientation="vertical"
+        android:paddingTop="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layoutfocus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/com_facebook_button_background_color_focused"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <SearchView
+                    android:id="@+id/autocomplete_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_weight="1">
+
+
+                </SearchView>
+
+                <LinearLayout
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/filtro3" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/contenedorCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="left"
+                android:orientation="vertical">
+
+                <com.cunoraz.tagview.TagView xmlns:tagview="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/tag_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="left"
+                    tagview:lineMargin="5dp"
+                    tagview:tagMargin="5dp"
+                    tagview:textPaddingBottom="5dp"
+                    tagview:textPaddingLeft="8dp"
+                    tagview:textPaddingRight="8dp"
+                    tagview:textPaddingTop="5dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

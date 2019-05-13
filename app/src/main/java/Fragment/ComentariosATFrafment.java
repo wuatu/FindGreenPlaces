@@ -4,18 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -28,12 +31,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cristian.findgreenplaces.R;
+import com.example.cristian.findgreenplaces.SubirFoto;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickCancel;
+import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +54,7 @@ import Clases.ComentarioMeGusta;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.Usuario;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -204,6 +214,38 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
     {
         inflater.inflate(R.menu.camara, menu);
         return;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.camara:
+                //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
+                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                        .setOnPickResult(new IPickResult() {
+                            @Override
+                            public void onPickResult(PickResult r) {
+                                Uri uri=r.getUri();
+                                Intent intent = new Intent(ComentariosATFrafment.this.getActivity(), SubirFoto.class);
+                                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                                intent.putExtra("imagen",uri.toString());
+                                Log.v("descargar",uri.toString());
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setOnPickCancel(new IPickCancel() {
+                            @Override
+                            public void onCancelClick() {
+                                //TODO: do what you have to if user clicked cancel
+                            }
+                        }).show((FragmentActivity) ComentariosATFrafment.this.getActivity());
+                return false;
+            default:
+                break;
+        }
+
+        return false;
     }
 
     /**

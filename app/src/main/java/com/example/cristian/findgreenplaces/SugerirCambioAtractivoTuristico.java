@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +29,6 @@ import Clases.Categoria;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
-import Fragment.VisualizarAtractivoTuristicoFragment;
 
 public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
     TextView textViewButtonModificarCalificacion;
@@ -57,6 +53,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
     TagView tagGroup;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
+    String nivel="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +77,29 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         titulo.setText(atractivoTuristico.getNombre());
         textViewDescripcionAT =findViewById(R.id.textViewDescripcionAT);
         //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
+        textViewButtonModificarTips=findViewById(R.id.textViewModificarTips);
+        textViewButtonModificarHorario=findViewById(R.id.textViewModificarHorario);
+        textViewButtonModificarTelefono=findViewById(R.id.textViewModificarTelefono);
+        textViewButtonModificarPaginaWeb=findViewById(R.id.textViewModificarPagina);
+        textViewButtonModificarRedesSociales=findViewById(R.id.textViewModificarRedes);
+
+        TextView tips= findViewById(R.id.textViewTipsAT);
+        tips.setText(atractivoTuristico.getTipsDeViaje());
+
+        TextView horario= findViewById(R.id.textViewHorarioAT);
+        horario.setText(atractivoTuristico.getHorarioDeAtencion());
+
+        TextView telefono= findViewById(R.id.textViewTelefonoAT);
+        telefono.setText(atractivoTuristico.getTelefono());
+
+        TextView pagina= findViewById(R.id.textViewPaginaAT);
+        pagina.setText(atractivoTuristico.getPaginaWeb());
+
+        TextView redes= findViewById(R.id.textViewRedesAT);
+        redes.setText(atractivoTuristico.getRedesSociales());
+
         imageView=findViewById(R.id.imageViewVAT);
+
 
         getImagenesAtractivoTuristico();
         textViewratingBar=findViewById(R.id.textViewRatingBar);
@@ -121,16 +140,68 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         textViewButtonModificarDescripcion =findViewById(R.id.textViewModificarDescripcion);
         textViewButtonModificarCategorias =findViewById(R.id.textViewModificarCategorias);
 
+        //consulta para saber nivel de usuario
+        mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario()).child(Referencias.NIVEL).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                nivel=dataSnapshot.getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         textViewButtonModificarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
                     Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para modificar descripción de atractivo turistico!",Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
-                    intent.putExtra("imagenes", imagenes);
-                    intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
+                    if(nivel.equals("1") || nivel.equals("2")){
+                        if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
+                            Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
+                            intent.putExtra("imagenes", imagenes);
+                            intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para modificar descripción de otro usuario",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if(nivel.equals("3")){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivity(intent);
+                    }
+
+                }
+            }
+        });
+        textViewButtonModificarTips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
+                }else {
+                    if(nivel.equals("1") || nivel.equals("2")){
+                        if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
+                            Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
+                            intent.putExtra("imagenes", imagenes);
+                            intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para contribuir en tips de otro usuario",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if(nivel.equals("2")){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -138,9 +209,75 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
-                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para modificar categorias de atractivo turistico!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
+                    if(nivel.equals("1") ){
+                        if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
+                            Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
+                            intent.putExtra("imagenes", imagenes);
+                            intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 2 para contribuir en categoria de otro usuario",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if(nivel.equals("2")){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivity(intent);
+                    }
+
+                }
+            }
+        });
+        textViewButtonModificarHorario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(SugerirCambioAtractivoTuristico.this,SetHorarioDeAtencion.class);
+                    intent.putExtra("imagenes", imagenes);
+                    intent.putExtra("atractivoTuristico", atractivoTuristico);
+                    startActivity(intent);
+                }
+            }
+        });
+        textViewButtonModificarTelefono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
+                }else {
+                Intent intent = new Intent(SugerirCambioAtractivoTuristico.this,SetTelefonoAT.class);
+                intent.putExtra("imagenes", imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
+                }
+            }
+        });
+        textViewButtonModificarPaginaWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetPaginaWebAT.class);
+                    intent.putExtra("imagenes", imagenes);
+                    intent.putExtra("atractivoTuristico", atractivoTuristico);
+                    startActivity(intent);
+                }
+            }
+        });
+        textViewButtonModificarRedesSociales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetRedesSocialesAT.class);
                     intent.putExtra("imagenes", imagenes);
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
                     startActivity(intent);

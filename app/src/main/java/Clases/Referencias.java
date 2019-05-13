@@ -22,7 +22,25 @@ public class Referencias {
     public static final String CONTADORMEGUSTAATRACTIVOTURISTICO="contadorMeGustaAtractivoTuristico";
     public static final String FOTOMEGUSTA="fotoMeGusta";
     public static final String CONTADORVISUALIZACIONES="contadorVisualizaciones";
-    public static final String CONTRIBUCIONESAT="contribucionesAT";
+    public static final String CONTRIBUCIONESPORAT="contribucionesPorAT";
+    public static final String CONTRIBUCIONESPORUSUARIO="contribucionesPorUsuario";
+    public static final String DESCRIPCION="descripcion";
+    public static final String CATEGORIA="categoria";
+    public static final String TIPSDEVIAJE="tipsDeViaje";
+    public static final String TELEFONO="telefono";
+    public static final String HORARIODEATENCION="horarioDeAtencion";
+    public static final String PAGINAWEB="paginaWeb";
+    public static final String REDESSOCIALES="redesSociales";
+    public static final String NIVEL="nivel";
+    public static final String PUNTOS="puntos";
+    public static final String PRINCIPIANTE="Principiante";
+    public static final String AVANZADO="Avanzado";
+    public static final String EXPERTO="Experto";
+    public static final String SI="si";
+    public static final String NO="no";
+    public static final String CONOCESESTELUGAR="conocesEsteLugar";
+
+
 
 
 

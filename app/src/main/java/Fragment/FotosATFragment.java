@@ -40,8 +40,11 @@ import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SpaceGalleryActivity;
 import com.example.cristian.findgreenplaces.SpacePhotoActivity;
 import com.example.cristian.findgreenplaces.SubirFoto;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -54,7 +57,9 @@ import java.util.ArrayList;
 import Clases.AtractivoTuristico;
 import Clases.Comentario;
 import Clases.Imagen;
+import Clases.Referencias;
 import Clases.SpacePhoto;
+import Clases.Usuario;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -309,8 +314,5 @@ public class FotosATFragment extends android.app.Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-
 
 }

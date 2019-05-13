@@ -27,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
 import Clases.IdUsuario;
+import Clases.Referencias;
 import Clases.Usuario;
 
 public class Registrar extends AppCompatActivity {
@@ -169,7 +170,7 @@ public class Registrar extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         String userId=task.getResult().getUser().getUid();
-                        Usuario usuario=new Usuario(userId,nombre,apellido,email,Integer.parseInt(dia),Integer.parseInt(mes),Integer.parseInt(año),password);
+                        Usuario usuario=new Usuario(userId,nombre,apellido,email,Integer.parseInt(dia),Integer.parseInt(mes),Integer.parseInt(año),password,"1","0","0",Referencias.PRINCIPIANTE);
                         mDatabase.child("usuario").child(userId).setValue(usuario);
                         Toast.makeText(Registrar.this,"Usuario creado con exito!",Toast.LENGTH_SHORT).show();
                         ejecutarLoginActivity();

@@ -20,15 +20,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Ref;
-
 import Clases.AtractivoTuristico;
 import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Referencias;
 import Clases.Usuario;
 
-public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
+public class SetTipsDeViaje extends AppCompatActivity {
     Usuario usuario;
     AtractivoTuristico atractivoTuristico;
     private TextView titulo;
@@ -40,13 +38,13 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_descripcion_atractivo_turistico);
+        setContentView(R.layout.activity_set_tips_de_viaje);
 
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
-        textView.setText("Editar Descripción");
+        textView.setText("Editar Tips de Viaje");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -62,27 +60,24 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
         //**
         titulo.setText(atractivoTuristico.getNombre());
         //descripcionAntigua.setText(atractivoTuristico.getDescripcion());
-        descripcionNueva.setText(atractivoTuristico.getDescripcion());
+        descripcionNueva.setText(atractivoTuristico.getTipsDeViaje());
         buttonEnviarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetDescripcionAtractivoTuristico.this)
-                        .setTitle("Editar Descripción")
+                new AlertDialog.Builder(SetTipsDeViaje.this)
+                        .setTitle("Editar Tips")
                         .setMessage("Esta seguro que quiere realizar estos cambios?")
                         //.setIcon(R.drawable.aporte)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
-
+                                atractivoTuristico.setTipsDeViaje(descripcionNueva.getText().toString());
                                 mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
-                                //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
                                 DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
                                         child(atractivoTuristico.getId()).
                                         child(IdUsuario.getIdUsuario()).push();
                                 String key=databaseReference.getKey();
-                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
+                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TIPSDEVIAJE,descripcionNueva.getText().toString());
                                 databaseReference.setValue(contribucion);
-
                                 //añade contribucion (a tabla "contribucionPorUsuario") por usuario
                                 mDatabase.child(Referencias.CONTRIBUCIONESPORUSUARIO).
                                         child(IdUsuario.getIdUsuario()).
@@ -96,7 +91,7 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         usuario=dataSnapshot.getValue(Usuario.class);
-                                        int puntos=Integer.valueOf(usuario.getPuntos())+1;
+                                        int puntos=Integer.valueOf(usuario.getPuntos())+2;
                                         if(puntos>=100){
                                             int nivel= Integer.valueOf(usuario.getNivel());
                                             if(nivel==1){
@@ -120,7 +115,7 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
 
                                     }
                                 });
-                                Toast.makeText(SetDescripcionAtractivoTuristico.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SetTipsDeViaje.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         })
@@ -133,8 +128,8 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
         cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetDescripcionAtractivoTuristico.this)
-                        .setTitle("Editar Descripción")
+                new AlertDialog.Builder(SetTipsDeViaje.this)
+                        .setTitle("Editar Tips")
                         .setMessage("Esta seguro que quiere cancelar?")
                         //.setIcon(R.drawable.aporte)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

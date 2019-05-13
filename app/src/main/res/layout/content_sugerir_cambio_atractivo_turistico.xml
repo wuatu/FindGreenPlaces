@@ -466,33 +466,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@color/com_facebook_button_background_color_focused"
-                android:orientation="vertical"
-                android:paddingBottom="10dp">
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:text="Comentarios"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/ma_lv_lista"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="40dp"
-                    android:background="@color/com_facebook_button_background_color_focused">
-                    android:layout_marginTop="40dp" />
-                </ListView>
-            </RelativeLayout>
         </LinearLayout>
 
     </ScrollView>

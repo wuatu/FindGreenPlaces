@@ -120,7 +120,6 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     disminuyeContadorLikesYEliminaRegistro(position,contadorLike);
                     Log.v("leyla", imageViewLike.getTag().toString()+"2");
 
-//                    for (int i=0;i<2;i++){
                     comentarios.get(position).setImageViewLike(R.drawable.likeoff);
                     comentarioMeGustas.remove(comentarios.get(position).getId());
                     imageViewLike.setTag(R.drawable.likeoff);
@@ -129,31 +128,20 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
                     imageViewDislike.setTag(R.drawable.dislikeoff);
                     imageViewDislike.setImageResource(R.drawable.dislikeoff);
-  //                  }
-                    //imageViewLike.setImageResource((Integer) (comentarios.get(position).getImageViewLike().getTag()));
-                    /*comentarios.get(position).imageViewLike.setTag(R.drawable.likeoff);
-                    comentarios.get(position).setImageViewLike(imageViewLike);
-                    imageViewLike.setImageResource((Integer) (comentarios.get(position).getImageViewLike().getTag()));*/
-
+                    disminuyePuntos(position);
                 }
                 else{
                     Log.v("leyla", imageViewLike.getTag().toString()+"3");
                     if(comentarios.get(position).getImageViewDislike()==(R.drawable.dislikeon)) {
                         disminuyeContadorDislikesYEliminaRegistro(position,contadorDislike);
                         comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
-                        //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.MEGUSTA);
                         imageViewDislike.setTag(R.drawable.dislikeoff);
                         imageViewDislike.setImageResource(R.drawable.dislikeoff);
-
-                        //imageViewDislike.setImageResource(R.drawable.dislikeoff);
-                        //imageViewDislike.setTag("dislikeoff");
-
                     }
                     //cambio el contador de like de la base de datos y del objeto
                     int a=(Integer.parseInt(comentarios.get(position).getContadorLike())+1);
                     comentarios.get(position).setContadorLike(String.valueOf(a));
                     contadorLike.setText(comentarios.get(position).getContadorLike());
-
 
                     mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).
                             child(comentarios.get(position).getId()).child(Referencias.CONTADORLIKE).setValue(comentarios.get(position).getContadorLike());
@@ -170,15 +158,12 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                             setValue(comentarioMeGusta);
 
                     comentarios.get(position).setImageViewLike(R.drawable.likeon);
-                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.MEGUSTA);
                     imageViewLike.setTag(R.drawable.likeon);
                     imageViewLike.setImageResource(R.drawable.likeon);
 
-                    //imageViewLike.setImageResource(R.drawable.likeon);
-                    //imageViewLike.setTag(R.drawable.likeon);
-                }
-                //Toast.makeText(AdapterListViewComentarioAT.this.context, imageViewLike.getTag().toString(), Toast.LENGTH_SHORT).show();
+                    aumentaPuntos(position);
 
+                }
             }
         });
 
@@ -189,29 +174,18 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     disminuyeContadorDislikesYEliminaRegistro(position,contadorDislike);
                     comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
                     comentarioMeGustas.remove(comentarios.get(position).getId());
-                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
                     imageViewDislike.setTag(R.drawable.dislikeoff);
                     imageViewDislike.setImageResource(R.drawable.dislikeoff);
-
-
-                    //imageViewDislike.setImageResource(R.drawable.dislikeoff);
-                    //imageViewDislike.setTag("dislikeoff");
-
 
                 }
                 else{
                     if(comentarios.get(position).getImageViewLike()==(R.drawable.likeon)) {
                         disminuyeContadorLikesYEliminaRegistro(position,contadorLike);
                         comentarios.get(position).setImageViewLike(R.drawable.likeoff);
-                        //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
                         imageViewLike.setTag(R.drawable.likeoff);
                         imageViewLike.setImageResource(R.drawable.likeoff);
-
-                        //imageViewLike.setImageResource(R.drawable.likeoff);
-                        //imageViewLike.setTag(R.drawable.likeoff);
-
+                        disminuyePuntos(position);
                     }
-
 
                     //cambio el contador de like de la base de datos y del objeto
                     int a=(Integer.parseInt(comentarios.get(position).getContadorDislike())+1);
@@ -233,16 +207,17 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
 
 
                     comentarios.get(position).setImageViewDislike(R.drawable.dislikeon);
-                    //comentarioMeGustas.get(comentarios.get(position).getId()).setMeGustaComentario(Referencias.NOMEGUSTA);
+
                     imageViewDislike.setTag(R.drawable.dislikeon);
                     imageViewDislike.setImageResource(R.drawable.dislikeon);
 
-                    //imageViewDislike.setImageResource(R.drawable.dislikeon);
-                    //imageViewDislike.setTag("dislikeon");
+
+
                 }
 
             }
         });
+
 
         imageViewBotonPuntos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,6 +250,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     child(IdUsuario.getIdUsuario()).
                     child(atractivoTuristico.getId()).
                     child(comentarios.get(position).getId()).removeValue();
+
         }
     }
     public void disminuyeContadorDislikesYEliminaRegistro(final int position, TextView contadorDislike) {
@@ -292,6 +268,76 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                 child(atractivoTuristico.getId()).
                 child(comentarios.get(position).getId()).removeValue();
     }
+    }
+
+    //Consulta aumenta 1 punto cada vez que un usuario agrega el "me gusta" a una foto
+    public void aumentaPuntos(int position){
+        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(comentarios.get(position).getIdUsuario());
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Usuario usuario=dataSnapshot.getValue(Usuario.class);
+                int puntos=Integer.valueOf(usuario.getPuntos())+1;
+                if(puntos>=100){
+                    int nivel= Integer.valueOf(usuario.getNivel());
+                    if(nivel==1){
+                        usuario.setNivel("2");
+                        usuario.setPuntos("0");
+                        usuario.setNombreNivel(Referencias.AVANZADO);
+                    }
+                    if(nivel==2){
+                        usuario.setNivel("3");
+                        usuario.setPuntos("0");
+                        usuario.setNombreNivel(Referencias.EXPERTO);
+                    }
+                }else{
+                    usuario.setPuntos(String.valueOf(puntos));
+                }
+                databaseReference1.setValue(usuario);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Consulta disminuye 1 punto cada vez que un usuario quita el "me gusta" a una foto
+    public void disminuyePuntos(int position){
+
+        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(comentarios.get(position).getIdUsuario());
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Usuario usuario=dataSnapshot.getValue(Usuario.class);
+                int puntos=Integer.valueOf(usuario.getPuntos());
+                if(puntos>0){
+                    puntos=puntos-1;
+                    if(puntos<0){
+                        int nivel= Integer.valueOf(usuario.getNivel());
+                        if(nivel==2){
+                            usuario.setNivel("1");
+                            usuario.setPuntos("99");
+                            usuario.setNombreNivel(Referencias.PRINCIPIANTE);
+                        }
+                        if(nivel==3){
+                            usuario.setNivel("2");
+                            usuario.setPuntos("99");
+                            usuario.setNombreNivel(Referencias.AVANZADO);
+                        }
+                    }else{
+                        usuario.setPuntos(String.valueOf(puntos));
+                    }
+                    databaseReference1.setValue(usuario);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
 

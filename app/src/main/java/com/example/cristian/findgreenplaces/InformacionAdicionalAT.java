@@ -3,8 +3,6 @@ package com.example.cristian.findgreenplaces;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,11 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -85,7 +80,7 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         textViewHorario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InformacionAdicionalAT.this, HorarioDeAtencion.class);
+                Intent intent = new Intent(InformacionAdicionalAT.this, SetHorarioDeAtencion.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
@@ -97,7 +92,7 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         textViewTelefono.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InformacionAdicionalAT.this, TelefonoAT.class);
+                Intent intent = new Intent(InformacionAdicionalAT.this, SetTelefonoAT.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
@@ -109,7 +104,7 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         textViewPagina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InformacionAdicionalAT.this, PaginaWebAT.class);
+                Intent intent = new Intent(InformacionAdicionalAT.this, SetPaginaWebAT.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
@@ -121,7 +116,7 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         textViewRedesSociales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InformacionAdicionalAT.this, RedesSocialesAT.class);
+                Intent intent = new Intent(InformacionAdicionalAT.this, SetRedesSocialesAT.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);

@@ -3,7 +3,6 @@ package com.example.cristian.findgreenplaces;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,59 +19,68 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Ref;
+import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Contribucion;
 import Clases.IdUsuario;
+import Clases.Imagen;
 import Clases.Referencias;
 import Clases.Usuario;
 
-public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
-    Usuario usuario;
-    AtractivoTuristico atractivoTuristico;
-    private TextView titulo;
-    //private EditText descripcionAntigua;
-    private EditText descripcionNueva;
-    Button buttonEnviarDescripcion;
-    FirebaseDatabase database;
+public class SetHorarioDeAtencion extends AppCompatActivity {
+    Button buttonAceptar;
+    Button buttonCancelar;
     DatabaseReference mDatabase;
+    FirebaseDatabase database;
+    AtractivoTuristico atractivoTuristico;
+    ArrayList<Imagen> imagenes;
+    EditText editTextHorario;
+    Usuario usuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_descripcion_atractivo_turistico);
+        setContentView(R.layout.activity_set_horario_de_atencion);
 
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
-        textView.setText("Editar Descripción");
+        textView.setText("Editar Horario de Atención");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        final FirebaseDatabase database=FirebaseDatabase.getInstance();
-        final DatabaseReference mDatabase=database.getReference();
+        database=FirebaseDatabase.getInstance();
+        mDatabase=database.getReference();
+        buttonAceptar=findViewById(R.id.buttonAceptar);
+        buttonCancelar=findViewById(R.id.buttonCancelar);
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
-        //***
-        titulo=findViewById(R.id.textViewTituloAT3);
-        //descripcionAntigua=findViewById(R.id.textViewDescripcionAnteriorAT);
-        descripcionNueva=findViewById(R.id.textViewNuevaDescripcionAT);
-        buttonEnviarDescripcion=findViewById(R.id.buttonAceptar);
-        //**
-        titulo.setText(atractivoTuristico.getNombre());
-        //descripcionAntigua.setText(atractivoTuristico.getDescripcion());
-        descripcionNueva.setText(atractivoTuristico.getDescripcion());
-        buttonEnviarDescripcion.setOnClickListener(new View.OnClickListener() {
+        imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        editTextHorario=findViewById(R.id.editTextHorario);
+        if(!atractivoTuristico.getHorarioDeAtencion().equals("")){
+            editTextHorario.setText(atractivoTuristico.getHorarioDeAtencion());
+        }
+        aceptar();
+        cancelar();
+    }
+
+    public void aceptar(){
+        buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetDescripcionAtractivoTuristico.this)
-                        .setTitle("Editar Descripción")
-                        .setMessage("Esta seguro que quiere realizar estos cambios?")
-                        //.setIcon(R.drawable.aporte)
+                if(!editTextHorario.getText().equals("")){
+                    atractivoTuristico.setHorarioDeAtencion(editTextHorario.getText().toString());
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                }
+
+                new AlertDialog.Builder(SetHorarioDeAtencion.this)
+                        .setTitle("Información")
+                        .setMessage("Seguro Quieres Enviar Estos Datos?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
+                                atractivoTuristico.setDescripcion(editTextHorario.getText().toString());
 
                                 mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                                 //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
@@ -80,7 +88,7 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
                                         child(atractivoTuristico.getId()).
                                         child(IdUsuario.getIdUsuario()).push();
                                 String key=databaseReference.getKey();
-                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
+                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.HORARIODEATENCION,editTextHorario.getText().toString());
                                 databaseReference.setValue(contribucion);
 
                                 //añade contribucion (a tabla "contribucionPorUsuario") por usuario
@@ -96,7 +104,7 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         usuario=dataSnapshot.getValue(Usuario.class);
-                                        int puntos=Integer.valueOf(usuario.getPuntos())+1;
+                                        int puntos=Integer.valueOf(usuario.getPuntos())+2;
                                         if(puntos>=100){
                                             int nivel= Integer.valueOf(usuario.getNivel());
                                             if(nivel==1){
@@ -120,35 +128,40 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
 
                                     }
                                 });
-                                Toast.makeText(SetDescripcionAtractivoTuristico.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(SetHorarioDeAtencion.this,"Datos enviados correctamente!",Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-
-            }
-        });
-        Button cancelar=findViewById(R.id.buttonCancelar);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(SetDescripcionAtractivoTuristico.this)
-                        .setTitle("Editar Descripción")
-                        .setMessage("Esta seguro que quiere cancelar?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                finish();
+                                // do nothing
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
                         .show();
             }
         });
-
     }
 
+    public void cancelar(){
+        buttonCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(SetHorarioDeAtencion.this)
+                            .setTitle("Información")
+                            .setMessage("Seguro que quieres cancelar?")
+                            //.setIcon(R.drawable.aporte)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .show();
+            }
+        });
+    }
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

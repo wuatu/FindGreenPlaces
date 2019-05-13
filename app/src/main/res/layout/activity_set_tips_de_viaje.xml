@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".SetCategoriasAtractivoTuristico">
+    android:orientation="vertical"
+
+    tools:context=".setTipsDeViaje">
 
     <include
         layout="@layout/toolbar_camera"
@@ -20,84 +21,56 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/textViewTituloAT2"
+            android:id="@+id/textViewTituloAT3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="20sp"
             android:text="Titulo"
             android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="24sp"
             android:textStyle="bold" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/autocomplete_region"
-            style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Categoria"
-            android:singleLine="true" />
-
-    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
-
-            <Button
-                android:id="@+id/buttonaddCategoria"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorPrimary"
-                android:text="Añadir" />
-
-        </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewRatingBar"
+                android:id="@+id/textViewTituloNuevaDescripcionAT"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Categorias"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5px"
+                android:layout_weight="1"
+                android:text="Tips"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="16sp" />
 
         </LinearLayout>
 
-
-    </LinearLayout>
-
-        <com.cunoraz.tagview.TagView xmlns:tagview="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/tag_group3"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            tagview:lineMargin="5dp"
-            tagview:tagMargin="5dp"
-            tagview:textPaddingBottom="5dp"
-            tagview:textPaddingLeft="8dp"
-            tagview:textPaddingRight="8dp"
-            tagview:textPaddingTop="5dp" />
+            android:orientation="horizontal">
 
+            <EditText
+                android:id="@+id/textViewNuevaDescripcionAT"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5px"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="Tips"
+                android:inputType="textCapSentences|textMultiLine"
+                android:text="Tips"
+                android:textAllCaps="false"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/contenedorBotonesAC"
@@ -123,7 +96,7 @@
 
 
             <Button
-                android:id="@+id/buttonEnviarCalificacion"
+                android:id="@+id/buttonAceptar"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -133,4 +106,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>
+

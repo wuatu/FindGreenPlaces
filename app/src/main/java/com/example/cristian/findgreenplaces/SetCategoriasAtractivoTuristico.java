@@ -3,16 +3,19 @@ package com.example.cristian.findgreenplaces;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
@@ -48,9 +51,19 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set_categorias_atractivo_turistico);
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
-        setContentView(R.layout.activity_set_categorias_atractivo_turistico);
+
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        textView.setText("Editar Categorias");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
@@ -119,30 +132,24 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
                 categoriasEliminadas.clear();
                 categoriasAñadidas.clear();
                 categorias.clear();
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(SetCategoriasAtractivoTuristico.this, android.R.style.Theme_Material_Dialog);
-                } else {
-                    builder = new AlertDialog.Builder(SetCategoriasAtractivoTuristico.this);
-                }
-                builder.setTitle("Categorias Actualizadas")
-                        .setMessage("Categorias Actualizadas con Exito!")
+                Toast.makeText(SetCategoriasAtractivoTuristico.this,"Categorias actualizadas correctamente",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        Button cancelar=findViewById(R.id.buttonCancelar);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(SetCategoriasAtractivoTuristico.this)
+                        .setTitle("Editar Descripción")
+                        .setMessage("Esta seguro que quiere cancelar?")
+                        //.setIcon(R.drawable.aporte)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                /*Intent intent = new Intent(SetCategoriasAtractivoTuristico.this, VisualizarAtractivoTuristicoFragment.class);
-                                intent.putExtra("item_photo",item_photo);
-                                Log.v("ooooh",String.valueOf(item_photo.size()));
-                                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                                startActivity(intent);*/
                                 finish();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setNegativeButton(android.R.string.no, null)
                         .show();
             }
         });
@@ -191,4 +198,10 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
 
 
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
+    }
+
 }

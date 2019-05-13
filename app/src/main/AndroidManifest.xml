@@ -110,27 +110,20 @@
             android:name=".SetDescripcionAtractivoTuristico"
             android:label="Actualizar Descripción" />
         <activity
-            android:name=".BuscarMainActivity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".SugerirCambioAtractivoTuristico"
             android:label="@string/title_activity_sugerir_cambio_atractivo_turistico"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".InformacionAdicionalAtractivoTuristico"
-            android:label="@string/title_activity_informacion_adicional_atractivo_turistico"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".InformacionAdicionalAT" />
-        <activity android:name=".HorarioDeAtencion" />
-        <activity android:name=".TelefonoAT" />
-        <activity android:name=".PaginaWebAT" />
-        <activity android:name=".RedesSocialesAT" />
+        <activity android:name=".SetHorarioDeAtencion" />
+        <activity android:name=".SetTelefonoAT" />
+        <activity android:name=".SetPaginaWebAT" />
+        <activity android:name=".SetRedesSocialesAT" />
         <activity android:name=".FotoPerfil" />
         <activity android:name=".PerfilUsuario" />
         <activity android:name=".AdaptadorImagenes" />
         <activity android:name=".SpaceGalleryActivity" />
         <activity android:name=".SpacePhotoActivity" />
+        <activity android:name=".SetTipsDeViaje" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -146,7 +139,15 @@
         <activity
             android:name=".SubirFoto"
             android:label="@string/title_activity_subir_foto"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Buscar_Maps"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DialogoReportarFoto"
+            android:label="@string/title_activity_dialogo_filtro_de_busqueda"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".DialogoReportatAtractivoTuristico"></activity>
     </application>
 
 </manifest>

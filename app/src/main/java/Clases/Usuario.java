@@ -10,8 +10,12 @@ public class Usuario {
     int año;
     String password;
     String urlFotoPerfil="@drawable/com_facebook_profile_picture_blank_square";
+    String nivel;
+    String puntos;
+    String contribuciones;
+    String nombreNivel;
 
-    public Usuario(String id,String nombre, String apellido, String email, int dia, int mes, int año, String password) {
+    public Usuario(String id,String nombre, String apellido, String email, int dia, int mes, int año, String password,String nivel, String puntos, String contribuciones, String nombreNivel) {
         this.id=id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -20,9 +24,45 @@ public class Usuario {
         this.mes = mes;
         this.año = año;
         this.password = password;
+        this.nivel=nivel;
+        this.puntos=puntos;
+        this.contribuciones=contribuciones;
+        this.nombreNivel=nombreNivel;
     }
 
     public Usuario() {
+    }
+
+    public String getNombreNivel() {
+        return nombreNivel;
+    }
+
+    public void setNombreNivel(String nombreNivel) {
+        this.nombreNivel = nombreNivel;
+    }
+
+    public String getContribuciones() {
+        return contribuciones;
+    }
+
+    public void setContribuciones(String contribuciones) {
+        this.contribuciones = contribuciones;
+    }
+
+    public String getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(String puntos) {
+        this.puntos = puntos;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
     }
 
     public String getUrlFotoPerfil() {

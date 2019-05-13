@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -120,32 +121,9 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                             getSumaCalificaciones=calificacionPromedio.getSumaDeCalificaciones();
                         }
                         calculaNuevaCalificacionPromedio(getTotlaPersonas,getSumaCalificaciones,calificacionUsuario);
-                        AlertDialog.Builder builder;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder = new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this, android.R.style.Theme_Material_Dialog);
-                        } else {
-                            builder = new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this);
-                        }
-                        builder.setTitle("Calificacion Enviada")
-                                .setMessage("Calificacion Enviada con Exito!")
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        finish();
-                                        /*Intent intent = new Intent(SetCalificacionAtractivoTuristico.this, VisualizarAtractivoTuristicoFragment.class);
-                                        intent.putExtra("item_photo",item_photo);
-                                        Log.v("ooooh",String.valueOf(item_photo.size()));
-                                        intent.putExtra("atractivoTuristico", atractivoTuristico);
-                                        startActivity(intent);
-                                        finish();*/
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        Toast.makeText(SetCalificacionAtractivoTuristico.this,"Calificación enviada exitosamente!",Toast.LENGTH_SHORT).show();
+                        finish();
+
                     }
 
                     @Override

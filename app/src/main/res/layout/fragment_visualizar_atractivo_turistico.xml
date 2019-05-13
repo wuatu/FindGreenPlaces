@@ -20,6 +20,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewReportar"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_action_more_vert" />
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/imageViewVAT"
             android:layout_width="match_parent"
@@ -30,8 +46,63 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
+
+            <LinearLayout
+                android:id="@+id/contenedorIr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewIr"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/indicaciones" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Indicaciones" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,8 +114,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewTituloAT2"
@@ -56,21 +126,6 @@
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/contenedorIr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/imageViewIr"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ir" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -97,14 +152,13 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/com_facebook_button_background_color_disabled" />
+                android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingBottom="10sp">
+                android:orientation="vertical">
 
                 <!--Descripcion-->
                 <LinearLayout
@@ -138,32 +192,32 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Tips de viaje-->
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewTips"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20px"
-                        android:orientation="vertical">
+                        android:text="Tips de Viaje"
+                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/textViewTips"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Tips de Viaje"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewTipsAT"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tips"
+                        android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/textViewTipsAT"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="tips"
-                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
+                </LinearLayout>
 
                 <!--fin tips de viaje-->
                 <View
@@ -171,7 +225,8 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -192,17 +247,17 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                <!--Horario de atencion-->
+                        <!--Horario de atencion-->
 
                         <!--fin horario de atencion-->
-                <!--Telefono-->
+                        <!--Telefono-->
 
                         <!--fin telefono-->
-                <!--Página web-->
+                        <!--Página web-->
 
                         <!--fin página web-->
 
-                <!--Redes sociales-->
+                        <!--Redes sociales-->
                         <!--fin redes sociales-->
                     </LinearLayout>
                     <!--Fin linearlayout contenedor informacion adicional-->
@@ -216,12 +271,13 @@
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Categorias-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -265,7 +321,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <TextView
                     android:id="@+id/textViewSugerirCambio"
@@ -274,16 +330,85 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
-                    android:text="Sugerir Cambios"
+                    android:text="Contribuir"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Calificar-->
+                <LinearLayout
+                    android:id="@+id/linearLayoutLoConoces"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20px"
+                    android:background="@drawable/my_custom_background"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Encuesta"
+                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20px"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/textViewPregunta"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:padding="20dp"
+                            android:text="¿Conoces este lugar?"
+                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textSize="24sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textViewNo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="No"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textViewSi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Si"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -313,7 +438,7 @@
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
                             android:gravity="center_horizontal"
-                            android:text="4.5"
+                            android:text="0.0"
                             android:textColor="@color/common_google_signin_btn_text_dark_focused"
                             android:textSize="50sp" />
 
@@ -348,6 +473,7 @@
                             style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
                             android:text="Calificar" />
                     </LinearLayout>
 
@@ -358,7 +484,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -401,7 +527,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <TextView
                     android:id="@+id/textViewVerMasComentarios"
@@ -419,7 +545,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_background_color_disabled" />
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -428,14 +554,16 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:id="@+id/linearLayoutLike"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center_horizontal"
                             android:orientation="horizontal"
                             android:padding="10dp">
@@ -460,6 +588,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="right"
                         android:orientation="horizontal">
 

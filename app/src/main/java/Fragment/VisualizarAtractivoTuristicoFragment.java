@@ -11,7 +11,9 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,11 +37,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
+import com.example.cristian.findgreenplaces.DialogoReportatAtractivoTuristico;
 import com.example.cristian.findgreenplaces.InformacionAdicionalAT;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SetDescripcionAtractivoTuristico;
+import com.example.cristian.findgreenplaces.SubirFoto;
 import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,8 +52,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickCancel;
+import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Clases.AdapterListViewComentarioAT;
 import Clases.AtractivoTuristico;
@@ -57,10 +67,12 @@ import Clases.AtractivoTuristicoMeGusta;
 import Clases.CalificacionPromedio;
 import Clases.Categoria;
 import Clases.Comentario;
+import Clases.ConocesEsteLugar;
 import Clases.ContadorMeGustaAtractivoTuristico;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.Usuario;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +89,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private TextView textViewDescripcionAT;
     private TextView textViewSugerirCambio;
     private TextView textViewAñadirInformacionAdicional;
+    private TextView textViewTips;
     private LinearLayout linearLayoutAñadirInformacionAdicional;
     private RatingBar ratingBar;
     private RatingBar ratingBar2;
@@ -96,6 +109,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     LinearLayout linearLayoutcategorias;
     TagView tagGroup;
 
+    String nivel="";
+
     private ListView lista;
     private Adapter adapter;
     ArrayList<Comentario> model;
@@ -110,10 +125,16 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    LinearLayout linearLayoutLike;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    LinearLayout linearLayoutLoConoces;
+    TextView textViewSi;
+    TextView textViewNo;
+    TextView textViewLoConoces;
 
     private OnFragmentInteractionListener mListener;
 
@@ -157,29 +178,85 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_visualizar_atractivo_turistico, container, false);
+
         Toolbar toolbar=view.findViewById(R.id.toolbar_camera);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
-        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        final TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
         textView.setText("Información");
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
+
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         linearLayoutAñadirInformacionAdicional=view.findViewById(R.id.linearLatyoutInformacionAdicional);
         textViewVisualizaciones=view.findViewById(R.id.textViewVisualizacion);
         textViewAñadirInformacionAdicional=view.findViewById(R.id.textViewAñadirInformacionAdicional);
         textViewVerMasComentarios=view.findViewById(R.id.textViewVerMasComentarios);
+        textViewTips=view.findViewById(R.id.textViewTipsAT);
+        textViewTips.setText(atractivoTuristico.getTipsDeViaje());
         linearLayoutComentario=view.findViewById(R.id.comentario);
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
         botonCalificar=view.findViewById(R.id.botonCalificar);
+
+        linearLayoutLoConoces=view.findViewById(R.id.linearLayoutLoConoces);
+        textViewSi=view.findViewById(R.id.textViewSi);
+        textViewNo=view.findViewById(R.id.textViewNo);
+        textViewLoConoces=view.findViewById(R.id.textViewPregunta);
+
+
+        //Consulta para saber si respondio la encuesta "Conoces este Lugar"
+        final DatabaseReference databaseReference=mDatabase.child(Referencias.CONOCESESTELUGAR).child(atractivoTuristico.getId()).
+                child(IdUsuario.getIdUsuario());
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final ConocesEsteLugar conocesEsteLugar;
+                if(dataSnapshot.getValue()==null){
+                    //final ConocesEsteLugar conocesEsteLugar=dataSnapshot.getValue(ConocesEsteLugar.class);
+                    conocesEsteLugar=new ConocesEsteLugar(IdUsuario.getIdUsuario(),atractivoTuristico.getId(),IdUsuario.getIdUsuario(),"","false");
+                    databaseReference.setValue(conocesEsteLugar);
+                }else {
+                        conocesEsteLugar = dataSnapshot.getValue(ConocesEsteLugar.class);
+                        if (conocesEsteLugar.isContestado().equals("true")) {
+                            linearLayoutLoConoces.setVisibility(LinearLayout.GONE);
+                        }
+                }
+                textViewSi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        conocesEsteLugar.setRespuesta(Referencias.SI);
+                        conocesEsteLugar.setContestado("true");
+                        databaseReference.setValue(conocesEsteLugar);
+                        textViewLoConoces.setText("Gracias por su Respuesta.");
+                        textViewSi.setVisibility(TextView.GONE);
+                        textViewNo.setVisibility(TextView.GONE);
+                    }
+                });
+                textViewNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        conocesEsteLugar.setRespuesta(Referencias.NO);
+                        conocesEsteLugar.setContestado("false");
+                        databaseReference.setValue(conocesEsteLugar);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         int contadorVisualizaciones=Integer.valueOf(atractivoTuristico.getContadorVisualizaciones())+1;
         atractivoTuristico.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
         textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).child(Referencias.CONTADORVISUALIZACIONES).setValue(String.valueOf(contadorVisualizaciones));
 
+        linearLayoutLike=view.findViewById(R.id.linearLayoutLike);
         //setListViewHeightBasedOnChildren(lista);
         ImageView imageViewIr=view.findViewById(R.id.imageViewIr);
         imageViewIr.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +359,17 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 startActivity(intent);
             }
         });
+        //consulta para saber nivel de usuario
+        mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario()).child(Referencias.NIVEL).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                nivel=dataSnapshot.getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         int i=0;
         if(!atractivoTuristico.getTelefono().equals("")){
             i++;
@@ -305,10 +393,28 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         textViewAñadirInformacionAdicional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), InformacionAdicionalAT.class);
-                intent.putExtra("imagenes", imagenes);
-                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(getActivity(),"Debe registrarse para contribuir en atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    if(nivel.equals("1") ){
+                        if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
+                            Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), InformacionAdicionalAT.class);
+                            intent.putExtra("imagenes", imagenes);
+                            intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(getActivity(),"Debe ser nivel 2 para añadir información adicional de otro usuario",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if(nivel.equals("2")){
+                        Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), InformacionAdicionalAT.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivity(intent);
+                    }
+
+                }
             }
         });
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -356,13 +462,53 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             }
         });
 
-
+        ImageView imageViewReportar=view.findViewById(R.id.imageViewReportar);
+        imageViewReportar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(),DialogoReportatAtractivoTuristico.class);
+                intent.putExtra("atractivoTuristico",atractivoTuristico);
+                startActivity(intent);
+            }
+        });
 
 
         TextView textViewContadorLike=view.findViewById(R.id.contadorLikes);
         textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
         setImageView(imageViewLike, textViewContadorLike);
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.camara:
+                //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
+                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                        .setOnPickResult(new IPickResult() {
+                            @Override
+                            public void onPickResult(PickResult r) {
+                                Uri uri=r.getUri();
+                                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SubirFoto.class);
+                                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                                intent.putExtra("imagen",uri.toString());
+                                Log.v("descargar",uri.toString());
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setOnPickCancel(new IPickCancel() {
+                            @Override
+                            public void onCancelClick() {
+                                //TODO: do what you have to if user clicked cancel
+                            }
+                        }).show((FragmentActivity) VisualizarAtractivoTuristicoFragment.this.getActivity());
+                return false;
+            default:
+                break;
+        }
+
+        return false;
     }
 
     @Override
@@ -373,7 +519,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     }
 
     public void setImageView(final ImageView imageViewLike, final TextView textViewContadorLike){
-        imageViewLike.setOnClickListener(new View.OnClickListener() {
+        linearLayoutLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(Integer.valueOf(imageViewLike.getTag().toString())==(R.drawable.likeon)){
@@ -393,6 +539,56 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         //aumetar en 1 el me gusta del atractivo turistico en la base de datos
                         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                     }
+                    //disminuye en 1 los puntos de un usuario cada vez que quitan "me gusta"
+                    mDatabase.child(Referencias.CONTRIBUCIONESPORAT).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ArrayList<String> idUsuarios=new ArrayList<>();
+                                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                                    String idUsuario=dataSnapshot1.getKey();
+                                    idUsuarios.add(idUsuario);
+                                    final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(idUsuario);
+                                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Usuario usuario=dataSnapshot.getValue(Usuario.class);
+                                            int puntos=Integer.valueOf(usuario.getPuntos());
+                                            if(puntos>0){
+                                                puntos=puntos-1;
+                                                if(puntos<0){
+                                                    int nivel= Integer.valueOf(usuario.getNivel());
+                                                    if(nivel==2){
+                                                        usuario.setNivel("1");
+                                                        usuario.setPuntos("99");
+                                                        usuario.setNombreNivel(Referencias.PRINCIPIANTE);
+
+                                                    }
+                                                    if(nivel==3){
+                                                        usuario.setNivel("2");
+                                                        usuario.setNivel("99");
+                                                        usuario.setNombreNivel(Referencias.AVANZADO);
+                                                    }
+                                                }else{
+                                                    usuario.setPuntos(String.valueOf(puntos));
+                                                }
+                                                databaseReference.setValue(usuario);
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+
+                            }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
 
                 }else{
@@ -412,6 +608,55 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
                     //aumetar en 1 el me gusta del atractivo turistico en la base de datos
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+
+                    //aumenta en 1 los puntos de un usuario con cada "me gusta"
+                    mDatabase.child(Referencias.CONTRIBUCIONESPORAT).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            ArrayList<String> idUsuarios=new ArrayList<>();
+                            for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                                String idUsuario=dataSnapshot1.getKey();
+                                idUsuarios.add(idUsuario);
+                                final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(idUsuario);
+                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Usuario usuario=dataSnapshot.getValue(Usuario.class);
+                                        int puntos=Integer.valueOf(usuario.getPuntos())+1;
+                                        if(puntos>=100){
+                                            int nivel= Integer.valueOf(usuario.getNivel());
+                                            if(nivel==1){
+                                                usuario.setNivel("2");
+                                                usuario.setPuntos("0");
+                                                usuario.setNombreNivel(Referencias.AVANZADO);
+                                            }
+                                            if(nivel==2){
+                                                usuario.setNivel("3");
+                                                usuario.setPuntos("0");
+                                                usuario.setNombreNivel(Referencias.EXPERTO);
+                                            }
+                                        }else{
+                                            usuario.setPuntos(String.valueOf(puntos));
+
+                                        }
+                                        databaseReference.setValue(usuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
         });

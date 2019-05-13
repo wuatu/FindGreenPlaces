@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="opciones">
-        <item>Por Ciudad</item>
         <item>Mejor Evaluado</item>
         <item>Mas Me Gusta</item>
         <item>Categoria/Etiqueta</item>
+        <item>Mas visto</item>
     </string-array>
 </resources>

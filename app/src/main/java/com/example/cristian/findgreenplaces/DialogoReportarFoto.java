@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,22 +17,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import Clases.AtractivoTuristico;
 import Clases.Comentario;
 import Clases.IdUsuario;
 import Clases.Referencias;
 import Clases.Usuario;
 
-public class DialogoReportarComentario extends AppCompatActivity {
+public class DialogoReportarFoto extends AppCompatActivity {
+
     Comentario comentario;
     AtractivoTuristico atractivoTuristico;
     int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dialogo_reportar_comentario);
+        setContentView(R.layout.activity_dialogo_reportar_foto);
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         final DatabaseReference mDatabase=database.getReference();
 //        getSupportActionBar().hide();
@@ -48,26 +47,16 @@ public class DialogoReportarComentario extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setAttributes(lp);
         TextView textViewReportar=findViewById(R.id.textViewReportar);
-        comentario= (Comentario) getIntent().getSerializableExtra("comentario");
+
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
-//        position=(int) getIntent().getSerializableExtra("position");
-        Log.v("agus", comentario.getApellidoUsuario());
+        int contadorReportes=Integer.valueOf(atractivoTuristico.getContadorReportes())+1;
+        atractivoTuristico.setContadorReportes(String.valueOf(contadorReportes));
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DialogoReportarComentario.this,"El comentario ha sido reportado",Toast.LENGTH_SHORT).show();
-                int reporte=Integer.valueOf(comentario.getContadorReportes())+1;
-                comentario.setContadorReportes(String.valueOf(reporte));
-                //consulta para ver cuantos reportes tiene
-                mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
-                        child(atractivoTuristico.getId()).
-                        child(comentario.getId()).setValue(comentario);
-                //con 10 reportes el comentarios se elimina
-                if(Integer.valueOf(comentario.getContadorReportes())>10){
-                    mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
-                            child(atractivoTuristico.getId()).
-                            child(comentario.getId()).removeValue();
-                }
+                Toast.makeText(DialogoReportarFoto.this,"La foto ha sido reportada  ",Toast.LENGTH_SHORT).show();
                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -103,7 +92,9 @@ public class DialogoReportarComentario extends AppCompatActivity {
                 });
                 finish();
             }
+
         });
+
 
     }
 }
