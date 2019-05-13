@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,6 +119,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     private final int REQUEST_ACCESS_READ_EXTERNAL_STORAGE=0;
     private final int REQUEST_ACCESS_WRITE_EXTERNAL_STORAGE=0;
     String busqueda;
+    SearchView buscarEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +134,36 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         // Referencia al elemento en la vista
         textViewCategoria = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
 
-        busqueda= ((String) getIntent().getStringExtra("busqueda"));
+        //busqueda= ((String) getIntent().getStringExtra("busqueda"));
 
+        buscarEditText = findViewById(R.id.autocomplete_region2);
+        buscarEditText.setQueryHint("Buscar");
+        buscarEditText.setIconified(true);
+        buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.v("santiago",query);
+                mostrarAtractivoTuristicoPorCiudadOComuna(query);
+                return true;
+            }
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+
+        });
+        buscarEditText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
 
         tituloCategoria=findViewById(R.id.categoriasTitulo);
         imagenes=new ArrayList();
@@ -192,6 +223,31 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
     }
 
+    public void mostrarAtractivoTuristicoPorCiudadOComuna(final String busqueda) {
+
+        Geocoder geo = new Geocoder(AgregarAtractivoTuristico.this);
+        int maxResultados = 1;
+        List<Address> adress = null;
+
+        try {
+            adress = geo.getFromLocationName(busqueda, maxResultados);
+
+            Log.v("paco",adress.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (adress != null) {
+            if (adress.size() > 0) {
+                LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
+                addres = adress.get(0);
+
+            } else {
+                Toast.makeText(AgregarAtractivoTuristico.this, "No se encuenta ciudad!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     public void subirImagen(){
 
         botonSubirImagen.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +280,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             setSupportActionBar(toolbar);
             toolbar.setTitleTextColor(Color.WHITE);
             TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
-            textView.setText("Agregar Nuevo Atractivo Turístico");
+            textView.setText("Nuevo Atractivo Turístico");
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -590,8 +646,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             }
         });
 
-
-
         // Add a marker in Sydney and move the camera
         /*LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -622,31 +676,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     }
                 });
 
-        busquedaPorCiudadORegion();
         agregarAtractivoTuristico();
         cancelarAgregarAtractivoTuristico();
         agregarCategorias();
         subirImagen();
-    }
-
-    public void busquedaPorCiudadORegion(){
-        Geocoder geo = new Geocoder(AgregarAtractivoTuristico.this);
-        int maxResultados = 1;
-        List<Address> adress = null;
-        try {
-            adress = geo.getFromLocationName(busqueda, maxResultados);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (adress != null) {
-            if (adress.size() > 0) {
-                LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
-                addres = adress.get(0);
-            } else {
-                Toast.makeText(AgregarAtractivoTuristico.this, "No se encuenta ciudad!", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override

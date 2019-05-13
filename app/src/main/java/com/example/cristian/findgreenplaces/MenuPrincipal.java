@@ -1,6 +1,7 @@
 package com.example.cristian.findgreenplaces;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -133,15 +134,12 @@ public class MenuPrincipal extends AppCompatActivity
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        buscarEditText = findViewById(R.id.autocomplete_region);
-        buscarEditText.setQueryHint("Buscar");
         final float density = getResources().getDisplayMetrics().density;
         final Drawable drawable = getResources().getDrawable(R.drawable.lupa);
         final int width = Math.round(25 * density);
         final int height = Math.round(25 * density);
         drawable.setBounds(0, 0, width, height);
-        //buscarEditText.setCompoundDrawables(drawable,null,null,null);
-        //drawable.setBounds(0,0,50,50);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,39 +187,29 @@ public class MenuPrincipal extends AppCompatActivity
             }
         });
 
-        /*TextView textViewNombre=navigationView.findViewById(R.id.textViewNombre);
-        TextView textViewCorreo=navigationView.findViewById(R.id.textViewCorreo);
-        textViewNombre.setText("as");
-        textViewCorreo.setText(IdUsuario.getCorreo());*/
-
         navigationView.setNavigationItemSelectedListener(this);
         Log.v("taza2", IdUsuario.getNombreUsuario());
 
         if (IdUsuario.getIdUsuario() == null) {
             ejecutarLoginActivity();
         }
-
         // Arreglo con las regiones
         final String[] regions = getResources().getStringArray(R.array.region_array);
 
-        buscarEditText.setIconified(false);
+
+        buscarEditText = findViewById(R.id.autocomplete_region);
+        buscarEditText.setFocusable(false);
+        //buscarEditText.setIconified(false);
+        buscarEditText.requestFocusFromTouch();
+        buscarEditText.setIconified(true);
         //buscarEditText.setQuery("", false);
         //buscarEditText.setIconified(true);
-        bandera=0;
+
         buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.v("santiago",query);
                 mostrarAtractivoTuristicoPorCiudadOComuna(query);
-                for(int i=0;i<regions.length;i++){
-                    if(query.equalsIgnoreCase(regions[i])){
-
-                        bandera=1;
-                        break;
-                    }
-                }
-                //buscarEditText.setQuery("", false);
-                //buscarEditText.setIconified(true);
                 return true;
             }
 

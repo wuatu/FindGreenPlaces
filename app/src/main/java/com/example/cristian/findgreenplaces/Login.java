@@ -122,8 +122,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         botonInvitado=findViewById(R.id.boton_invitado);
 
         callbackManager = CallbackManager.Factory.create();
-        loginFacebookButton = (LoginButton) findViewById(R.id.login_button);
-        loginFacebookButton.setReadPermissions("email");
+        //loginFacebookButton = (LoginButton) findViewById(R.id.login_button);
+        ///loginFacebookButton.setReadPermissions("email");
         registrar=findViewById(R.id.textViewRegistro);
         registrar.setOnClickListener(new OnClickListener() {
             @Override
@@ -135,7 +135,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         });
 
         // Callback registration
-        loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        /*loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 ejecutarMainActivity();
@@ -152,9 +152,9 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             }
 
 
-        });
+        });*/
 
-        loginFacebookButton.setReadPermissions("email");
+        //loginFacebookButton.setReadPermissions("email");
 
 
         mPasswordView = (EditText) findViewById(R.id.password);

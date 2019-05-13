@@ -27,7 +27,7 @@
     <application
         android:name=".FindGreenPlacesApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo2"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -105,8 +105,7 @@
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
             android:label="Atractivos Turísticos Contribuidos" />
-        <activity android:name=".Buscar" />
-        <activity
+
             android:name=".SetDescripcionAtractivoTuristico"
             android:label="Actualizar Descripción" />
         <activity

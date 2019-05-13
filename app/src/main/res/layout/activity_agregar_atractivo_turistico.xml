@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="#ffffff"
     tools:context=".AgregarAtractivoTuristico">
 
     <include
@@ -17,15 +16,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="3">
+        android:layout_weight="4"
+        android:orientation="vertical">
+
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:uiMapToolbar="false"
-            tools:context=".MenuPrincipal"/>
+            tools:context=".MenuPrincipal" />
 
 
         <ImageButton
@@ -38,7 +38,30 @@
             android:background="@null"
             android:paddingBottom="37dp"
             app:srcCompat="@drawable/marcadorpalo"
-            tools:srcCompat="@drawable/marcadorpalo"/>
+            tools:srcCompat="@drawable/marcadorpalo" />
+
+        <LinearLayout
+            android:id="@+id/layoutfocus"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+
+            android:background="@color/com_facebook_button_background_color_focused"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+
+            <SearchView
+                android:id="@+id/autocomplete_region2"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1">
+
+
+            </SearchView>
+
+
+        </LinearLayout>
 
 
     </RelativeLayout>
@@ -47,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:gravity="center_horizontal">
 
         <LinearLayout
@@ -56,6 +79,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
