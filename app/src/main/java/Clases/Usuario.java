@@ -30,6 +30,7 @@ public class Usuario {
         this.nombreNivel=nombreNivel;
     }
 
+
     public Usuario() {
     }
 

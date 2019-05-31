@@ -2,13 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cristian.findgreenplaces">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,9 +15,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -32,7 +28,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".Informacion"></activity>
+        <activity android:name=".AcercaDe" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -63,7 +60,12 @@
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
             android:name=".DialogoReportarComentario"
-            android:label="@string/title_activity_visualizar_atractivo_turistico"
+            android:theme="@style/AppTheme.CustomTheme2" />
+        <activity
+            android:name=".DialogoReportarAtractivoTuristico"
+            android:theme="@style/AppTheme.CustomTheme2" />
+        <activity
+            android:name=".DialogoReportarFoto"
             android:theme="@style/AppTheme.CustomTheme2" />
         <activity
             android:name=".AgregarAtractivoTuristico"
@@ -105,9 +107,6 @@
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
             android:label="Atractivos Turísticos Contribuidos" />
-
-            android:name=".SetDescripcionAtractivoTuristico"
-            android:label="Actualizar Descripción" />
         <activity
             android:name=".SugerirCambioAtractivoTuristico"
             android:label="@string/title_activity_sugerir_cambio_atractivo_turistico"
@@ -123,6 +122,7 @@
         <activity android:name=".SpaceGalleryActivity" />
         <activity android:name=".SpacePhotoActivity" />
         <activity android:name=".SetTipsDeViaje" />
+        <activity android:name=".SetDescripcionAtractivoTuristico" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -142,11 +142,9 @@
         <activity
             android:name=".Buscar_Maps"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".DialogoReportarFoto"
-            android:label="@string/title_activity_dialogo_filtro_de_busqueda"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".DialogoReportatAtractivoTuristico"></activity>
+        <activity android:name=".SetNombreAT" />
+        <activity android:name=".EditarPerfil" />
+        <activity android:name=".OlvidoContrasena" />
     </application>
 
 </manifest>

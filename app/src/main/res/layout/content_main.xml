@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         android:theme="@style/AppTheme.AppBarOverlay"></include>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,9 +22,10 @@
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:uiMapToolbar="false"
+
             tools:context=".Buscar_Maps"
             tools:layout_editor_absoluteY="60dp" />
     </LinearLayout>
@@ -46,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/com_facebook_button_background_color_focused"
-                android:focusable="true"
+
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal">
 
@@ -54,13 +56,14 @@
                     android:id="@+id/autocomplete_region"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:iconifiedByDefault="false">
 
 
                 </SearchView>
 
                 <LinearLayout
-                    android:layout_width="40dp"
+                    android:layout_width="35dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="horizontal"

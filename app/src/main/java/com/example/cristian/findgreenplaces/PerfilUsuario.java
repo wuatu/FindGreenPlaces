@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -14,8 +15,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -38,11 +42,19 @@ public class PerfilUsuario extends AppCompatActivity {
     ImageView imageViewFotoPerfil;
     View progressBar;
     ProgressBar progressBar2;
+    LinearLayout linearLayoutPerfil;
+    Button buttonEditarPerfil;
+    LinearLayout linearLayoutMedallas;
+    LinearLayout linearLayoutBronce;
+    LinearLayout linearLayoutPlata;
+    LinearLayout linearLayoutOro;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_usuario);
-        progressBar=findViewById(R.id.progress_bar);
+
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
@@ -51,22 +63,39 @@ public class PerfilUsuario extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        buttonEditarPerfil=findViewById(R.id.buttonEditarPerfil);
+        linearLayoutPerfil=findViewById(R.id.linearLayoutPerfil);
+
+        linearLayoutMedallas=findViewById(R.id.LayoutMedallas);
+        linearLayoutBronce=findViewById(R.id.LayoutBronce);
+        linearLayoutPlata=findViewById(R.id.LayoutPlata);
+        linearLayoutOro=findViewById(R.id.LayoutOro);
+        //barra circular
+        progressBar=findViewById(R.id.progressBar1);
+        showProgress(true);
+
         progressBar2=findViewById(R.id.seekBar);
 
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
         final DatabaseReference mDatabase=database.getReference();
-        imageViewFotoPerfil=findViewById(R.id.imageViewFotoPerfil);
+        imageViewFotoPerfil=findViewById(R.id.imageViewFotoPerfil1);
         if(IdUsuario.getUrl().equals("")) {
-            Glide.with(getApplicationContext())
+            Glide.with(PerfilUsuario.this)
                     .load(R.drawable.com_facebook_profile_picture_blank_square)
-                    .transform(new CircleTransform(PerfilUsuario.this)).into(imageViewFotoPerfil);
+                    .fitCenter()
+                    .transform(new CircleTransform(PerfilUsuario.this))
+                    .into(imageViewFotoPerfil);
         }else{
-            Glide.with(getApplicationContext())
+            Glide.with(PerfilUsuario.this)
                     .load(IdUsuario.getUrl())
-                    .transform(new CircleTransform(PerfilUsuario.this)).into(imageViewFotoPerfil);
+                    .transform(new CircleTransform(PerfilUsuario.this))
+                    .fitCenter()
+                    .into(imageViewFotoPerfil);
+            Log.v("aburri",IdUsuario.getUrl());
 
         }
-        showProgress(true);
+
         mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -88,6 +117,19 @@ public class PerfilUsuario extends AppCompatActivity {
                 progressBar2.setProgress(Integer.valueOf(usuario.getPuntos()));
                 progressBar2.setEnabled(false);
                 showProgress(false);
+                linearLayoutPerfil.setVisibility(View.VISIBLE);
+                if(nivel.getText().toString().equalsIgnoreCase("1")){
+                    linearLayoutBronce.setVisibility(View.VISIBLE);
+                }
+                if(nivel.getText().toString().equalsIgnoreCase("2")){
+                    linearLayoutBronce.setVisibility(View.VISIBLE);
+                    linearLayoutPlata.setVisibility(View.VISIBLE);
+                }
+                if(Integer.valueOf(nivel.getText().toString())>=3){
+                    linearLayoutPlata.setVisibility(View.VISIBLE);
+                    linearLayoutBronce.setVisibility(View.VISIBLE);
+                    linearLayoutOro.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -96,6 +138,14 @@ public class PerfilUsuario extends AppCompatActivity {
             }
         });
 
+        buttonEditarPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(PerfilUsuario.this,EditarPerfil.class);
+
+                startActivity(intent);
+            }
+        });
     }
     public static class CircleTransform extends BitmapTransformation {
         public CircleTransform(Context context) {

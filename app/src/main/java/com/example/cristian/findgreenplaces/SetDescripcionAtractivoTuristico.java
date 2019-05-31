@@ -2,6 +2,7 @@ package com.example.cristian.findgreenplaces;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import Clases.AtractivoTuristico;
 import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Referencias;
+import Clases.SubirPuntos;
 import Clases.Usuario;
 
 public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
@@ -73,54 +75,11 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
+                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
 
-                                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
-                                //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
-                                DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
-                                        child(atractivoTuristico.getId()).
-                                        child(IdUsuario.getIdUsuario()).push();
-                                String key=databaseReference.getKey();
-                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
-                                databaseReference.setValue(contribucion);
-
-                                //añade contribucion (a tabla "contribucionPorUsuario") por usuario
-                                mDatabase.child(Referencias.CONTRIBUCIONESPORUSUARIO).
-                                        child(IdUsuario.getIdUsuario()).
-                                        child(atractivoTuristico.getId()).
-                                        child(key).
-                                        setValue(contribucion);
-
-                                //subir puntos
-                                final DatabaseReference databaseReference1=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
-                                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        usuario=dataSnapshot.getValue(Usuario.class);
-                                        int puntos=Integer.valueOf(usuario.getPuntos())+1;
-                                        if(puntos>=100){
-                                            int nivel= Integer.valueOf(usuario.getNivel());
-                                            if(nivel==1){
-                                                usuario.setNivel("2");
-                                            }
-                                            if(nivel==2){
-                                                usuario.setNivel("3");
-                                            }
-                                        }else{
-                                            usuario.setPuntos(String.valueOf(puntos));
-
-                                        }
-                                        int contribuciones=Integer.valueOf(usuario.getContribuciones())+1;
-                                        usuario.setContribuciones(String.valueOf(contribuciones));
-                                        databaseReference1.setValue(usuario);
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                                Toast.makeText(SetDescripcionAtractivoTuristico.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK,
+                                        new Intent().putExtra("descripcion", atractivoTuristico.getDescripcion()).
+                                                putExtra("contribucion",contribucion));
                                 finish();
                             }
                         })

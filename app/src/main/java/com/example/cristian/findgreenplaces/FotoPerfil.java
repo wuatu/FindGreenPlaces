@@ -4,13 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +38,8 @@ import Clases.Usuario;
 public class FotoPerfil extends AppCompatActivity {
     private static String PREFS_KEY = "mispreferencias";
     private static String URL = "url";
+
+
     ImageView imageViewFotoPerfil;
     private static final int INTENT_EXTRA_IMAGES=1;
     private static final int GALLERY_INTENT=1;
@@ -40,10 +48,29 @@ public class FotoPerfil extends AppCompatActivity {
     FirebaseDatabase database;
     StorageReference mStorageReference;
     String urlImagen;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto_perfil);
+
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        //textView.setText("Foto de Perfil");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Window window = getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // finally change the color
+        window.setStatusBarColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_focused));
+
         mStorageReference=FirebaseStorage.getInstance().getReference();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -110,6 +137,7 @@ public class FotoPerfil extends AppCompatActivity {
                                 .fitCenter()
                                 .into(imageViewFotoPerfil);
                         Toast.makeText(FotoPerfil.this,"La foto se subio exitosamente!",Toast.LENGTH_SHORT).show();
+
                     } else {
                         // Handle failures
                         // ...
@@ -125,5 +153,10 @@ public class FotoPerfil extends AppCompatActivity {
         editor = settings.edit();
         editor.putString(keyPref, valor);
         editor.commit();
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 }

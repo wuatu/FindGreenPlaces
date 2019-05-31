@@ -5,10 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".VisualizarContribucionAtractivoTuristico">
-    <include
-        layout="@layout/toolbar_camera"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></include>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include
+            layout="@layout/toolbar_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+
+    </android.support.design.widget.AppBarLayout>
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"

@@ -100,13 +100,15 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private static String APELLIDO = "apellido";
     private static String URL = "url";
     private static String CORREO = "correo";
+    TextView textViewOlvidoContrasña;
     private boolean sesionIniciada=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
-
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+        showProgress(true);
         if(leerValorBoolean(Login.this,SESIONINICIADA)){
             String key=leerValorString(Login.this,IDUSUARIO);
             String nombre=leerValorString(Login.this,NOMBRE);
@@ -114,12 +116,22 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             String correo=leerValorString(Login.this,CORREO);
             String url=leerValorString(Login.this,URL);
             IdUsuario idUsuario=new IdUsuario(key,nombre,apellido,correo,url);
+            finish();
             ejecutarMainActivity();
         }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         botonInvitado=findViewById(R.id.boton_invitado);
+        textViewOlvidoContrasña=findViewById(R.id.textViewOlvideContraseña);
+        textViewOlvidoContrasña.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Login.this,OlvidoContrasena.class);
+                startActivity(intent);
+            }
+        });
 
         callbackManager = CallbackManager.Factory.create();
         //loginFacebookButton = (LoginButton) findViewById(R.id.login_button);
@@ -184,15 +196,15 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         });
 
 
-        mProgressView = findViewById(R.id.login_progress);
+
+
         mAuthListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user=firebaseAuth.getCurrentUser();
             }
         };
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+
     }
 
     private void iniciarSesionInvitado() {
@@ -208,7 +220,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         Intent intent=new Intent(Login.this,MenuPrincipal.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     @Override
@@ -355,6 +367,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
 
                     }else{
+                        showProgress(false);
                         Toast.makeText(Login.this,"Error, usuario o contraseña incorrecta!",Toast.LENGTH_SHORT).show();
                     }
                 }

@@ -1,6 +1,8 @@
 package Clases;
 
-public class Contribucion {
+import java.io.Serializable;
+
+public class Contribucion implements Serializable {
     String id;
     String idAtractivoTuristico;
     String idUsuario;

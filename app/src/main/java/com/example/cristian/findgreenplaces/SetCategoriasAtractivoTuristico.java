@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.Contribucion;
+import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
 
@@ -54,6 +56,8 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
         setContentView(R.layout.activity_set_categorias_atractivo_turistico);
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        categorias=((ArrayList<Categoria>)getIntent().getSerializableExtra("categorias"));
+
 
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
@@ -66,18 +70,27 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
-        atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
+
+
         titulo = (TextView) findViewById(R.id.textViewTituloAT2);
         textViewCategoria = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
         titulo.setText(atractivoTuristico.getNombre());
         buttonEnviarCalificacion=findViewById(R.id.buttonEnviarCalificacion);
-        categorias =new ArrayList<>();
+
         categoriasEliminadas =new ArrayList<>();
         categoriasAñadidas =new ArrayList<>();
         tagGroup = (TagView)findViewById(R.id.tag_group3);
         addCategoria= (Button) findViewById(R.id.buttonaddCategoria);
         agregarCategorias();
-        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        for (Categoria categoria:categorias){
+            String sX="   x";
+            String sCategoria=categoria.getEtiqueta();
+            sCategoria=sCategoria.concat(sX);
+            Tag tag=new Tag(sCategoria);
+            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+            tagGroup.addTag(tag);
+        }
+        /*mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
@@ -95,7 +108,7 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
         tagGroup.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(final Tag tag, int i) {
@@ -118,7 +131,21 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
         buttonEnviarCalificacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Categoria categoria: categoriasAñadidas){
+
+                //atractivoTuristico.setNombre(nombreNuevo.getText().toString());
+                ArrayList<Contribucion> contribuciones=new ArrayList<>();
+                for(Categoria categoria:categorias){
+                    Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.CATEGORIA,categoria.getEtiqueta());
+                    contribuciones.add(contribucion);
+                }
+
+                //Toast.makeText(SetNombreAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK,
+                        new Intent().putExtra("categorias", categorias).
+                                putExtra("contribuciones",contribuciones));
+                finish();
+
+                /*for (Categoria categoria: categoriasAñadidas){
                         DatabaseReference dbrcategoria= mDatabase.child(Referencias.KEYSATRACTIVOTURISTICO).child(categoria.getEtiqueta()).push();
                         String keyCategoria2=dbrcategoria.getKey();
                         dbrcategoria.setValue(categoria);
@@ -133,7 +160,8 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
                 categoriasAñadidas.clear();
                 categorias.clear();
                 Toast.makeText(SetCategoriasAtractivoTuristico.this,"Categorias actualizadas correctamente",Toast.LENGTH_SHORT).show();
-                finish();
+                */
+                //finish();
             }
         });
         Button cancelar=findViewById(R.id.buttonCancelar);
@@ -166,8 +194,10 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
                     String sCategoria=textViewCategoria.getText().toString();
                     Categoria categoria=new Categoria(sCategoria);
                     categoriasAñadidas.add(categoria);
+                    categorias.add(categoria);
                     sCategoria=sCategoria.concat(sX);
                     Tag tag=new Tag(sCategoria);
+                    tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                     tagGroup.addTag(tag);
                     contadorCategorias++;
                     textViewCategoria.setText("");

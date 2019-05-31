@@ -3,6 +3,8 @@ package com.example.cristian.findgreenplaces;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +42,7 @@ public class SubirFoto extends AppCompatActivity {
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     StorageReference mStorageReference;
-    AtractivoTuristico atractivoTuristico;
+    String atractivoTuristico;
     ImageView imageViewFotoPerfil;
     String uris;
     Uri uri;
@@ -48,13 +51,21 @@ public class SubirFoto extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subir_foto);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         mStorageReference=FirebaseStorage.getInstance().getReference();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
 
-        atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        textView.setText("Subir Foto");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        atractivoTuristico= ((String) getIntent().getStringExtra("atractivoTuristico"));
         uris= ((String) getIntent().getStringExtra("imagen"));
         uri=uri.parse(uris);
         imageViewFotoPerfil =findViewById(R.id.imageViewFotoPerfil);
@@ -94,15 +105,17 @@ public class SubirFoto extends AppCompatActivity {
                             Uri downloadUri = task.getResult();
                             String urlImagen = downloadUri.toString();
 
-                            DatabaseReference databaseReference=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId()).push();
+                            DatabaseReference databaseReference=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico).push();
                             String key =databaseReference.getKey();
                             Date c = Calendar.getInstance().getTime();
                             String fecha=CurrentDate.CurrentDate(c);
-                            Imagen imagen=new Imagen(key,urlImagen,fecha,IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario(),"0","0");
+                            Imagen imagen=new Imagen(key,urlImagen,fecha,atractivoTuristico,IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario(),"0","0","0",Referencias.VISIBLE);
                             databaseReference.setValue(imagen);
-                            mDatabase.child(Referencias.IMAGENES).child(IdUsuario.getIdUsuario()).setValue(imagen);
+                            mDatabase.child("imagenesContribuidas").child(IdUsuario.getIdUsuario()).child(key).setValue(imagen);
 
                             Toast.makeText(SubirFoto.this,"La foto se subio exitosamente",Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK,
+                                    new Intent().putExtra("imagen", imagen.getUrl()));
                             finish();
                         } else {
                             Toast.makeText(SubirFoto.this,"Error al subir foto",Toast.LENGTH_SHORT).show();
@@ -132,4 +145,9 @@ public class SubirFoto extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
+    }
 }

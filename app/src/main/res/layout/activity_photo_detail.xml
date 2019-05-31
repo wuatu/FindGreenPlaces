@@ -7,31 +7,31 @@
     android:orientation="vertical"
     android:background="#00ffffff">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:background="#00ffffff">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <ImageView
-            android:id="@+id/imageViewReportar"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            app:srcCompat="@drawable/ic_action_more_vert" />
-    </LinearLayout>
+        <include
+            layout="@layout/toolbar_foto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+
+    </android.support.design.widget.AppBarLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/common_google_signin_btn_text_dark_focused">
 
         <LinearLayout
             android:id="@+id/activity_character"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:background="@color/common_google_signin_btn_text_dark_focused"
             android:orientation="vertical">
 
             <ImageView
@@ -39,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:background="@color/common_google_signin_btn_text_dark_focused"
                 android:scaleType="fitCenter" />
 
         </LinearLayout>

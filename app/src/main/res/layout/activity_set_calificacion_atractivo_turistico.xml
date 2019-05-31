@@ -1,44 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".SetCalificacionAtractivoTuristico">
-    <LinearLayout
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include
+            layout="@layout/toolbar_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageViewVAT"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_marginBottom="10px"
-            android:layout_weight="1"
-            android:src="@drawable/addimagen" />
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewVAT"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginBottom="10px"
+                android:layout_weight="1"
+                android:src="@drawable/addimagen" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="10sp">
+            android:padding="10dp">
 
 
             <TextView
                 android:id="@+id/textViewTituloAT2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20sp"
+                android:layout_marginBottom="5dp"
                 android:text="Titulo"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="24sp"
@@ -59,7 +74,6 @@
                         android:id="@+id/textViewRatingBar"
                         android:layout_width="115dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
                         android:text="0"
@@ -75,20 +89,19 @@
                 style="@style/Widget.AppCompat.RatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:numStars="5"
                 android:stepSize="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewOpinionesn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30px"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="0"
@@ -100,18 +113,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewTituloComentarios"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_weight="1"
-                    android:gravity=""
-                    android:text="Comentar"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textSize="18sp" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -121,21 +125,51 @@
                         android:id="@+id/editTextComentar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="top"
                         android:hint="Comentar"
-                        android:inputType="textCapWords|textAutoComplete|textMultiLine|textEmailSubject"
-                        android:maxLines="1"
+                        android:inputType="textAutoComplete|textMultiLine"
+                        android:maxLines="5"
                         android:singleLine="false" />
                 </android.support.design.widget.TextInputLayout>
 
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contenedorBotonesAC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+
+
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/my_button_bg"
+                android:text="Cancelar"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
+
             <Button
                 android:id="@+id/buttonEnviarCalificacion"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Enviar Calificacion" />
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:background="@drawable/my_button_green"
+                android:text="Aceptar"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

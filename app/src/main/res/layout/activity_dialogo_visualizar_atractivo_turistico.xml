@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/contenedorDialogoAT"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -26,7 +26,7 @@
                 android:id="@+id/imageViewMiniFotoAtractivoTuristico"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:background="#ffffff"
                 android:src="@drawable/addimagen"
                 android:text="Subir Imagen" />
@@ -110,23 +110,22 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewRatingBarPromedio3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_weight="1"
-                android:text="Descricion:"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewDescripcion"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"
-                android:text="Descripcion" />
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa mas...  " />
+
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

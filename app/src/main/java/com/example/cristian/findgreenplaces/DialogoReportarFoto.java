@@ -17,15 +17,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import Clases.AtractivoTuristico;
-import Clases.Comentario;
+
 import Clases.IdUsuario;
+import Clases.Imagen;
 import Clases.Referencias;
 import Clases.Usuario;
 
 public class DialogoReportarFoto extends AppCompatActivity {
 
-    Comentario comentario;
+    Imagen imagen;
     AtractivoTuristico atractivoTuristico;
     int position;
 
@@ -47,16 +50,29 @@ public class DialogoReportarFoto extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setAttributes(lp);
         TextView textViewReportar=findViewById(R.id.textViewReportar);
-
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
-        int contadorReportes=Integer.valueOf(atractivoTuristico.getContadorReportes())+1;
-        atractivoTuristico.setContadorReportes(String.valueOf(contadorReportes));
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+        imagen=((Imagen)getIntent().getSerializableExtra("imagen"));
 
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(DialogoReportarFoto.this,"La foto ha sido reportada  ",Toast.LENGTH_SHORT).show();
+
+
+                //consulta para ver cuantos reportes tiene
+                int contadorReportes=Integer.valueOf(imagen.getContadorReportes())+1;
+                if(contadorReportes>=10){
+                    //con 10 reportes la foto se elimina
+                    imagen.setVisible(Referencias.INVISIBLE);
+                    mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
+                }else{
+                    imagen.setContadorReportes(String.valueOf(contadorReportes));
+                    mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
+                }
+
+
+
+
                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

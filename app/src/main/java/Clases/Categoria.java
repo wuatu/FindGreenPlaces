@@ -1,6 +1,8 @@
 package Clases;
 
-public class Categoria {
+import java.io.Serializable;
+
+public class Categoria implements Serializable {
     String id;
     String etiqueta;
 

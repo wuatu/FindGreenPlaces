@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,6 +62,15 @@ public class SpacePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detail);
 
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        //textView.setText("Foto de Perfil");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
 
@@ -87,10 +97,12 @@ public class SpacePhotoActivity extends AppCompatActivity {
         int contadorVisualizaciones=Integer.valueOf(imagen.getContadorVisualizaciones())+1;
         textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
         imagen.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
-        mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId()).child(imagen.getId()).setValue(imagen);
+        mDatabase.child(Referencias.IMAGENES).
+                child(imagen.getIdAtractivo()).
+                child(imagen.getId()).setValue(imagen);
 
         //Consulta para saber si la imagen tiene un like del usuario
-            mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).child(imagen.getId()).child(Referencias.MEGUSTA).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(imagen.getIdAtractivo()).child(imagen.getId()).child(Referencias.MEGUSTA).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String meGusta=dataSnapshot.getValue(String.class);
@@ -133,7 +145,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
             public void onPalette(Palette palette) {
                 if (null != palette) {
                     ViewGroup parent = (ViewGroup) mImageView.getParent().getParent();
-                    parent.setBackgroundColor(palette.getDarkVibrantColor(Color.BLACK));
+                    //parent.setBackgroundColor(palette.getDarkVibrantColor(Color.BLACK));
                 }
             }
         })
@@ -176,6 +188,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(SpacePhotoActivity.this,DialogoReportarFoto.class);
                 intent.putExtra("atractivoTuristico",atractivoTuristico);
+                intent.putExtra("imagen",imagen);
                 startActivity(intent);
             }
         });
@@ -267,4 +280,9 @@ public class SpacePhotoActivity extends AppCompatActivity {
             }
         }
     };*/
+   @Override
+   public boolean onSupportNavigateUp() {
+       onBackPressed();
+       return false;
+   }
 }

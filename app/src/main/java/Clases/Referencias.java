@@ -39,9 +39,9 @@ public class Referencias {
     public static final String SI="si";
     public static final String NO="no";
     public static final String CONOCESESTELUGAR="conocesEsteLugar";
+    public static final String VISIBLE="visible";
+    public static final String INVISIBLE="invisible";
 
 
-
-
-
+    public static final String NOMBRE = "nombre";
 }

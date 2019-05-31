@@ -1,9 +1,7 @@
 package Fragment;
 
-import android.annotation.SuppressLint;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -11,7 +9,6 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -21,14 +18,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,12 +32,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
-import com.example.cristian.findgreenplaces.DialogoReportatAtractivoTuristico;
+import com.example.cristian.findgreenplaces.DialogoReportarAtractivoTuristico;
 import com.example.cristian.findgreenplaces.InformacionAdicionalAT;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
-import com.example.cristian.findgreenplaces.SetCategoriasAtractivoTuristico;
-import com.example.cristian.findgreenplaces.SetDescripcionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SubirFoto;
 import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
@@ -59,20 +52,20 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import Clases.AdapterListViewComentarioAT;
 import Clases.AtractivoTuristico;
 import Clases.AtractivoTuristicoMeGusta;
 import Clases.CalificacionPromedio;
 import Clases.Categoria;
 import Clases.Comentario;
 import Clases.ConocesEsteLugar;
-import Clases.ContadorMeGustaAtractivoTuristico;
+import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
 import Clases.Usuario;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,13 +76,24 @@ import Clases.Usuario;
  * create an instance of this fragment.
  */
 public class VisualizarAtractivoTuristicoFragment extends Fragment implements View.OnClickListener, LocationListener {
-
-    ArrayList<Categoria> categorias;
-    private TextView titulo;
+    private static final int CONTRIBUCION = 0;
+    ArrayList<Categoria> categorias=new ArrayList<>();
+    private TextView textViewTitulo;
     private TextView textViewDescripcionAT;
+    private TextView textViewTips;
+    private TextView textViewHorario;
+    private TextView textViewTelefono;
+    private TextView textViewpagina;
+    private TextView textViewRedes;
+    private LinearLayout linearLayoutHorario;
+    private LinearLayout linearLayoutTelefono;
+    private LinearLayout linearLayoutPagina;
+    private LinearLayout linearLayoutRedes;
+
     private TextView textViewSugerirCambio;
     private TextView textViewAñadirInformacionAdicional;
-    private TextView textViewTips;
+
+    private TextView textViewNombre;
     private LinearLayout linearLayoutAñadirInformacionAdicional;
     private RatingBar ratingBar;
     private RatingBar ratingBar2;
@@ -121,6 +125,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     ImageView imageViewLike;
     LatLng currentLatLng;
     TextView textViewVisualizaciones;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -192,9 +197,21 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         linearLayoutAñadirInformacionAdicional=view.findViewById(R.id.linearLatyoutInformacionAdicional);
         textViewVisualizaciones=view.findViewById(R.id.textViewVisualizacion);
         textViewAñadirInformacionAdicional=view.findViewById(R.id.textViewAñadirInformacionAdicional);
+
+        textViewHorario=view.findViewById(R.id.textViewHorario);
+        textViewTelefono=view.findViewById(R.id.textViewTelefono);
+        textViewpagina=view.findViewById(R.id.textViewPagina);
+        textViewRedes=view.findViewById(R.id.textViewRedes);
+        linearLayoutHorario=view.findViewById(R.id.linearLatyoutHorario);
+        linearLayoutTelefono=view.findViewById(R.id.linearLatyoutTelefono);
+        linearLayoutPagina=view.findViewById(R.id.linearLatyoutPagina);
+        linearLayoutRedes=view.findViewById(R.id.linearLatyoutRedes);
+
         textViewVerMasComentarios=view.findViewById(R.id.textViewVerMasComentarios);
         textViewTips=view.findViewById(R.id.textViewTipsAT);
         textViewTips.setText(atractivoTuristico.getTipsDeViaje());
+        textViewNombre=view.findViewById(R.id.textViewTituloAT2);
+        //textViewNombre.setText(atractivoTuristico.getNombre());
         linearLayoutComentario=view.findViewById(R.id.comentario);
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
@@ -241,6 +258,9 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         conocesEsteLugar.setRespuesta(Referencias.NO);
                         conocesEsteLugar.setContestado("false");
                         databaseReference.setValue(conocesEsteLugar);
+                        textViewLoConoces.setText("Gracias por su Respuesta.");
+                        textViewSi.setVisibility(TextView.GONE);
+                        textViewNo.setVisibility(TextView.GONE);
                     }
                 });
             }
@@ -303,8 +323,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             }
         });
         textViewSugerirCambio=(TextView) view.findViewById(R.id.textViewSugerirCambio);
-        titulo = (TextView) view.findViewById(R.id.textViewTituloAT2);
-        titulo.setText(atractivoTuristico.getNombre());
+        textViewTitulo = (TextView) view.findViewById(R.id.textViewTituloAT2);
+        textViewTitulo.setText(atractivoTuristico.getNombre());
         textViewDescripcionAT =view.findViewById(R.id.textViewDescripcionAT);
         //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         imageView=view.findViewById(R.id.imageViewVAT);
@@ -323,7 +343,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         //textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
         textViewOpiniones2=view.findViewById(R.id.textViewOpiniones2);
 
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
@@ -335,14 +355,17 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
             }
         });
-        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 tagGroup.removeAll();
+
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     Categoria categoria=dataSnapshot1.getValue(Categoria.class);
                     Tag tag=new Tag(categoria.getEtiqueta());
+                    tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                     tagGroup.addTag(tag);
+                    categorias.add(categoria);
                 }
             }
             @Override
@@ -356,7 +379,9 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SugerirCambioAtractivoTuristico.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                intent.putExtra("categorias", categorias);
+                //startActivity(intent);
+                startActivityForResult(intent,CONTRIBUCION);
             }
         });
         //consulta para saber nivel de usuario
@@ -373,19 +398,27 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         int i=0;
         if(!atractivoTuristico.getTelefono().equals("")){
             i++;
-            creaInformacionAdicional("Teléfono",atractivoTuristico.getTelefono());
+            //creaInformacionAdicional("Teléfono",atractivoTuristico.getTelefono());
+            linearLayoutTelefono.setVisibility(view.VISIBLE);
+            textViewTelefono.setText(atractivoTuristico.getTelefono());
         }
         if(!atractivoTuristico.getHorarioDeAtencion().equals("")){
             i++;
-            creaInformacionAdicional("Horario de Atención",atractivoTuristico.getHorarioDeAtencion());
+            //creaInformacionAdicional("Horario de Atención",atractivoTuristico.getHorarioDeAtencion());
+            linearLayoutHorario.setVisibility(view.VISIBLE);
+            textViewHorario.setText(atractivoTuristico.getHorarioDeAtencion());
         }
         if(!atractivoTuristico.getPaginaWeb().equals("")){
             i++;
-            creaInformacionAdicional("Página Web",atractivoTuristico.getPaginaWeb());
+            //creaInformacionAdicional("Página Web",atractivoTuristico.getPaginaWeb());
+            linearLayoutPagina.setVisibility(view.VISIBLE);
+            textViewpagina.setText(atractivoTuristico.getPaginaWeb());
         }
         if(!atractivoTuristico.getRedesSociales().equals("")){
             i++;
-            creaInformacionAdicional("Redes Sociales",atractivoTuristico.getRedesSociales());
+            //creaInformacionAdicional("Redes Sociales",atractivoTuristico.getRedesSociales());
+            linearLayoutRedes.setVisibility(view.VISIBLE);
+            textViewRedes.setText(atractivoTuristico.getRedesSociales());
         }
         if (i==4){
             textViewAñadirInformacionAdicional.setVisibility(view.GONE);
@@ -466,7 +499,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         imageViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(),DialogoReportatAtractivoTuristico.class);
+                Intent intent=new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(),DialogoReportarAtractivoTuristico.class);
                 intent.putExtra("atractivoTuristico",atractivoTuristico);
                 startActivity(intent);
             }
@@ -783,6 +816,51 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);
             v.requestLayout();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CONTRIBUCION && resultCode == RESULT_OK) {
+           atractivoTuristico = (AtractivoTuristico) data.getSerializableExtra("atractivoTuristico");
+            ArrayList<Categoria>categoriasNuevas= (ArrayList<Categoria>) data.getSerializableExtra("categorias");
+            ArrayList<Contribucion>contribuciones = (ArrayList<Contribucion>) data.getSerializableExtra("contribuciones");
+
+            for (Contribucion contribucion:contribuciones) {
+                if(contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.NOMBRE)){
+                    textViewTitulo.setText(atractivoTuristico.getNombre());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.DESCRIPCION)){
+                    textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.TIPSDEVIAJE)){
+                    textViewTips.setText(atractivoTuristico.getTipsDeViaje());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.HORARIODEATENCION)){
+                    textViewHorario.setText(atractivoTuristico.getHorarioDeAtencion());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.TELEFONO)){
+                    textViewTelefono.setText(atractivoTuristico.getTelefono());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.PAGINAWEB)){
+                    textViewpagina.setText(atractivoTuristico.getPaginaWeb());
+                }
+                if (contribucion.getContribucionNombre().equalsIgnoreCase(Referencias.REDESSOCIALES)){
+                    textViewRedes.setText(atractivoTuristico.getRedesSociales());
+                }
+
+            }
+
+            if(categoriasNuevas!=null){
+                tagGroup.removeAll();
+                for (Categoria categoria : categoriasNuevas) {
+                    Tag tag=new Tag(categoria.getEtiqueta());
+                    tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                    tagGroup.addTag(tag);
+                    //categorias.add(categoria);
+                }
+            }
+
         }
     }
 

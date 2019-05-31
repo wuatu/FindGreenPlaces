@@ -47,6 +47,21 @@
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewModificarNombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="Modificar"
+                        android:textColor="@color/colorAccent" />
+                </LinearLayout>
+
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
@@ -78,14 +93,6 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/textViewDescripcionAT"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Descripción"
-                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
-                            android:textSize="14sp" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -93,6 +100,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDescripcionAT"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Descripción"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                            android:textSize="14sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -105,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Descripción"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -159,7 +174,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Tips de Viaje"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -201,7 +216,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="tips"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -223,7 +238,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Horario de Atención"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -255,7 +270,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="telefono"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -277,7 +292,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Teléfono"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -309,7 +324,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="pagina web"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -331,7 +346,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Página Web"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -363,7 +378,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="redes sociales"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -385,7 +400,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:text="Modificar Redes Sociales"
+                                android:text="Modificar"
                                 android:textColor="@color/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
@@ -418,18 +433,18 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <com.cunoraz.tagview.TagView xmlns:tagview="http://schemas.android.com/apk/res-auto"
+                            <com.cunoraz.tagview.TagView
                                 android:id="@+id/tag_group2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="10dp"
                                 android:gravity="center_horizontal"
-                                tagview:lineMargin="5dp"
-                                tagview:tagMargin="5dp"
-                                tagview:textPaddingBottom="5dp"
-                                tagview:textPaddingLeft="8dp"
-                                tagview:textPaddingRight="8dp"
-                                tagview:textPaddingTop="5dp" />
+                                app:lineMargin="5dp"
+                                app:tagMargin="5dp"
+                                app:textPaddingBottom="5dp"
+                                app:textPaddingLeft="8dp"
+                                app:textPaddingRight="8dp"
+                                app:textPaddingTop="5dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -449,7 +464,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="right"
-                                    android:text="Modificar Categorias"
+                                    android:text="Modificar"
                                     android:textColor="@color/colorAccent" />
                             </LinearLayout>
                         </LinearLayout>
@@ -461,11 +476,44 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
                         android:background="@color/com_facebook_button_background_color_disabled" />
 
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/contenedorBotonesAC"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+
+
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonCancelar"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_button_bg"
+                        android:text="Cancelar"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/buttonAceptar"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_button_green"
+                        android:text="Aceptar"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

@@ -204,7 +204,7 @@
                         android:id="@+id/textViewTips"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tips de Viaje"
+                        android:text="Recomendaciones de Viaje"
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -213,7 +213,7 @@
                         android:id="@+id/textViewTipsAT"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="tips"
+                        android:text="Recomendaciones"
                         android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                         android:textSize="14sp" />
 
@@ -248,16 +248,112 @@
                         android:orientation="vertical">
 
                         <!--Horario de atencion-->
+                        <LinearLayout
+                            android:id="@+id/linearLatyoutHorario"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20px"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Horario de Atención"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewHorario"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
                         <!--fin horario de atencion-->
                         <!--Telefono-->
+                        <LinearLayout
+                            android:id="@+id/linearLatyoutTelefono"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20px"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Teléfono"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewTelefono"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
                         <!--fin telefono-->
                         <!--Página web-->
+                        <LinearLayout
+                            android:id="@+id/linearLatyoutPagina"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20px"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Página Web"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewPagina"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
                         <!--fin página web-->
-
                         <!--Redes sociales-->
+                        <LinearLayout
+                            android:id="@+id/linearLatyoutRedes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20px"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Redes Sociales"
+                                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewRedes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
                         <!--fin redes sociales-->
                     </LinearLayout>
                     <!--Fin linearlayout contenedor informacion adicional-->
@@ -266,7 +362,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="Añadir Información Adicional +"
+                        android:text="Añadir Información +"
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -459,7 +555,7 @@
                                 android:id="@+id/textViewOpiniones2"
                                 android:layout_width="115dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5px"
+                                android:layout_marginBottom="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
                                 android:text="0"
@@ -472,8 +568,8 @@
                             android:id="@+id/botonCalificar"
                             style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary"
+                            android:layout_height="35dp"
+                            android:background="@drawable/my_button_green"
                             android:text="Calificar" />
                     </LinearLayout>
 

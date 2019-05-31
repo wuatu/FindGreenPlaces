@@ -1,10 +1,10 @@
+
 package com.example.cristian.findgreenplaces;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,13 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import Clases.AtractivoTuristico;
 import Clases.Comentario;
 import Clases.IdUsuario;
+import Clases.Imagen;
 import Clases.Referencias;
 import Clases.Usuario;
 
-public class DialogoReportatAtractivoTuristico extends AppCompatActivity {
+public class DialogoReportarAtractivoTuristico extends AppCompatActivity {
     Comentario comentario;
     AtractivoTuristico atractivoTuristico;
-    int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +47,22 @@ public class DialogoReportatAtractivoTuristico extends AppCompatActivity {
         getWindow().setAttributes(lp);
         TextView textViewReportar=findViewById(R.id.textViewReportar);
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+
 
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DialogoReportatAtractivoTuristico.this,"El atractivo turístico ha sido reportado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogoReportarAtractivoTuristico.this,"El atractivo turístico ha sido reportado",Toast.LENGTH_SHORT).show();
+                int contadorReportes=Integer.valueOf(atractivoTuristico.getContadorReportes())+1;
+                if(contadorReportes>=10){
+                    atractivoTuristico.setVisible(Referencias.INVISIBLE);
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                }else {
+                    atractivoTuristico.setContadorReportes(String.valueOf(contadorReportes));
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                }
+
+
                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

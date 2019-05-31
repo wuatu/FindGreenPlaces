@@ -8,10 +8,17 @@
     android:gravity="center_horizontal"
     tools:context=".SetCategoriasAtractivoTuristico">
 
-    <include
-        layout="@layout/toolbar_camera"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></include>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include
+            layout="@layout/toolbar_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Categoria"
+            android:inputType="textCapCharacters"
             android:singleLine="true" />
 
     </LinearLayout>
@@ -52,9 +60,9 @@
                 android:id="@+id/buttonaddCategoria"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/my_button_green"
                 android:text="Añadir" />
 
         </LinearLayout>

@@ -6,8 +6,6 @@
         android:endColor="@color/colorPrimary"
         android:startColor="@color/colorPrimary" />
 
-    <size
-        android:height="35dp"
-        android:width="35dp" />
+
 
 </shape>

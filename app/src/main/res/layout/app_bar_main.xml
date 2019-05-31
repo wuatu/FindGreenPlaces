@@ -10,14 +10,54 @@
 
     <include layout="@layout/content_main" />
 
+
+        <ImageView
+            android:id="@+id/imageViewIr"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity=""
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="130dp"
+            android:src="@drawable/indicaciones"
+            android:visibility="gone" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
+        android:layout_width="228dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#43a047"
-        android:src="@drawable/add_more">
-    </android.support.design.widget.FloatingActionButton>
+        android:layout_margin="30dp"
+        android:src="@drawable/add_more"
+        app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="110dp"
+        android:src="@drawable/ubicacion"
+        app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
+
+    <LinearLayout
+        android:id="@+id/layoutDialogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end|center_horizontal"
+        android:layout_marginRight="73dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/dialog_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="Añadir Nuevo\n Atractivo Turístico "
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

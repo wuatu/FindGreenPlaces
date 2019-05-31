@@ -27,4 +27,9 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/com_facebook_button_background_color_focused</item>
+    </style>
+
 </resources>

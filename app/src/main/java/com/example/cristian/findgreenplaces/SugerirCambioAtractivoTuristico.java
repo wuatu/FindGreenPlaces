@@ -1,12 +1,16 @@
 package com.example.cristian.findgreenplaces;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -26,12 +30,15 @@ import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.SubirPuntos;
 
 public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
-    TextView textViewButtonModificarCalificacion;
+    ArrayList<Categoria> categoriasNuevas=new ArrayList<>();
+    TextView textViewButtonModificarNombre;
     TextView textViewButtonModificarDescripcion;
     TextView textViewButtonModificarCategorias;
     TextView textViewButtonModificarTips;
@@ -39,10 +46,16 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
     TextView textViewButtonModificarTelefono;
     TextView textViewButtonModificarPaginaWeb;
     TextView textViewButtonModificarRedesSociales;
+    ArrayList<Categoria> categorias;
     ArrayList<Imagen> imagenes;
     AtractivoTuristico atractivoTuristico;
     private TextView titulo;
-    private TextView textViewDescripcionAT;
+    private TextView descripcion;
+    TextView tips;
+    TextView horario;
+    TextView telefono;
+    TextView pagina;
+    TextView redes;
     private TextView textViewSugerirCambio;
     private LinearLayout linearLayoutCategorias;
     private RatingBar ratingBar;
@@ -54,6 +67,17 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     String nivel="";
+    private static final int NOMBRE = 0;
+    private static final int DESCRIPCION = 1;
+    private static final int TIPS = 2;
+    private static final int HORARIO = 3;
+    private static final int TELEFONO = 4;
+    private static final int PAGINA = 5;
+    private static final int REDES = 6;
+    private static final int CATEGORIAS = 7;
+    Button buttonAceptar;
+    boolean isCategoria=false;
+    ArrayList<Contribucion> contribuciones=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +97,11 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         mDatabase=database.getReference();
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        categorias=((ArrayList<Categoria>)getIntent().getSerializableExtra("categorias"));
+        buttonAceptar=findViewById(R.id.buttonAceptar);
         titulo = (TextView) findViewById(R.id.textViewTituloAT2);
         titulo.setText(atractivoTuristico.getNombre());
-        textViewDescripcionAT =findViewById(R.id.textViewDescripcionAT);
+
         //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         textViewButtonModificarTips=findViewById(R.id.textViewModificarTips);
         textViewButtonModificarHorario=findViewById(R.id.textViewModificarHorario);
@@ -83,19 +109,17 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         textViewButtonModificarPaginaWeb=findViewById(R.id.textViewModificarPagina);
         textViewButtonModificarRedesSociales=findViewById(R.id.textViewModificarRedes);
 
-        TextView tips= findViewById(R.id.textViewTipsAT);
+        descripcion =findViewById(R.id.textViewDescripcionAT);
+        descripcion.setText(atractivoTuristico.getDescripcion());
+        tips= findViewById(R.id.textViewTipsAT);
         tips.setText(atractivoTuristico.getTipsDeViaje());
-
-        TextView horario= findViewById(R.id.textViewHorarioAT);
+        horario= findViewById(R.id.textViewHorarioAT);
         horario.setText(atractivoTuristico.getHorarioDeAtencion());
-
-        TextView telefono= findViewById(R.id.textViewTelefonoAT);
+        telefono= findViewById(R.id.textViewTelefonoAT);
         telefono.setText(atractivoTuristico.getTelefono());
-
-        TextView pagina= findViewById(R.id.textViewPaginaAT);
+        pagina= findViewById(R.id.textViewPaginaAT);
         pagina.setText(atractivoTuristico.getPaginaWeb());
-
-        TextView redes= findViewById(R.id.textViewRedesAT);
+        redes= findViewById(R.id.textViewRedesAT);
         redes.setText(atractivoTuristico.getRedesSociales());
 
         imageView=findViewById(R.id.imageViewVAT);
@@ -110,19 +134,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         tagGroup = (TagView)findViewById(R.id.tag_group2);
 
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        /*mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 tagGroup.removeAll();
@@ -130,6 +142,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                     Categoria categoria=dataSnapshot1.getValue(Categoria.class);
                     Tag tag=new Tag(categoria.getEtiqueta());
                     tagGroup.addTag(tag);
+                    categorias.add(categoria);
                 }
             }
             @Override
@@ -137,6 +150,14 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
 
             }
         });
+        */
+        for (Categoria categoria:categorias){
+            Tag tag=new Tag(categoria.getEtiqueta());
+            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+            tagGroup.addTag(tag);
+            Log.v("categoriass",categoria.getEtiqueta());
+        }
+        textViewButtonModificarNombre =findViewById(R.id.textViewModificarNombre);
         textViewButtonModificarDescripcion =findViewById(R.id.textViewModificarDescripcion);
         textViewButtonModificarCategorias =findViewById(R.id.textViewModificarCategorias);
 
@@ -151,7 +172,104 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
 
             }
         });
+        Button cancelar=findViewById(R.id.buttonCancelar);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(SugerirCambioAtractivoTuristico.this)
+                        .setTitle("Editar Nombre")
+                        .setMessage("Esta seguro que quiere cancelar?")
+                        //.setIcon(R.drawable.aporte)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        });
+        buttonAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                //modifico el atractivo turistico con la nueva información
+                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                new AlertDialog.Builder(SugerirCambioAtractivoTuristico.this)
+                        .setTitle("Enviar Cambios")
+                        .setMessage("Esta seguro que quiere realizar estos cambios?")
+                        //.setIcon(R.drawable.aporte)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                for (Contribucion contribucion:contribuciones){
+                                    //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
+                                    DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
+                                            child(atractivoTuristico.getId()).
+                                            child(IdUsuario.getIdUsuario()).push();
+                                    String key=databaseReference.getKey();
+                                    contribucion.setId(key);
+                                    databaseReference.setValue(contribucion);
+
+                                    //añade contribucion (a tabla "contribucionPorUsuario") por usuario
+                                    mDatabase.child(Referencias.CONTRIBUCIONESPORUSUARIO).
+                                            child(IdUsuario.getIdUsuario()).
+                                            child(atractivoTuristico.getId()).
+                                            child(key).
+                                            setValue(contribucion);
+                                }
+                                if(isCategoria) {
+                                    mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).removeValue();
+                                    for (Categoria categoria : categoriasNuevas) {
+                                        DatabaseReference dbrcategoria = mDatabase.child(Referencias.KEYSATRACTIVOTURISTICO).child(categoria.getEtiqueta());
+                                        //String keyCategoria2 = dbrcategoria.getKey();
+                                        dbrcategoria.setValue(categoria);
+                                        categoria.setId(categoria.getEtiqueta());
+                                        mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).child(categoria.getEtiqueta()).setValue(categoria);
+                                    }
+                                }
+                                isCategoria=false;
+
+                                SubirPuntos subirPuntos=new SubirPuntos();
+                                setResult(RESULT_OK, new Intent().putExtra("atractivoTuristico", atractivoTuristico).
+                                        putExtra("contribuciones",contribuciones).
+                                        putExtra("categorias",categoriasNuevas));
+                                subirPuntos.SubirPuntos(SugerirCambioAtractivoTuristico.this);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+
+            }
+        });
+        textViewButtonModificarNombre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
+                    Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para modificar nombre de atractivo turistico!",Toast.LENGTH_SHORT).show();
+                }else {
+                    if(nivel.equals("1") || nivel.equals("2")){
+                        if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
+                            Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetNombreAT.class);
+                            intent.putExtra("imagenes", imagenes);
+                            intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            //startActivity(intent);
+                            startActivityForResult(intent,NOMBRE);
+                        }
+                        else{
+                            Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para modificar nombre de otro usuario",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if(nivel.equals("3")){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetNombreAT.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivityForResult(intent,NOMBRE);
+                    }
+
+                }
+            }
+        });
         textViewButtonModificarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +281,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
                             intent.putExtra("imagenes", imagenes);
                             intent.putExtra("atractivoTuristico", atractivoTuristico);
-                            startActivity(intent);
+                            startActivityForResult(intent,DESCRIPCION);
                         }
                         else{
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para modificar descripción de otro usuario",Toast.LENGTH_SHORT).show();
@@ -173,7 +291,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
-                        startActivity(intent);
+                        startActivityForResult(intent,DESCRIPCION);
                     }
 
                 }
@@ -190,17 +308,17 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
                             intent.putExtra("imagenes", imagenes);
                             intent.putExtra("atractivoTuristico", atractivoTuristico);
-                            startActivity(intent);
+                            startActivityForResult(intent,TIPS);
                         }
                         else{
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para contribuir en tips de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("2")){
+                    if(nivel.equals("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
-                        startActivity(intent);
+                        startActivityForResult(intent,TIPS);
                     }
                 }
             }
@@ -216,17 +334,20 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
                             intent.putExtra("imagenes", imagenes);
                             intent.putExtra("atractivoTuristico", atractivoTuristico);
+                            intent.putExtra("categorias", categorias);
+
                             startActivity(intent);
                         }
                         else{
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 2 para contribuir en categoria de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("2")){
+                    if(nivel.equals("2") || nivel.equalsIgnoreCase("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
-                        startActivity(intent);
+                        intent.putExtra("categorias", categorias);
+                        startActivityForResult(intent,CATEGORIAS);
                     }
 
                 }
@@ -241,7 +362,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                     Intent intent = new Intent(SugerirCambioAtractivoTuristico.this,SetHorarioDeAtencion.class);
                     intent.putExtra("imagenes", imagenes);
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
+                    startActivityForResult(intent,HORARIO);
                 }
             }
         });
@@ -254,7 +375,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 Intent intent = new Intent(SugerirCambioAtractivoTuristico.this,SetTelefonoAT.class);
                 intent.putExtra("imagenes", imagenes);
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                    startActivityForResult(intent,TELEFONO);
                 }
             }
         });
@@ -267,7 +388,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                     Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetPaginaWebAT.class);
                     intent.putExtra("imagenes", imagenes);
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
+                    startActivityForResult(intent,PAGINA);
                 }
             }
         });
@@ -280,7 +401,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                     Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetRedesSocialesAT.class);
                     intent.putExtra("imagenes", imagenes);
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    startActivity(intent);
+                    startActivityForResult(intent,REDES);
                 }
             }
         });
@@ -292,6 +413,79 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 .centerCrop()
                 .into(imageView);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NOMBRE && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            titulo.setText(nombre);
+            atractivoTuristico.setNombre(titulo.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == DESCRIPCION && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("descripcion");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            descripcion.setText(nombre);
+            atractivoTuristico.setDescripcion(descripcion.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == TIPS && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            tips.setText(nombre);
+            atractivoTuristico.setTipsDeViaje(tips.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == HORARIO && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            horario.setText(nombre);
+            atractivoTuristico.setHorarioDeAtencion(horario.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == TELEFONO && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            telefono.setText(nombre);
+            atractivoTuristico.setTelefono(telefono.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == PAGINA && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            pagina.setText(nombre);
+            atractivoTuristico.setPaginaWeb(pagina.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == REDES && resultCode == RESULT_OK) {
+            String nombre = data.getStringExtra("nombre");
+            Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");
+            redes.setText(nombre);
+            atractivoTuristico.setRedesSociales(redes.getText().toString());
+            contribuciones.add(contribucion);
+        }
+        if (requestCode == CATEGORIAS && resultCode == RESULT_OK) {
+            //String nombre = data.getStringExtra("nombre");
+            ArrayList<Contribucion> contribuciones2 = (ArrayList<Contribucion>) data.getSerializableExtra("contribuciones");
+            categoriasNuevas= (ArrayList<Categoria>) data.getSerializableExtra("categorias");
+            //Log.v("riico",categorias2.get(0).getEtiqueta());
+            //titulo.setText(nombre);
+            //atractivoTuristico.setRedesSociales();
+            for (Contribucion contribucion:contribuciones2) {
+                contribuciones.add(contribucion);
+            }
+
+            tagGroup.removeAll();
+            for (Categoria categoria : categoriasNuevas) {
+                Tag tag=new Tag(categoria.getEtiqueta());
+                tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                tagGroup.addTag(tag);
+                //categorias.add(categoria);
+            }
+            isCategoria=true;
+        }
     }
 
     @Override

@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,10 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.storage.StorageReference;
 
-import Clases.IdUsuario;
 import Clases.Referencias;
 import Clases.Usuario;
 
@@ -48,7 +42,7 @@ public class Registrar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar);
         botonCancelar=findViewById(R.id.cancelar);
-        botonRegistrar=findViewById(R.id.registrar);
+        botonRegistrar=findViewById(R.id.aceptar);
         textViewNombre=findViewById(R.id.nombre);
         textViewApellido=findViewById(R.id.apellido);
         textViewEmail=findViewById(R.id.email);
@@ -100,7 +94,7 @@ public class Registrar extends AppCompatActivity {
         final String dia = textViewDia.getText().toString();
         final String mes = textViewMes.getText().toString();
         final String año = textViewAño.getText().toString();
-        final String password = textViewPassword.getText().toString();
+        String password = textViewPassword.getText().toString();
         String password2 = getTextViewPassword2.getText().toString();
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             textViewPassword.setError(getString(R.string.error_invalid_password));
@@ -158,7 +152,7 @@ public class Registrar extends AppCompatActivity {
             focusView=getTextViewPassword2;
             cancel=true;
         }else if(!passwordIguales(password,password2)){
-            getTextViewPassword2.setError("Contraseña no es la misma!");
+            getTextViewPassword2.setError("Contraseña no coincide");
             focusView=getTextViewPassword2;
             cancel=true;
         }
@@ -170,7 +164,7 @@ public class Registrar extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         String userId=task.getResult().getUser().getUid();
-                        Usuario usuario=new Usuario(userId,nombre,apellido,email,Integer.parseInt(dia),Integer.parseInt(mes),Integer.parseInt(año),password,"1","0","0",Referencias.PRINCIPIANTE);
+                        Usuario usuario=new Usuario(userId,nombre,apellido,email,Integer.parseInt(dia),Integer.parseInt(mes),Integer.parseInt(año),"","1","0","0",Referencias.PRINCIPIANTE);
                         mDatabase.child("usuario").child(userId).setValue(usuario);
                         Toast.makeText(Registrar.this,"Usuario creado con exito!",Toast.LENGTH_SHORT).show();
                         ejecutarLoginActivity();

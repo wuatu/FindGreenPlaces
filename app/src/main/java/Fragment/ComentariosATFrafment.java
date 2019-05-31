@@ -146,7 +146,10 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 model.removeAll(model);
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    model.add(dataSnapshot1.getValue(Comentario.class));
+                    Comentario comentario=dataSnapshot1.getValue(Comentario.class);
+                    if(comentario.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                        model.add(comentario);
+                    }
                 }
                 //consulta para saber si el usuario dio like a un comentario
                 ComentarioMeGusta comentarioMeGusta;

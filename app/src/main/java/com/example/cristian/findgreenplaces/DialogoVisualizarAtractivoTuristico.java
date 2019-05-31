@@ -63,7 +63,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int ancho=dm.widthPixels;
         int alto=dm.heightPixels;
-        getWindow().setLayout((int) (ancho*.99),(int)(alto*.25));
+        getWindow().setLayout((int) (ancho*.99),(int)(alto*.21));
         getWindow().setGravity(Gravity.BOTTOM);
         titulo = (TextView) findViewById(R.id.textViewTituloAT);
         titulo.setText(atractivoTuristico.getNombre());
@@ -77,7 +77,12 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                descripcion.setText(atractivoTuristico.getDescripcion());
+                if(atractivoTuristico.getDescripcion().length()>90){
+                    String dercripcion2=atractivoTuristico.getDescripcion();
+                    String descripcionCortada=dercripcion2.substring(0,90)+" mas...";
+                }else{
+                    descripcion.setText("Descripción: "+atractivoTuristico.getDescripcion()+" mas...");
+                }
             }
 
             @Override
@@ -132,7 +137,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
 
                     Glide.with(getApplicationContext())
                             .load(imagenes.get(0).getUrl())
-                            .fitCenter()
+
                             .centerCrop()
                             .into(foto);
                 }

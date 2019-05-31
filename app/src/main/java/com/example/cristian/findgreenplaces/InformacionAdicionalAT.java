@@ -3,8 +3,10 @@ package com.example.cristian.findgreenplaces;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +53,15 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         textViewTelefono=findViewById(R.id.textViewTelefono);
         textViewPagina=findViewById(R.id.textViewPagina);
         textViewRedesSociales=findViewById(R.id.textViewRedesSociales);
+
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        textView.setText("Información Adicional");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         editTextHorario=findViewById(R.id.editTextHorario);
         editTextTelefono=findViewById(R.id.editTextTelefono);
@@ -144,9 +155,9 @@ public class InformacionAdicionalAT extends AppCompatActivity {
                     atractivoTuristico.setRedesSociales(editTextRedesSociales.getText().toString());
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
-                AlertDialog.Builder builder;
-                builder = new AlertDialog.Builder(InformacionAdicionalAT.this,AlertDialog.THEME_HOLO_LIGHT);
-                builder.setTitle("Información")
+                new AlertDialog.Builder(InformacionAdicionalAT.this)
+                .setTitle("Información")
+
                         .setMessage("Seguro Quieres Enviar Estos Datos?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -163,7 +174,6 @@ public class InformacionAdicionalAT extends AppCompatActivity {
                                 // do nothing
                             }
                         })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
         });
@@ -173,9 +183,8 @@ public class InformacionAdicionalAT extends AppCompatActivity {
         buttonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder;
-                builder = new AlertDialog.Builder(InformacionAdicionalAT.this,AlertDialog.THEME_HOLO_LIGHT);
-                builder.setTitle("Información")
+                new AlertDialog.Builder(InformacionAdicionalAT.this)
+                        .setTitle("Información")
                         .setMessage("Seguro Quieres Cancelar?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -187,9 +196,14 @@ public class InformacionAdicionalAT extends AppCompatActivity {
                                 // do nothing
                             }
                         })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 }

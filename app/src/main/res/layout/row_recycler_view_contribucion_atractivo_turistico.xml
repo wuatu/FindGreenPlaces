@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Titulo"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textColor="@color/com_facebook_button_background_color_focused_disabled"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
             android:text="Ciudad:"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
 
         <TextView
             android:id="@+id/textViewCiudad"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="ciudad"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
 
         <TextView
             android:id="@+id/textView11"
@@ -41,7 +41,7 @@
             android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:text="Comuna:"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
 
         <TextView
             android:id="@+id/textViewComuna"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="ciudad"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
 
     </LinearLayout>
 

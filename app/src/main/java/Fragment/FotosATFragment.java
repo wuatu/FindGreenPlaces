@@ -121,6 +121,7 @@ public class FotosATFragment extends android.app.Fragment {
         }
         atractivoTuristico = ((AtractivoTuristico)getArguments().getSerializable("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getArguments().getSerializable("imagenes"));
+        Log.v("imagenesctm",imagenes.get(0).getUrl());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -148,9 +149,11 @@ public class FotosATFragment extends android.app.Fragment {
 
         int i=0;
         for (Imagen imagen:imagenes){
-            SpacePhoto a= new SpacePhoto(imagen.getUrl(), imagen.getId().toString());
-            getSpacePhotos[i]=a;
-            i++;
+            if(imagen.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                SpacePhoto a = new SpacePhoto(imagen.getUrl(), imagen.getId().toString());
+                getSpacePhotos[i] = a;
+                i++;
+            }
         }
         FotosATFragment.ImageGalleryAdapter adapter = new FotosATFragment.ImageGalleryAdapter(getContext(), getSpacePhotos);
         recyclerView.setAdapter(adapter);

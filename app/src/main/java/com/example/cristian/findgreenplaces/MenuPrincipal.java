@@ -7,17 +7,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,6 +62,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -72,6 +78,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -87,6 +94,7 @@ import Clases.Referencias;
 public class MenuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, Serializable {
     Address addres = null;
+    ImageView imageViewIr;
     boolean buscarPorCategoria = false;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -106,10 +114,12 @@ public class MenuPrincipal extends AppCompatActivity
     NavigationView navigationView;
     View hView;
     ImageView imageViewFotoPerfil;
-    String busqueda="";
-    int bandera=0;
+    String busqueda = "";
+    int bandera = 0;
     TagView tagGroup;
-    int contadorCategorias=0;
+    int contadorCategorias = 0;
+    View view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -120,20 +130,21 @@ public class MenuPrincipal extends AppCompatActivity
 
         }
         linearLayoutFocus = findViewById(R.id.layoutfocus);
-        spinner=findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opciones, android.R.layout.simple_spinner_item);
+        spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opciones, R.layout.layout_item_spinner);
         spinner.setAdapter(adapter1);
 
-        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        Toolbar toolbar = findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
-        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        TextView textView = (TextView) toolbar.findViewById(R.id.textViewToolbar);
         textView.setText("AhoraTurismo");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         final float density = getResources().getDisplayMetrics().density;
         final Drawable drawable = getResources().getDrawable(R.drawable.lupa);
         final int width = Math.round(25 * density);
@@ -148,9 +159,42 @@ public class MenuPrincipal extends AppCompatActivity
                 } else {
 
                     Intent intent = new Intent(MenuPrincipal.this, AgregarAtractivoTuristico.class);
+                    intent.putExtra("atractivosTuristicos", atractivoTuristicos);
                     startActivity(intent);
                     //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
                 }
+            }
+        });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                mMap.setMyLocationEnabled(true);
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(MenuPrincipal.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    LatLng latLng;
+                                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+                                    Geocoder geo = new Geocoder(MenuPrincipal.this);
+                                    List<Address> adress = null;
+                                }
+                            }
+                        });
+
             }
         });
 
@@ -188,7 +232,7 @@ public class MenuPrincipal extends AppCompatActivity
         });
 
         navigationView.setNavigationItemSelectedListener(this);
-        Log.v("taza2", IdUsuario.getNombreUsuario());
+        //Log.v("taza2", IdUsuario.getNombreUsuario());
 
         if (IdUsuario.getIdUsuario() == null) {
             ejecutarLoginActivity();
@@ -198,18 +242,16 @@ public class MenuPrincipal extends AppCompatActivity
 
 
         buscarEditText = findViewById(R.id.autocomplete_region);
+
         buscarEditText.setFocusable(false);
-        //buscarEditText.setIconified(false);
-        buscarEditText.requestFocusFromTouch();
         buscarEditText.setIconified(true);
-        //buscarEditText.setQuery("", false);
-        //buscarEditText.setIconified(true);
+        buscarEditText.setQueryHint("Buscar");
 
         buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.v("santiago",query);
-                mostrarAtractivoTuristicoPorCiudadOComuna(query);
+                //mostrarAtractivoTuristicoPorCiudadOComuna(query);
+                buscar(query);
                 return true;
             }
 
@@ -255,12 +297,14 @@ public class MenuPrincipal extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    if(bandera==0){
-                        bandera++;
+                    if(position==0){
+                        tagGroup.removeAll();
                     }else {
                         Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
+                        tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                         tagGroup.removeAll();
                         tagGroup.addTag(tag);
+
                     }
             }
 
@@ -278,6 +322,8 @@ public class MenuPrincipal extends AppCompatActivity
             public void onTagClick(Tag tag, int i) {
                 tagGroup.remove(i);
                 contadorCategorias--;
+                spinner.setSelection(0);
+
             }
         });
         //set delete listener
@@ -286,39 +332,56 @@ public class MenuPrincipal extends AppCompatActivity
             public void onTagDeleted(final TagView view, final Tag tag, final int position) {
             }
         });
+
+        imageViewIr=findViewById(R.id.imageViewIr);
+        imageViewIr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+atractivoTuristico.getLatitud()+","+atractivoTuristico.getLongitud()+"&travelmode=driving"));
+                startActivity(intent);
+            }
+        });
     }
 
 
 
 
-    public void buscar() {
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("por ciudad")) {
-            Geocoder geo = new Geocoder(MenuPrincipal.this);
-            int maxResultados = 1;
-            List<Address> adress = null;
-            try {
-                adress = geo.getFromLocationName(buscarEditText.getQuery().toString(), maxResultados);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (adress != null) {
-                if (adress.size() > 0) {
-                    LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
-                    addres = adress.get(0);
-                } else {
-                    Toast.makeText(MenuPrincipal.this, "No se encuenta ciudad!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria/etiqueta")) {
+    public void buscar(String query) {
+        final String busqueda = limpiarAcentos(query);
+        if (spinner.getSelectedItem().toString().equalsIgnoreCase("sin filtros")) {
             mMap.clear();
-            String textoBusqueda = buscarEditText.getQuery().toString();
-            getkeyAtractivoTuristico(textoBusqueda);
+            mostrarAtractivoTuristicoPorCiudadOComuna(busqueda);
+        }
+        if(spinner.getSelectedItem().toString().equalsIgnoreCase("por nombre")){
+            mMap.clear();
+            mDatabase.child(Referencias.ATRACTIVOTURISTICO).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                        AtractivoTuristico atractivoTuristico=dataSnapshot1.getValue(AtractivoTuristico.class);
+                        if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)){
+                            if(atractivoTuristico.getNombre().equalsIgnoreCase(busqueda)){
+                                LatLng latLng;
+                                latLng = new LatLng(atractivoTuristico.getLatitud(), atractivoTuristico.getLongitud());
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria")) {
+            mMap.clear();
+            getkeyAtractivoTuristico(busqueda);
             buscarAtractivoTuristicoPorCategoria();
             if (buscarPorCategoria) {
-                Toast.makeText(MenuPrincipal.this, "No existen categorias asociadas!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MenuPrincipal.this, "No existen categorias", Toast.LENGTH_SHORT).show();
             }
         }
         if (spinner.getSelectedItem().toString().equalsIgnoreCase("mas me gusta")) {
@@ -327,17 +390,63 @@ public class MenuPrincipal extends AppCompatActivity
         }
         if (spinner.getSelectedItem().toString().equalsIgnoreCase("mejor evaluado")) {
             mMap.clear();
-            getMasMeGustaAtractivoTuristico();
+            getMejorCalificadosAtractivoTuristico();
+        }
+        if (spinner.getSelectedItem().toString().equalsIgnoreCase("mas visto")) {
+            mMap.clear();
+            getMasVistosAtractivoTuristico();
         }
 
 
     }
+
+
 
     public void getMasMeGustaAtractivoTuristico(){
         int i=0;
         HashMap<Integer,AtractivoTuristico> map=new HashMap<>();
         for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
             map.put(Integer.valueOf(atractivoTuristico.getContadorMeGusta()),atractivoTuristico);
+        }
+        List<Integer> megusta = new ArrayList<>(map.keySet());
+        Collections.sort(megusta);
+
+        for (int j=atractivoTuristicos.size()-1; j>=0;j--){
+            AtractivoTuristico atractivoTuristico=map.get(megusta.get(j));
+            repintarMapaConFiltroDeBusqueda(atractivoTuristico);
+            i++;
+            if(i>10){
+                break;
+            }
+        }
+
+    }
+
+    public void getMejorCalificadosAtractivoTuristico(){
+        int i=0;
+        HashMap<Integer,AtractivoTuristico> map=new HashMap<>();
+        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
+            map.put(Integer.valueOf(atractivoTuristico.getCalificacion()),atractivoTuristico);
+        }
+        List<Integer> megusta = new ArrayList<>(map.keySet());
+        Collections.sort(megusta);
+
+        for (int j=atractivoTuristicos.size()-1; j>=0;j--){
+            AtractivoTuristico atractivoTuristico=map.get(megusta.get(j));
+            repintarMapaConFiltroDeBusqueda(atractivoTuristico);
+            i++;
+            if(i>10){
+                break;
+            }
+        }
+
+    }
+
+    public void getMasVistosAtractivoTuristico(){
+        int i=0;
+        HashMap<Integer,AtractivoTuristico> map=new HashMap<>();
+        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
+            map.put(Integer.valueOf(atractivoTuristico.getContadorVisualizaciones()),atractivoTuristico);
         }
         List<Integer> megusta = new ArrayList<>(map.keySet());
         Collections.sort(megusta);
@@ -400,48 +509,48 @@ public class MenuPrincipal extends AppCompatActivity
         finish();
     }
 
+    public static String limpiarAcentos(String cadena) {
+        String limpio =null;
+        if (cadena !=null) {
+            String valor = cadena;
+            valor = valor.toUpperCase();
+            // Normalizar texto para eliminar acentos, dieresis, cedillas y tildes
+            limpio = Normalizer.normalize(valor, Normalizer.Form.NFD);
+            // Quitar caracteres no ASCII excepto la enie, interrogacion que abre, exclamacion que abre, grados, U con dieresis.
+            limpio = limpio.replaceAll("[^\\p{ASCII}(N\u0303)(n\u0303)(\u00A1)(\u00BF)(\u00B0)(U\u0308)(u\u0308)]", "");
+            // Regresar a la forma compuesta, para poder comparar la enie con la tabla de valores
+            limpio = Normalizer.normalize(limpio, Normalizer.Form.NFC);
+        }
+        return limpio;
+    }
 
-    public void mostrarAtractivoTuristicoPorCiudadOComuna(final String busqueda) {
+    public void mostrarAtractivoTuristicoPorCiudadOComunaInicio(String busqueda) {
+        final String ciudadLimpio = limpiarAcentos(busqueda);
         Query q = mDatabase.child("atractivoTuristico");
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.v("busqueda",busqueda.toString());
-
-                Geocoder geo = new Geocoder(MenuPrincipal.this);
-                int maxResultados = 1;
-                List<Address> adress = null;
-
-                try {
-                    adress = geo.getFromLocationName(busqueda, maxResultados);
-
-                    Log.v("paco",adress.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (adress != null) {
-                    if (adress.size() > 0) {
-                        LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f));
-                        addres = adress.get(0);
-
-                    } else {
-                        Toast.makeText(MenuPrincipal.this, "No se encuenta ciudad!", Toast.LENGTH_SHORT).show();
-                    }
-                }
                 atractivoTuristicos.clear();
                 mMap.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
-                    if(atractivoTuristico.getCiudad().equalsIgnoreCase(busqueda) || atractivoTuristico.getComuna().equalsIgnoreCase(busqueda)) {
-                        double latitud, longitud;
-                        latitud = atractivoTuristico.getLatitud();
-                        longitud = atractivoTuristico.getLongitud();
-                        LatLng sydney = new LatLng(latitud, longitud);
-                        Marker marker;
-                        marker = mMap.addMarker(new MarkerOptions().position(sydney).title(atractivoTuristico.getNombre()));
-                        marker.showInfoWindow();
-                        atractivoTuristicos.add(atractivoTuristico);
+                    String limpiaCiudad=limpiarAcentos(atractivoTuristico.getCiudad());
+                    String limpiaRegion=limpiarAcentos(atractivoTuristico.getComuna());
+                    //Log.v("limon",atractivoTuristico.getCalificacion());
+                    if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                        if (limpiaCiudad.equalsIgnoreCase(ciudadLimpio) || limpiaRegion.equalsIgnoreCase(ciudadLimpio)) {
+                            double latitud, longitud;
+                            latitud = atractivoTuristico.getLatitud();
+                            longitud = atractivoTuristico.getLongitud();
+                            LatLng sydney = new LatLng(latitud, longitud);
+                            Marker marker;
+                            marker = mMap.addMarker(new MarkerOptions().
+                                    position(sydney).
+                                    icon(bitmapDescriptorFromVector(MenuPrincipal.this, R.drawable.marcador, atractivoTuristico.getCalificacion())).
+                                    title(atractivoTuristico.getNombre()));
+                            //marker.showInfoWindow();
+                            atractivoTuristicos.add(atractivoTuristico);
+                        }
                     }
 
                 }
@@ -454,6 +563,84 @@ public class MenuPrincipal extends AppCompatActivity
             }
         });
     }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId, String scalificacion) {
+        double calificacion=Double.valueOf(scalificacion);
+        double alto=60;
+        if(calificacion==2){alto=alto*1.3;}
+        if(calificacion==3){alto=alto*1.6;}
+        if(calificacion==4){alto=alto*1.8;}
+        if(calificacion==5){alto=alto*2;
+        }
+        int anch= (int) Math.ceil(alto);
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, anch, anch);
+        Bitmap bitmap = Bitmap.createBitmap(anch, anch, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    public void mostrarAtractivoTuristicoPorCiudadOComuna(String busqueda) {
+        final String ciudadLimpio = limpiarAcentos(busqueda);
+        Query q = mDatabase.child("atractivoTuristico");
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Geocoder geo = new Geocoder(MenuPrincipal.this);
+                int maxResultados = 1;
+                List<Address> adress = null;
+
+                try {
+                    adress = geo.getFromLocationName(ciudadLimpio, maxResultados);
+
+                    Log.v("paco",adress.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (adress != null) {
+                    if (adress.size() > 0) {
+                        LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f));
+                        addres = adress.get(0);
+
+                    } else {
+                        Toast.makeText(MenuPrincipal.this, "No se encuenta ciudad!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                atractivoTuristicos.clear();
+                mMap.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
+                    String limpiaCiudad=limpiarAcentos(atractivoTuristico.getCiudad());
+                    String limpiaRegion=limpiarAcentos(atractivoTuristico.getComuna());
+                    if(atractivoTuristico.getVisible().equalsIgnoreCase("visible")) {
+                        if (limpiaCiudad.equalsIgnoreCase(ciudadLimpio) || limpiaRegion.equalsIgnoreCase(ciudadLimpio)) {
+                            double latitud, longitud;
+                            latitud = atractivoTuristico.getLatitud();
+                            longitud = atractivoTuristico.getLongitud();
+                            LatLng sydney = new LatLng(latitud, longitud);
+                            Marker marker;
+                            marker = mMap.addMarker(new MarkerOptions().position(sydney).
+                                    icon(bitmapDescriptorFromVector(MenuPrincipal.this, R.drawable.marcador, atractivoTuristico.getCalificacion())).
+                                    title(atractivoTuristico.getNombre()));
+                            //marker.showInfoWindow();
+                            atractivoTuristicos.add(atractivoTuristico);
+                        }
+                    }
+
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     public void getkeyAtractivoTuristico(final String texto) {
         mDatabase.child("categoriaAtractivoTuristico").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -486,14 +673,13 @@ public class MenuPrincipal extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (String keyAtractivoTuristico : keysAtractivosTuristicos) {
                     Query q = mDatabase.child("atractivoTuristico").child(keyAtractivoTuristico);
-                    Log.v("quee", q.getPath().toString());
-                    Log.v("quee", q.getRef().toString());
-
                     q.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            AtractivoTuristico atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                            repintarMapaConFiltroDeBusqueda(atractivoTuristico);
+                            if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                                AtractivoTuristico atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
+                                repintarMapaConFiltroDeBusqueda(atractivoTuristico);
+                            }
                         }
 
                         @Override
@@ -533,17 +719,20 @@ public class MenuPrincipal extends AppCompatActivity
         return null;
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mGoogleApiClient.connect();
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                AtractivoTuristico atractivoTuristico;
+                imageViewIr.setVisibility(View.VISIBLE);
                 atractivoTuristico = buscarAtractivoTuristicoEnArrayListPorNombre(marker);
                 Intent intent = new Intent(MenuPrincipal.this, DialogoVisualizarAtractivoTuristico.class);
-                Log.v("seee", atractivoTuristico.getNombre());
+                //Log.v("seee", atractivoTuristico.getNombre());
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
                 return false;
@@ -562,6 +751,7 @@ public class MenuPrincipal extends AppCompatActivity
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        mMap.setMyLocationEnabled(true);
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
@@ -570,7 +760,7 @@ public class MenuPrincipal extends AppCompatActivity
                         if (location != null) {
                             LatLng latLng;
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
                             Geocoder geo = new Geocoder(MenuPrincipal.this);
                             List<Address> adress = null;
 
@@ -581,13 +771,7 @@ public class MenuPrincipal extends AppCompatActivity
                             }
                             if(adress!=null){
                                 if(adress.size()>0){
-                                    String localidad=adress.get(0).getLocality();
-                                    localidad=localidad.replace("á","a");
-                                    localidad=localidad.replace("é","e");
-                                    localidad= localidad.replace("í","i");
-                                    localidad= localidad.replace("ó","o");
-                                    localidad=localidad.replace("ú","u");
-                                    mostrarAtractivoTuristicoPorCiudadOComuna(localidad);
+                                    mostrarAtractivoTuristicoPorCiudadOComunaInicio(adress.get(0).getLocality());
                                 }
                             }
 
@@ -598,17 +782,95 @@ public class MenuPrincipal extends AppCompatActivity
                     }
                 });
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng arg0) {
+                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+                linearLayoutDialogo.setVisibility(View.GONE);
+                imageViewIr.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        buscarEditText.setQuery("", false);
+        //mMap.requestFocus();
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
+
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }*/
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            Intent intent=new Intent(MenuPrincipal.this,PerfilUsuario.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_gallery) {
+            Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_slideshow) {
+            Intent intent=new Intent(MenuPrincipal.this,SpaceGalleryActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_manage) {
+            Intent intent=new Intent(MenuPrincipal.this,Informacion.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_share) {
+            logout();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void actualizaFotoPerfil(){
+        Glide.with(getApplicationContext())
+                .load(IdUsuario.getUrl())
+                .fitCenter()
+                .into(imageViewFotoPerfil);
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -631,67 +893,17 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
     @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            logout();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            Intent intent=new Intent(MenuPrincipal.this,PerfilUsuario.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-            Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
-            Intent intent=new Intent(MenuPrincipal.this,AdaptadorImagenes.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

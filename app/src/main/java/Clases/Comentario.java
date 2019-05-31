@@ -20,11 +20,12 @@ public class Comentario implements Serializable {
     public int imageViewLike=0;
     public int imageViewDislike=0;
     String contadorReportes="0";
+    String visible;
 
     public Comentario() {
     }
 
-    public Comentario(String id, String comentario, String idUsuario, String nombreUsuario, String apellidoUsuario, String contadorLike, String contadorDislike) {
+    public Comentario(String id, String comentario, String idUsuario, String nombreUsuario, String apellidoUsuario, String contadorLike, String contadorDislike, String visible) {
         this.id=id;
         this.comentario = comentario;
         this.idUsuario = idUsuario;
@@ -32,6 +33,15 @@ public class Comentario implements Serializable {
         this.apellidoUsuario=apellidoUsuario;
         this.contadorLike=contadorLike;
         this.contadorDislike=contadorDislike;
+        this.visible=visible;
+    }
+
+    public String getVisible() {
+        return visible;
+    }
+
+    public void setVisible(String visible) {
+        this.visible = visible;
     }
 
     public String getContadorReportes() {

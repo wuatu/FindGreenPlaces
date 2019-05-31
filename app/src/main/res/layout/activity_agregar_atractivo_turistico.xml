@@ -8,63 +8,123 @@
     android:orientation="vertical"
     tools:context=".AgregarAtractivoTuristico">
 
-    <include
-        layout="@layout/toolbar_camera"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></include>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <RelativeLayout
+        <include
+            layout="@layout/toolbar_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <RelativeLayout
+            android:id="@+id/layoutMapa"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:uiMapToolbar="false"
-            tools:context=".MenuPrincipal" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:uiMapToolbar="false"
+                tools:context=".MenuPrincipal" />
 
 
-        <ImageButton
-            android:id="@+id/buttonSubirImagen2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:background="@null"
-            android:paddingBottom="37dp"
-            app:srcCompat="@drawable/marcadorpalo"
-            tools:srcCompat="@drawable/marcadorpalo" />
-
-        <LinearLayout
-            android:id="@+id/layoutfocus"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_margin="5dp"
-
-            android:background="@color/com_facebook_button_background_color_focused"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="horizontal">
-
-            <SearchView
-                android:id="@+id/autocomplete_region2"
+            <ImageButton
+                android:id="@+id/buttonSubirImagen2"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                android:paddingBottom="37dp"
+                app:srcCompat="@drawable/marcadorpalo"
+                tools:srcCompat="@drawable/marcadorpalo" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab2"
+                android:layout_width="128dp"
+                android:layout_height="197dp"
+                android:layout_margin="30dp"
+                android:layout_alignRight="@id/map"
+                android:layout_alignBottom="@id/map"
+                android:src="@drawable/ubicacion"
+                app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
+
+            <LinearLayout
+                android:id="@+id/layoutfocus"
+                android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_weight="1">
+                android:layout_margin="5dp"
+
+                android:background="@color/com_facebook_button_background_color_focused"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <SearchView
+                    android:id="@+id/autocomplete_region2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:iconifiedByDefault="false">
 
 
-            </SearchView>
+                </SearchView>
 
 
-        </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutDialogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="55dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_bg"
 
 
-    </RelativeLayout>
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView28"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:text="Inserte la Ubicación del Atractivo Turístico"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/ocultarMapa"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/my_button_green"
+            android:text="Listo" />
+
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -202,9 +262,9 @@
                 android:id="@+id/buttonaddCategoria"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_weight="1"
-                android:background="#43a047"
+                android:background="@drawable/my_button_green"
                 android:text="Añadir"
                 android:textStyle="bold" />
 

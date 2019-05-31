@@ -2,6 +2,7 @@ package com.example.cristian.findgreenplaces;
 
         import android.app.AlertDialog;
         import android.content.DialogInterface;
+        import android.content.Intent;
         import android.graphics.Color;
         import android.support.annotation.NonNull;
         import android.support.v7.app.AppCompatActivity;
@@ -79,11 +80,12 @@ public class SetRedesSocialesAT extends AppCompatActivity {
                         .setMessage("Seguro Quieres Enviar Estos Datos?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                /*Intent intent = new Intent(SetHorarioDeAtencion.this, VisualizarAtractivoTuristico.class);
-                                intent.putExtra("item_photo", item_photo);
-                                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                                startActivity(intent);*/
-                                Toast.makeText(SetRedesSocialesAT.this,"Datos enviados correctamente!",Toast.LENGTH_SHORT).show();
+                                atractivoTuristico.setRedesSociales(editTextRedes.getText().toString());
+                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.REDESSOCIALES,editTextRedes.getText().toString());
+
+                                setResult(RESULT_OK,
+                                        new Intent().putExtra("nombre", atractivoTuristico.getRedesSociales())
+                                                .putExtra("contribucion",contribucion));
                                 finish();
                             }
                         })
@@ -106,55 +108,6 @@ public class SetRedesSocialesAT extends AppCompatActivity {
                         .setMessage("Seguro que quieres cancelar?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setDescripcion(editTextRedes.getText().toString());
-
-                                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
-                                //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
-                                DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
-                                        child(atractivoTuristico.getId()).
-                                        child(IdUsuario.getIdUsuario()).push();
-                                String key=databaseReference.getKey();
-                                Contribucion contribucion=new Contribucion(key,atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.REDESSOCIALES,editTextRedes.getText().toString());
-                                databaseReference.setValue(contribucion);
-
-                                //añade contribucion (a tabla "contribucionPorUsuario") por usuario
-                                mDatabase.child(Referencias.CONTRIBUCIONESPORUSUARIO).
-                                        child(IdUsuario.getIdUsuario()).
-                                        child(atractivoTuristico.getId()).
-                                        child(key).
-                                        setValue(contribucion);
-
-                                //subir puntos
-                                final DatabaseReference databaseReference1=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
-                                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        usuario=dataSnapshot.getValue(Usuario.class);
-                                        int puntos=Integer.valueOf(usuario.getPuntos())+2;
-                                        if(puntos>=100){
-                                            int nivel= Integer.valueOf(usuario.getNivel());
-                                            if(nivel==1){
-                                                usuario.setNivel("2");
-                                            }
-                                            if(nivel==2){
-                                                usuario.setNivel("3");
-                                            }
-                                        }else{
-                                            usuario.setPuntos(String.valueOf(puntos));
-
-                                        }
-                                        int contribuciones=Integer.valueOf(usuario.getContribuciones())+1;
-                                        usuario.setContribuciones(String.valueOf(contribuciones));
-                                        databaseReference1.setValue(usuario);
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                                Toast.makeText(SetRedesSocialesAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         })

@@ -2,10 +2,12 @@ package com.example.cristian.findgreenplaces;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,6 +68,16 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         setContentView(R.layout.activity_set_calificacion_atractivo_turistico);
+
+        Toolbar toolbar=findViewById(R.id.toolbar_camera);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        textView.setText("Calificar");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         titulo = (TextView) findViewById(R.id.textViewTituloAT2);
         textViewratingBar=findViewById(R.id.textViewRatingBar);
         titulo = (TextView) findViewById(R.id.textViewTituloAT2);
@@ -74,7 +86,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
 
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         editTextComentar=findViewById(R.id.editTextComentar);
-        textViewTituloComentar=findViewById(R.id.textViewTituloComentarios);
+        //textViewTituloComentar=findViewById(R.id.textViewTituloComentarios);
         buttonEnviarCalificacion=findViewById(R.id.buttonEnviarCalificacion);
         getImagenesAtractivoTuristico();
         ratingBar=findViewById(R.id.rating);
@@ -133,7 +145,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                 });
                 Query q2=mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
                 String keyComentario=((DatabaseReference) q2).getKey();
-                Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0");
+                Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0",Referencias.VISIBLE);
                 ((DatabaseReference) q2).setValue(comentario);
 
             }
@@ -161,15 +173,40 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                 return true;
             }
         });
+        Button cancelar=findViewById(R.id.buttonCancelar);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this)
+                        .setTitle("Cancelar Calificación")
+                        .setMessage("Esta seguro que quiere cancelar?")
+                        //.setIcon(R.drawable.aporte)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        });
     }
     private void calculaNuevaCalificacionPromedio(int getTotlaPersonas, double getSumaCalificaciones, float calificacionUsuario) {
         double nuevaSumaCalificaciones=getSumaCalificaciones+calificacionUsuario;
         int nuevoTotalPersonas=getTotlaPersonas+1;
         double nuevoPromedio=nuevaSumaCalificaciones/nuevoTotalPersonas;
+        atractivoTuristico.setCalificacion(String.valueOf(nuevoPromedio));
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
         CalificacionPromedio calificacionPromedio=new CalificacionPromedio(nuevoPromedio,nuevoTotalPersonas,nuevaSumaCalificaciones);
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).setValue(calificacionPromedio);
         Log.v("rating",String.valueOf(ratingBar.getRating()));
         textViewratingBar.setText(String.valueOf(nuevoPromedio).substring(0,3));
         textViewOpiniones.setText(String.valueOf(nuevoTotalPersonas));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 }

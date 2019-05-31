@@ -64,9 +64,10 @@ public class DialogoReportarComentario extends AppCompatActivity {
                         child(comentario.getId()).setValue(comentario);
                 //con 10 reportes el comentarios se elimina
                 if(Integer.valueOf(comentario.getContadorReportes())>10){
+                    comentario.setVisible(Referencias.INVISIBLE);
                     mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
                             child(atractivoTuristico.getId()).
-                            child(comentario.getId()).removeValue();
+                            child(comentario.getId()).setValue(Referencias.INVISIBLE);
                 }
                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -101,6 +102,7 @@ public class DialogoReportarComentario extends AppCompatActivity {
 
                     }
                 });
+
                 finish();
             }
         });

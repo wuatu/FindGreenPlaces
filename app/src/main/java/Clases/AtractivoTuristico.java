@@ -19,9 +19,11 @@ public class AtractivoTuristico implements Serializable {
     String contadorMeGusta="0";
     String contadorReportes="0";
     String contadorVisualizaciones;
+    String calificacion;
     String idUsuario;
+    String visible;
 
-    public AtractivoTuristico(String id,String idUsuario, String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud,String contadorVisualizaciones, String contadorReportes) {
+    public AtractivoTuristico(String id,String idUsuario, String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud,String contadorVisualizaciones, String contadorReportes, String calificacion, String visible) {
         this.id = id;
         this.idUsuario=idUsuario;
         this.nombre = nombre;
@@ -32,6 +34,24 @@ public class AtractivoTuristico implements Serializable {
         this.longitud = longitud;
         this.contadorVisualizaciones=contadorVisualizaciones;
         this.contadorReportes=contadorReportes;
+        this.calificacion=calificacion;
+        this.visible=visible;
+    }
+
+    public String getVisible() {
+        return visible;
+    }
+
+    public void setVisible(String visible) {
+        this.visible = visible;
+    }
+
+    public String getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(String calificacion) {
+        this.calificacion = calificacion;
     }
 
     public String getContadorReportes() {
