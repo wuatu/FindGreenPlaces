@@ -2,13 +2,17 @@ package com.example.cristian.findgreenplaces;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +61,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
     LinearLayout linearLayoutLike;
     ImageView imageViewReportar;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,14 @@ public class SpacePhotoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Window window = getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // finally change the color
+        window.setStatusBarColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_focused));
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -156,20 +169,20 @@ public class SpacePhotoActivity extends AppCompatActivity {
     public void onClick(View v) {
         if(Integer.valueOf(imageViewLike.getTag().toString())==R.drawable.likeoff){
             //Consulta para añadir un megusta a la imagen
-            DatabaseReference databaseReference=mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).child(imagen.getId());
+            DatabaseReference databaseReference=mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(imagen.getIdAtractivo()).child(imagen.getId());
             String key=databaseReference.getKey();
-            MeGustaImagen meGustaImagen=new MeGustaImagen(key,IdUsuario.getIdUsuario(),atractivoTuristico.getId(),imagen.getId(),Referencias.MEGUSTA);
+            MeGustaImagen meGustaImagen=new MeGustaImagen(key,IdUsuario.getIdUsuario(),imagen.getIdAtractivo(),imagen.getId(),Referencias.MEGUSTA);
             databaseReference.setValue(meGustaImagen);
             imageViewLike.setImageResource(R.drawable.likeon);
             imageViewLike.setTag(R.drawable.likeon);
             int contadorLike=Integer.valueOf(imagen.getContadorLike())+1;
             textViewNLike.setText(String.valueOf(contadorLike));
             imagen.setContadorLike(String.valueOf(contadorLike));
-            mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId()).child(imagen.getId()).setValue(imagen);
+            mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
             aumentaPuntos();
         }
         else{
-            mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).child(imagen.getId()).removeValue();
+            mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(imagen.getIdAtractivo()).child(imagen.getId()).removeValue();
             imageViewLike.setImageResource(R.drawable.likeoff);
             imageViewLike.setTag(R.drawable.likeoff);
             int contadorLike=Integer.valueOf(imagen.getContadorLike());
@@ -177,7 +190,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
                 contadorLike=contadorLike-1;
                 textViewNLike.setText(String.valueOf(contadorLike));
                 imagen.setContadorLike(String.valueOf(contadorLike));
-                mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId()).child(imagen.getId()).setValue(imagen);
+                mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
             }
             disminuyePuntos();
         }

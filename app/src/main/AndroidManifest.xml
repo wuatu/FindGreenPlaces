@@ -40,7 +40,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCl9lxTZegm_pKKXXPP_wEK4CQnegnYuMs" />
+            android:value="AIzaSyDwUa4AQD7U9ar0ZmjOS5gwSyE_9NgJPug" />
 
         <activity
             android:name=".MenuPrincipal"

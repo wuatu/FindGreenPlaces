@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="top"
                         android:hint="Comentar"
-                        android:inputType="textAutoComplete|textMultiLine"
+                        android:inputType="textAutoComplete|textMultiLine|textCapSentences"
                         android:maxLines="5"
                         android:singleLine="false" />
                 </android.support.design.widget.TextInputLayout>

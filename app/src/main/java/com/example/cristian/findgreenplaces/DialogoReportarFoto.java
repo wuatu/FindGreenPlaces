@@ -57,8 +57,6 @@ public class DialogoReportarFoto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(DialogoReportarFoto.this,"La foto ha sido reportada  ",Toast.LENGTH_SHORT).show();
-
-
                 //consulta para ver cuantos reportes tiene
                 int contadorReportes=Integer.valueOf(imagen.getContadorReportes())+1;
                 if(contadorReportes>=10){

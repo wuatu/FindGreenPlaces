@@ -2,6 +2,7 @@ package com.example.cristian.findgreenplaces;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -112,6 +113,14 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final float calificacionUsuario = ratingBar.getRating();
+                if(calificacionUsuario<=0){
+                    Toast.makeText(SetCalificacionAtractivoTuristico.this,"Debe Calificar",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(editTextComentar.getText().toString().equals("")){
+                    Toast.makeText(SetCalificacionAtractivoTuristico.this,"Debe Comentar",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //crea registro de calificacion de un atractivo turistico por usuario
                 CalificacionUsuarioAtractivoTuristico calificacionUsuarioAtractivoTuristico=new CalificacionUsuarioAtractivoTuristico(calificacionUsuario);
                 Query q=mDatabase.child(Referencias.CALIFICACIONUSUARIOATRACTIVOTURISTICO).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).push();
@@ -134,6 +143,10 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                         }
                         calculaNuevaCalificacionPromedio(getTotlaPersonas,getSumaCalificaciones,calificacionUsuario);
                         Toast.makeText(SetCalificacionAtractivoTuristico.this,"Calificación enviada exitosamente!",Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK,
+                                new Intent().putExtra("nombre", atractivoTuristico.getNombre()).
+                                        putExtra("opiniones",textViewOpiniones.getText().toString()).
+                                        putExtra("rating",textViewratingBar.getText().toString()));
                         finish();
 
                     }
@@ -143,10 +156,12 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
 
                     }
                 });
+
                 Query q2=mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
                 String keyComentario=((DatabaseReference) q2).getKey();
                 Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0",Referencias.VISIBLE);
                 ((DatabaseReference) q2).setValue(comentario);
+                editTextComentar.setText("");
 
             }
         });

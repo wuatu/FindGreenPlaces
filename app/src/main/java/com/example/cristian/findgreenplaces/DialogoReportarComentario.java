@@ -57,17 +57,20 @@ public class DialogoReportarComentario extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(DialogoReportarComentario.this,"El comentario ha sido reportado",Toast.LENGTH_SHORT).show();
                 int reporte=Integer.valueOf(comentario.getContadorReportes())+1;
-                comentario.setContadorReportes(String.valueOf(reporte));
-                //consulta para ver cuantos reportes tiene
-                mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
-                        child(atractivoTuristico.getId()).
-                        child(comentario.getId()).setValue(comentario);
+
                 //con 10 reportes el comentarios se elimina
-                if(Integer.valueOf(comentario.getContadorReportes())>10){
+                if(Integer.valueOf(comentario.getContadorReportes())>=10){
                     comentario.setVisible(Referencias.INVISIBLE);
+                    comentario.setContadorReportes(String.valueOf(reporte));
                     mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
                             child(atractivoTuristico.getId()).
-                            child(comentario.getId()).setValue(Referencias.INVISIBLE);
+                            child(comentario.getId()).setValue(comentario);
+                }
+                else{
+                    comentario.setContadorReportes(String.valueOf(reporte));
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).
+                            child(atractivoTuristico.getId()).
+                            child(comentario.getId()).setValue(comentario);
                 }
                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario());
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {

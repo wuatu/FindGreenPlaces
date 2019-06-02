@@ -108,7 +108,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         setContentView(R.layout.activity_login);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        showProgress(true);
+
         if(leerValorBoolean(Login.this,SESIONINICIADA)){
             String key=leerValorString(Login.this,IDUSUARIO);
             String nombre=leerValorString(Login.this,NOMBRE);
@@ -122,7 +122,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
         botonInvitado=findViewById(R.id.boton_invitado);
         textViewOlvidoContrasña=findViewById(R.id.textViewOlvideContraseña);
         textViewOlvidoContrasña.setOnClickListener(new OnClickListener() {
@@ -229,36 +228,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -271,18 +240,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
 
 
     /**

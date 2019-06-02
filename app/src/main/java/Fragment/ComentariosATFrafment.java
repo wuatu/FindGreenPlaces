@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -65,6 +66,8 @@ import Clases.Usuario;
  * create an instance of this fragment.
  */
 public class ComentariosATFrafment extends android.app.Fragment implements View.OnClickListener {
+    ImageView imageViewEnviar;
+    EditText editTextComentar;
     ArrayList<Imagen> imagenes;
     AtractivoTuristico atractivoTuristico;
     private ListView lista;
@@ -135,6 +138,10 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+
+        imageViewEnviar=view.findViewById(R.id.imageViewEnviar);
+        editTextComentar=view.findViewById(R.id.editTextComentar);
+
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
         //lista=(ListView)view.findViewById(R.id.ma_lv_lista);
@@ -192,10 +199,27 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                             }
 
                         }
+
                         showProgress(false);
                         adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico,comentarioMeGustas,view);
                         lista.setAdapter((ListAdapter) adapter);
                         Log.v("taza3",String.valueOf(model.size()));
+
+                        imageViewEnviar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Query q2=mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
+                                String keyComentario=((DatabaseReference) q2).getKey();
+                                Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0",Referencias.VISIBLE);
+                                comentario.setImageViewLike(R.drawable.likeoff);
+                                comentario.setImageViewDislike(R.drawable.dislikeoff);
+                                ((DatabaseReference) q2).setValue(comentario);
+                                model.add(comentario);
+                                adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico,comentarioMeGustas,view);
+                                lista.setAdapter((ListAdapter) adapter);
+                                editTextComentar.setText("");
+                            }
+                        });
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {}
@@ -208,6 +232,7 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
 
             }
         });
+
 
         return view;
     }
@@ -230,7 +255,7 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                             public void onPickResult(PickResult r) {
                                 Uri uri=r.getUri();
                                 Intent intent = new Intent(ComentariosATFrafment.this.getActivity(), SubirFoto.class);
-                                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                                intent.putExtra("atractivoTuristico", atractivoTuristico.getId());
                                 intent.putExtra("imagen",uri.toString());
                                 Log.v("descargar",uri.toString());
                                 startActivity(intent);
@@ -260,17 +285,21 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            //mLoginFormView=findViewById(R.id.progress_bar);
+            if(isAdded()) {
+                int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressBar.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+                //mLoginFormView=findViewById(R.id.progress_bar);
+
+                progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+
+                progressBar.animate().setDuration(shortAnimTime).alpha(
+                        show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                });
+            }
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.

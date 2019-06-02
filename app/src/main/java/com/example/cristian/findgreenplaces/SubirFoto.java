@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,10 +48,12 @@ public class SubirFoto extends AppCompatActivity {
     String uris;
     Uri uri;
     private ProgressDialog progressDialog;
+    StorageReference direccion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subir_foto);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mStorageReference=FirebaseStorage.getInstance().getReference();
         database=FirebaseDatabase.getInstance();
@@ -66,6 +69,7 @@ public class SubirFoto extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         atractivoTuristico= ((String) getIntent().getStringExtra("atractivoTuristico"));
+
         uris= ((String) getIntent().getStringExtra("imagen"));
         uri=uri.parse(uris);
         imageViewFotoPerfil =findViewById(R.id.imageViewFotoPerfil);
@@ -86,12 +90,12 @@ public class SubirFoto extends AppCompatActivity {
                 progressDialog.setMessage("Subiendo Foto...");
                 progressDialog.setCancelable(true);
                 progressDialog.show();
-                final StorageReference direccion=mStorageReference.child("fotos").child(uri.getLastPathSegment());
+                direccion=mStorageReference.child("fotos").child(uri.getLastPathSegment());
                 Task<Uri> urlTask = direccion.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (!task.isSuccessful()) {
-                            throw task.getException();
+
                         }
                         return direccion.getDownloadUrl();
                     }

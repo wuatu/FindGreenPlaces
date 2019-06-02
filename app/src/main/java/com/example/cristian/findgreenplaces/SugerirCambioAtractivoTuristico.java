@@ -193,14 +193,14 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //modifico el atractivo turistico con la nueva información
-                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 new AlertDialog.Builder(SugerirCambioAtractivoTuristico.this)
                         .setTitle("Enviar Cambios")
                         .setMessage("Esta seguro que quiere realizar estos cambios?")
                         //.setIcon(R.drawable.aporte)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                //modifico el atractivo turistico con la nueva información
+                                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                                 for (Contribucion contribucion:contribuciones){
                                     //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
                                     DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
@@ -335,8 +335,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             intent.putExtra("imagenes", imagenes);
                             intent.putExtra("atractivoTuristico", atractivoTuristico);
                             intent.putExtra("categorias", categorias);
-
-                            startActivity(intent);
+                            startActivityForResult(intent,CATEGORIAS);
                         }
                         else{
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 2 para contribuir en categoria de otro usuario",Toast.LENGTH_SHORT).show();

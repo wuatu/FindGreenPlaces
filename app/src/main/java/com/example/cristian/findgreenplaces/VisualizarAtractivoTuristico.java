@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
 import Clases.Imagen;
+import Clases.Referencias;
 import Fragment.VisualizarAtractivoTuristicoFragment;
 import Fragment.ComentariosATFrafment;
 import Fragment.FotosATFragment;
@@ -117,6 +118,13 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+
+        int contadorVisualizaciones=Integer.valueOf(atractivoTuristico.getContadorVisualizaciones())+1;
+        atractivoTuristico.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
+        //textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
+        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).child(Referencias.CONTADORVISUALIZACIONES).setValue(String.valueOf(contadorVisualizaciones));
+
+
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         iniciaFragment();

@@ -177,7 +177,7 @@ public class FotosATFragment extends android.app.Fragment {
                             public void onPickResult(PickResult r) {
                                 Uri uri=r.getUri();
                                 Intent intent = new Intent(FotosATFragment.this.getActivity(), SubirFoto.class);
-                                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                                intent.putExtra("atractivoTuristico", atractivoTuristico.getId());
                                 intent.putExtra("imagen",uri.toString());
                                 Log.v("descargar",uri.toString());
                                 startActivity(intent);

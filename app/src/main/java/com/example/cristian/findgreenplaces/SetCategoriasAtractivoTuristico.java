@@ -84,7 +84,8 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
         agregarCategorias();
         for (Categoria categoria:categorias){
             String sX="   x";
-            String sCategoria=categoria.getEtiqueta();
+            String stringLimpio=MenuPrincipal.limpiarAcentos(categoria.getEtiqueta());
+            String sCategoria=stringLimpio;
             sCategoria=sCategoria.concat(sX);
             Tag tag=new Tag(sCategoria);
             tag.layoutColor = getResources().getColor(R.color.colorPrimary);

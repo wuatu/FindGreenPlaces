@@ -280,6 +280,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20px"
+                            android:background="@android:drawable/list_selector_background"
                             android:orientation="vertical"
                             android:visibility="gone">
 
@@ -295,6 +296,7 @@
                                 android:id="@+id/textViewTelefono"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:background="@android:drawable/list_selector_background"
                                 android:text=""
                                 android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                                 android:textSize="14sp" />

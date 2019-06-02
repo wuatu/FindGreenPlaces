@@ -2,10 +2,9 @@
 <resources>
     <string-array name="opciones">
         <item>Sin Filtros</item>
-        <item>Por Nombre</item>
         <item>Mejor Evaluado</item>
         <item>Mas Me Gusta</item>
-        <item>Categoria</item>
         <item>Mas visto</item>
+        <item>Categoria</item>
     </string-array>
 </resources>
