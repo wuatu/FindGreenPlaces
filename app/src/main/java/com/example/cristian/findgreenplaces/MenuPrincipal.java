@@ -264,8 +264,10 @@ public class MenuPrincipal extends AppCompatActivity
         buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mostrarAtractivoTuristicoPorCiudadOComuna();
                 busqueda = limpiarAcentos(query);
-                if (isCiudadORegion()) {
+
+                if (isCiudadORegion() || isNombre()) {
                     busquedaCiudad=busqueda;
                     if (tags.size() > 0) {
                         int i = 0;
@@ -394,6 +396,9 @@ public class MenuPrincipal extends AppCompatActivity
                             repintarMapaConArrayList(14);
                         }
                     }
+                    else{
+                        repintarMapaConArrayList(14);
+                    }
                 }else {
                     if (tags.size()==0){
                         contadorCategorias = 1;
@@ -455,6 +460,7 @@ public class MenuPrincipal extends AppCompatActivity
                     tags.remove(i);
                     spinner.setSelection(0);
 
+
                 }else {
                     /*tagGroup.removeAll();
                     tags.clear();
@@ -467,25 +473,21 @@ public class MenuPrincipal extends AppCompatActivity
                     tagGroup.remove(i);
                     tags.remove(i);
                     atractivosTuristicosTemp.clear();
-                    for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
-                        atractivosTuristicosTemp.add(atractivoTuristico);
+                    if (tags.size() == 1) {
+                        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
+                            atractivosTuristicosTemp.add(atractivoTuristico);
+                        }
+                        repintarMapaConArrayListTemporal(14);
+                        buscar();
                     }
-                    buscar();
-
-                    return;
-
+                    if (tags.size() == 0) {
+                        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
+                            atractivosTuristicosTemp.add(atractivoTuristico);
+                        }
+                        repintarMapaConArrayListTemporal(14);
+                        repintarMapaConArrayList(14);
+                    }
                 }
-
-                if (tags.size() == 1) {
-                    repintarMapaConArrayListTemporal(14);
-                }
-                if (tags.size() == 0) {
-                    repintarMapaConArrayList(14);
-                }
-
-
-
-
             }
         });
         //set delete listener
@@ -505,6 +507,15 @@ public class MenuPrincipal extends AppCompatActivity
             }
         });
 
+    }
+
+    public boolean isNombre(){
+        for(AtractivoTuristico atractivoTuristico:atractivoTuristicos){
+            if(atractivoTuristico.getNombre().toUpperCase().indexOf(busqueda.toUpperCase())==0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void AlertNoGps(){

@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -485,6 +486,20 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         textViewCiudad=(TextView)findViewById(R.id.editTextCiudad);
         textViewComuna=(TextView)findViewById(R.id.editTextComuna);
         textViewDescripcion=(TextView)findViewById(R.id.editTextDescripcion);
+        textViewDescripcion.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.editTextDescripcion) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
         textViewDireccion=(TextView)findViewById(R.id.editTextDireccion);
         buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override

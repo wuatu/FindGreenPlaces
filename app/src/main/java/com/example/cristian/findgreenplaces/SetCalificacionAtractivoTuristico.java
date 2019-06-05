@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +89,21 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
 
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         editTextComentar=findViewById(R.id.editTextComentar);
+        editTextComentar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.editTextComentar) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
         //textViewTituloComentar=findViewById(R.id.textViewTituloComentarios);
         buttonEnviarCalificacion=findViewById(R.id.buttonEnviarCalificacion);
         getImagenesAtractivoTuristico();
@@ -176,6 +193,9 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                     float width = ratingBar.getWidth();
                     float starsf = (touchPositionX / width) * 5.0f;
                     int stars = (int)starsf + 1;
+                    if(stars>5){
+                        stars=5;
+                    }
                     ratingBar.setRating(stars);
                     v.setPressed(false);
                     textViewratingBar.setText(String.valueOf(stars)+".0");
@@ -190,6 +210,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                 return true;
             }
         });
+
         Button cancelar=findViewById(R.id.buttonCancelar);
         cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,4 +250,5 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
         onBackPressed();
         return false;
     }
+
 }

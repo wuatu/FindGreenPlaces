@@ -76,7 +76,7 @@
                     android:hint="Comentar"
                     android:includeFontPadding="false"
                     android:inputType="textAutoComplete|textMultiLine|textCapSentences"
-                    android:maxLines="5"
+                    android:maxLines="8"
                     android:singleLine="false" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

@@ -22,7 +22,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/layoutMapa"
@@ -56,9 +57,9 @@
                 android:id="@+id/fab2"
                 android:layout_width="128dp"
                 android:layout_height="197dp"
-                android:layout_margin="30dp"
                 android:layout_alignRight="@id/map"
                 android:layout_alignBottom="@id/map"
+                android:layout_margin="30dp"
                 android:src="@drawable/ubicacion"
                 app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
 
@@ -230,8 +231,11 @@
                 <AutoCompleteTextView
                     android:id="@+id/editTextDescripcion"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="200dp"
                     android:gravity="top"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
                     android:hint="Descripción"
                     android:inputType="textMultiLine|textCapSentences" />
             </android.support.design.widget.TextInputLayout>

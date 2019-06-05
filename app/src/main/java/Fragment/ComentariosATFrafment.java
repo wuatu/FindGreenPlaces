@@ -208,16 +208,18 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                         imageViewEnviar.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Query q2=mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
-                                String keyComentario=((DatabaseReference) q2).getKey();
-                                Comentario comentario=new Comentario(keyComentario,editTextComentar.getText().toString(),IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario(),IdUsuario.getApellidoUsuario(),"0","0",Referencias.VISIBLE);
-                                comentario.setImageViewLike(R.drawable.likeoff);
-                                comentario.setImageViewDislike(R.drawable.dislikeoff);
-                                ((DatabaseReference) q2).setValue(comentario);
-                                model.add(comentario);
-                                adapter=new AdapterListViewComentarioAT(getActivity(),model,atractivoTuristico,comentarioMeGustas,view);
-                                lista.setAdapter((ListAdapter) adapter);
-                                editTextComentar.setText("");
+                                if(!editTextComentar.getText().toString().equalsIgnoreCase("")){
+                                    Query q2 = mDatabase.child(Referencias.ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO).child(atractivoTuristico.getId()).push();
+                                    String keyComentario = ((DatabaseReference) q2).getKey();
+                                    Comentario comentario = new Comentario(keyComentario, editTextComentar.getText().toString(), IdUsuario.getIdUsuario(), IdUsuario.getNombreUsuario(), IdUsuario.getApellidoUsuario(), "0", "0", Referencias.VISIBLE);
+                                    comentario.setImageViewLike(R.drawable.likeoff);
+                                    comentario.setImageViewDislike(R.drawable.dislikeoff);
+                                    ((DatabaseReference) q2).setValue(comentario);
+                                    model.add(comentario);
+                                    adapter = new AdapterListViewComentarioAT(getActivity(), model, atractivoTuristico, comentarioMeGustas, view);
+                                    lista.setAdapter((ListAdapter) adapter);
+                                    editTextComentar.setText("");
+                                }
                             }
                         });
                     }
