@@ -353,7 +353,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==GALLERY_INTENT && resultCode==RESULT_OK){
-            String imagen=data.getStringExtra("imagen");
+            urlImagen=data.getStringExtra("imagen");
 
             /*progressDialog.setTitle("Subiendo Foto");
             progressDialog.setMessage("Subiendo Foto...");
@@ -382,7 +382,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                         urlImagen = downloadUri.toString();
                         Log.v("descargar",urlImagen);*/
                         Glide.with(AgregarAtractivoTuristico.this)
-                                .load(imagen)
+                                .load(urlImagen)
                                 .fitCenter()
                                 .centerCrop()
                                 .into(botonSubirImagen);
@@ -569,7 +569,15 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     String RegionLimpio = MenuPrincipal.limpiarAcentos(comuna);
                     String NombreLimpio = MenuPrincipal.limpiarAcentos(nombre);
 
-                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(keyAtractivoTuristico,IdUsuario.getIdUsuario(),NombreLimpio,ciudadLimpio,RegionLimpio,descripcion,latitud,longitud,"0","0","0",Referencias.VISIBLE);
+                    textViewCiudad.setFocusable(false);
+                    textViewCiudad.setFocusableInTouchMode(false); // user touches widget on phone with touch screen
+                        textViewCiudad.setClickable(false); // user navigates with wheel and selects widget
+                                    textViewCiudad.setKeyListener(null);
+                                    textViewCiudad.setEnabled(false);
+                    textViewComuna.setClickable(false);
+                    textViewComuna.setEnabled(false);
+
+                    AtractivoTuristico atractivoTuristico=new AtractivoTuristico(keyAtractivoTuristico,IdUsuario.getIdUsuario(),NombreLimpio,ciudadLimpio,RegionLimpio,descripcion,latitud,longitud,"0","0","0",Referencias.VISIBLE,"0",urlImagen);
                     databaseReference.setValue(atractivoTuristico, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {

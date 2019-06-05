@@ -56,14 +56,14 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         imagenes=new ArrayList();
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
 
-        getImagenesAtractivoTuristico();
+
         linearLayout=findViewById(R.id.contenedorDialogoAT);
         //getSupportActionBar().hide();
         DisplayMetrics dm= new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int ancho=dm.widthPixels;
         int alto=dm.heightPixels;
-        getWindow().setLayout((int) (ancho*.99),(int)(alto*.21));
+        getWindow().setLayout((int) (ancho*.99),(int)(alto*.30));
         getWindow().setGravity(Gravity.BOTTOM);
         titulo = (TextView) findViewById(R.id.textViewTituloAT);
         titulo.setText(atractivoTuristico.getNombre());
@@ -73,51 +73,39 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         ratingBar=findViewById(R.id.rating);
         textViewratingBar=findViewById(R.id.textViewRatingBar);
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                if(atractivoTuristico.getDescripcion().length()>90){
-                    String dercripcion2=atractivoTuristico.getDescripcion();
-                    String descripcionCortada=dercripcion2.substring(0,90)+" mas...";
-                }else{
-                    descripcion.setText("Descripción: "+atractivoTuristico.getDescripcion()+" mas...");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
+        /*mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
                 if(calificacionPromedio!=null){
                     String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
                     textViewratingBar.setText(calificacion.substring(0,3));
-                    Log.v("esooo",String.valueOf(Float.parseFloat(calificacion)));
                     ratingBar.setRating(Float.parseFloat(calificacion));
                     textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
-                    ratingBar.setEnabled(false);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
+        textViewratingBar.setText(atractivoTuristico.getCalificacion());
+        ratingBar.setRating(Float.parseFloat(atractivoTuristico.getCalificacion()));
+        textViewOpiniones.setText(String.valueOf(atractivoTuristico.getContadorOpiniones()));
+        ratingBar.setEnabled(false);
+        Glide.with(getApplicationContext())
+                .load(atractivoTuristico.getUrlFoto())
+                .centerCrop()
+                .into(foto);
+        linearLayout();
     }
+
+
     private void linearLayout(){
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
-                intent.putExtra("imagenes",imagenes);
-                Log.v("ooooh",String.valueOf(imagenes.size()));
-                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                startActivity(intent);
+                getImagenesAtractivoTuristico();
             }
         });
     }
@@ -131,9 +119,15 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     Imagen imagen=dataSnapshot1.getValue(Imagen.class);
                     imagenes.add(imagen);
-
                 }
-                if(imagenes.size()>0) {
+                finish();
+                Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
+                intent.putExtra("imagenes",imagenes);
+                Log.v("ooooh",String.valueOf(imagenes.size()));
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                startActivity(intent);
+
+                /*if(imagenes.size()>0) {
 
                     Glide.with(getApplicationContext())
                             .load(imagenes.get(0).getUrl())
@@ -141,7 +135,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
                             .centerCrop()
                             .into(foto);
                 }
-                    linearLayout();
+                    linearLayout();*/
 
             }
 

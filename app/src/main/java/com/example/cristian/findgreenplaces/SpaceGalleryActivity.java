@@ -38,7 +38,7 @@ import Clases.SpacePhoto;
 public class SpaceGalleryActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase= database.getReference();
-    ArrayList<Imagen> imagenes;
+    ArrayList<Imagen> imagenes=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public class SpaceGalleryActivity extends AppCompatActivity {
         mDatabase.child(Referencias.IMAGENES).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                imagenes=new ArrayList<>();
+                imagenes.clear();
                 for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
                     for(DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
                         Imagen imagen = dataSnapshot2.getValue(Imagen.class);

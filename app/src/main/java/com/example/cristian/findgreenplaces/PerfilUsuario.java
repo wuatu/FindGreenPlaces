@@ -120,15 +120,18 @@ public class PerfilUsuario extends AppCompatActivity {
                 linearLayoutPerfil.setVisibility(View.VISIBLE);
                 if(nivel.getText().toString().equalsIgnoreCase("1")){
                     linearLayoutBronce.setVisibility(View.VISIBLE);
+                    linearLayoutMedallas.setVisibility(View.VISIBLE);
                 }
                 if(nivel.getText().toString().equalsIgnoreCase("2")){
                     linearLayoutBronce.setVisibility(View.VISIBLE);
                     linearLayoutPlata.setVisibility(View.VISIBLE);
+                    linearLayoutMedallas.setVisibility(View.VISIBLE);
                 }
                 if(Integer.valueOf(nivel.getText().toString())>=3){
                     linearLayoutPlata.setVisibility(View.VISIBLE);
                     linearLayoutBronce.setVisibility(View.VISIBLE);
                     linearLayoutOro.setVisibility(View.VISIBLE);
+                    linearLayoutMedallas.setVisibility(View.VISIBLE);
                 }
             }
 

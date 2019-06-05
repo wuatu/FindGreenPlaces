@@ -102,6 +102,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                     textViewratingBar.setText("5.0");
                     ratingBar.setRating(Float.parseFloat("5.0"));
                     textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
+
                 }
             }
             @Override
@@ -142,6 +143,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
                             getSumaCalificaciones=calificacionPromedio.getSumaDeCalificaciones();
                         }
                         calculaNuevaCalificacionPromedio(getTotlaPersonas,getSumaCalificaciones,calificacionUsuario);
+
                         Toast.makeText(SetCalificacionAtractivoTuristico.this,"Calificación enviada exitosamente!",Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK,
                                 new Intent().putExtra("nombre", atractivoTuristico.getNombre()).
@@ -210,7 +212,10 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
         double nuevaSumaCalificaciones=getSumaCalificaciones+calificacionUsuario;
         int nuevoTotalPersonas=getTotlaPersonas+1;
         double nuevoPromedio=nuevaSumaCalificaciones/nuevoTotalPersonas;
-        atractivoTuristico.setCalificacion(String.valueOf(nuevoPromedio));
+        System.out.println("nuevo promedio: "+nuevoPromedio);
+        Log.v("nuevo promedio: ", String.valueOf(nuevoPromedio));
+        atractivoTuristico.setCalificacion(String.valueOf(nuevoPromedio).substring(0,3));
+        atractivoTuristico.setContadorOpiniones(String.valueOf(nuevoTotalPersonas));
         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
         CalificacionPromedio calificacionPromedio=new CalificacionPromedio(nuevoPromedio,nuevoTotalPersonas,nuevaSumaCalificaciones);
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).setValue(calificacionPromedio);

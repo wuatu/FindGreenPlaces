@@ -99,9 +99,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
     private RatingBar ratingBar2;
     private ImageView imageView;
-    //private TextView textViewratingBar;
     private TextView textViewratingBar2;
-    //private TextView textViewOpiniones;
+
     private TextView textViewOpiniones2;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
@@ -344,18 +343,10 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         //textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
         textViewOpiniones2=view.findViewById(R.id.textViewOpiniones2);
 
-        mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+        textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
+        textViewVisualizaciones.setText(atractivoTuristico.getContadorVisualizaciones());
 
             mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -467,10 +458,6 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                     //textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
                     //ratingBar.setEnabled(false);
 
-                    textViewratingBar2.setText(calificacion.substring(0,3));
-                    ratingBar2.setRating(Float.parseFloat(calificacion));
-                    textViewOpiniones2.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
-                    ratingBar2.setEnabled(false);
                 }
             }
             @Override
@@ -478,6 +465,12 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
             }
         });
+
+        textViewratingBar2.setText(atractivoTuristico.getCalificacion());
+        ratingBar2.setRating(Float.parseFloat(atractivoTuristico.getCalificacion()));
+        textViewOpiniones2.setText(String.valueOf(atractivoTuristico.getContadorOpiniones()));
+        ratingBar2.setEnabled(false);
+
         textViewVerMasComentarios();
         botonCalificar();
         imageViewLike=view.findViewById(R.id.imageViewLike);

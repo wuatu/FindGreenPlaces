@@ -199,7 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/editTextComuna"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -213,7 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/editTextCiudad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

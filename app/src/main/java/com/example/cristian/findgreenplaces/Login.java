@@ -57,51 +57,186 @@ import java.util.List;
 
 import Clases.IdUsuario;
 import Clases.Referencias;
+import Clases.UserLoginTask;
 import Clases.Usuario;
 
-import static android.Manifest.permission.READ_CONTACTS;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
+    public UserLoginTask getmAuthTask() {
+        return mAuthTask;
+    }
+
+    public void setmAuthTask(UserLoginTask mAuthTask) {
+        this.mAuthTask = mAuthTask;
+    }
+
+    public AutoCompleteTextView getmEmailView() {
+        return mEmailView;
+    }
+
+    public void setmEmailView(AutoCompleteTextView mEmailView) {
+        this.mEmailView = mEmailView;
+    }
+
+    public EditText getmPasswordView() {
+        return mPasswordView;
+    }
+
+    public void setmPasswordView(EditText mPasswordView) {
+        this.mPasswordView = mPasswordView;
+    }
+
+    public View getmProgressView() {
+        return mProgressView;
+    }
+
+    public void setmProgressView(View mProgressView) {
+        this.mProgressView = mProgressView;
+    }
+
+    public View getmLoginFormView() {
+        return mLoginFormView;
+    }
+
+    public void setmLoginFormView(View mLoginFormView) {
+        this.mLoginFormView = mLoginFormView;
+    }
+
+    public CallbackManager getCallbackManager() {
+        return callbackManager;
+    }
+
+    public void setCallbackManager(CallbackManager callbackManager) {
+        this.callbackManager = callbackManager;
+    }
+
+    public LoginButton getLoginFacebookButton() {
+        return loginFacebookButton;
+    }
+
+    public void setLoginFacebookButton(LoginButton loginFacebookButton) {
+        this.loginFacebookButton = loginFacebookButton;
+    }
+
+    public Button getBotonInvitado() {
+        return botonInvitado;
+    }
+
+    public void setBotonInvitado(Button botonInvitado) {
+        this.botonInvitado = botonInvitado;
+    }
+
+    public FirebaseAuth.AuthStateListener getmAuthListener() {
+        return mAuthListener;
+    }
+
+    public void setmAuthListener(FirebaseAuth.AuthStateListener mAuthListener) {
+        this.mAuthListener = mAuthListener;
+    }
+
+    public TextView getRegistrar() {
+        return registrar;
+    }
+
+    public void setRegistrar(TextView registrar) {
+        this.registrar = registrar;
+    }
+
+    public static String getPrefsKey() {
+        return PREFS_KEY;
+    }
+
+    public static void setPrefsKey(String prefsKey) {
+        PREFS_KEY = prefsKey;
+    }
+
+    public static String getSESIONINICIADA() {
+        return SESIONINICIADA;
+    }
+
+    public static void setSESIONINICIADA(String SESIONINICIADA) {
+        Login.SESIONINICIADA = SESIONINICIADA;
+    }
+
+    public static String getIDUSUARIO() {
+        return IDUSUARIO;
+    }
+
+    public static void setIDUSUARIO(String IDUSUARIO) {
+        Login.IDUSUARIO = IDUSUARIO;
+    }
+
+    public static String getNOMBRE() {
+        return NOMBRE;
+    }
+
+    public static void setNOMBRE(String NOMBRE) {
+        Login.NOMBRE = NOMBRE;
+    }
+
+    public static String getAPELLIDO() {
+        return APELLIDO;
+    }
+
+    public static void setAPELLIDO(String APELLIDO) {
+        Login.APELLIDO = APELLIDO;
+    }
+
+    public static String getURL() {
+        return URL;
+    }
+
+    public static void setURL(String URL) {
+        Login.URL = URL;
+    }
+
+    public static String getCORREO() {
+        return CORREO;
+    }
+
+    public static void setCORREO(String CORREO) {
+        Login.CORREO = CORREO;
+    }
+
+    public TextView getTextViewOlvidoContrasña() {
+        return textViewOlvidoContrasña;
+    }
+
+    public void setTextViewOlvidoContrasña(TextView textViewOlvidoContrasña) {
+        this.textViewOlvidoContrasña = textViewOlvidoContrasña;
+    }
+
+    public boolean isSesionIniciada() {
+        return sesionIniciada;
+    }
+
+    public void setSesionIniciada(boolean sesionIniciada) {
+        this.sesionIniciada = sesionIniciada;
+    }
+
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-    CallbackManager callbackManager;
-    LoginButton loginFacebookButton;
-    Button botonInvitado;
-    FirebaseAuth.AuthStateListener mAuthListener;
-    TextView registrar;
-    private static String PREFS_KEY = "mispreferencias";
-    private static String SESIONINICIADA = "estado.sesion";
-    private static String IDUSUARIO = "mispreferencias2";
-    private static String NOMBRE = "nombre";
-    private static String APELLIDO = "apellido";
-    private static String URL = "url";
-    private static String CORREO = "correo";
-    TextView textViewOlvidoContrasña;
-    private boolean sesionIniciada=false;
+    public AutoCompleteTextView mEmailView;
+    public EditText mPasswordView;
+    public View mProgressView;
+    public View mLoginFormView;
+    public CallbackManager callbackManager;
+    public LoginButton loginFacebookButton;
+    public Button botonInvitado;
+    public FirebaseAuth.AuthStateListener mAuthListener;
+    public TextView registrar;
+    public static String PREFS_KEY = "mispreferencias";
+    public static String SESIONINICIADA = "estado.sesion";
+    public static String IDUSUARIO = "mispreferencias2";
+    public static String NOMBRE = "nombre";
+    public static String APELLIDO = "apellido";
+    public static String URL = "url";
+    public static String CORREO = "correo";
+    public TextView textViewOlvidoContrasña;
+    public boolean sesionIniciada=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -457,62 +592,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-
-    }
 }
 

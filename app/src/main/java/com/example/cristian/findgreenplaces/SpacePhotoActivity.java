@@ -101,7 +101,20 @@ public class SpacePhotoActivity extends AppCompatActivity {
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         imagen=((Imagen)getIntent().getSerializableExtra("imagen"));
 
-        textViewNombre.setText(IdUsuario.getNombreUsuario()+" "+IdUsuario.getApellidoUsuario());
+
+        mDatabase.child(Referencias.USUARIO).child(imagen.getIdUsuario()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Usuario usuario =dataSnapshot.getValue(Usuario.class);
+                textViewNombre.setText(usuario.getNombre()+" "+usuario.getApellido());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         textViewFecha.setText(imagen.getFecha());
         textViewNLike.setText(imagen.getContadorLike());
         textViewVisualizaciones.setText(imagen.getContadorVisualizaciones());

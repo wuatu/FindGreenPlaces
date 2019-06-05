@@ -59,6 +59,8 @@ public class VisualizarContribucionAtractivoTuristico extends AppCompatActivity 
         TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
         textView.setText("Contribuciones");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //recyclerViewContribucionAtractivoTuristico.setAdapter(adapter);
         query(new OnGetDataListenerAtractivoTuristico() {
@@ -147,6 +149,12 @@ public class VisualizarContribucionAtractivoTuristico extends AppCompatActivity 
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 
 }
