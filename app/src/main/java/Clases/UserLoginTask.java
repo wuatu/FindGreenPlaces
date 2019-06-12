@@ -4,11 +4,13 @@ import android.os.AsyncTask;
 
 import com.example.cristian.findgreenplaces.R;
 
+import java.io.Serializable;
+
 /**
  * Represents an asynchronous login/registration task used to authenticate
  * the user.
  */
-public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+public class UserLoginTask extends AsyncTask<Void, Void, Boolean> implements Serializable {
 
     public final String mEmail;
     public final String mPassword;
@@ -17,6 +19,8 @@ public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         mEmail = email;
         mPassword = password;
     }
+
+
 
     public String getmEmail() {
         return mEmail;

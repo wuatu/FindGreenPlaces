@@ -627,7 +627,7 @@ public class Buscar_Maps extends AppCompatActivity
             Intent intent=new Intent(Buscar_Maps.this,VisualizarContribucionAtractivoTuristico.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            Intent intent=new Intent(Buscar_Maps.this,AdaptadorImagenes.class);
+            Intent intent=new Intent(Buscar_Maps.this,SpaceGalleryActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {

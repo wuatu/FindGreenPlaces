@@ -28,7 +28,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Informacion"></activity>
+        <activity android:name=".inicio"></activity>
+        <activity android:name=".Informacion" />
         <activity android:name=".AcercaDe" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -46,7 +47,7 @@
             android:name=".MenuPrincipal"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Login"
+            android:name=".Inicio"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -118,7 +119,7 @@
         <activity android:name=".SetRedesSocialesAT" />
         <activity android:name=".FotoPerfil" />
         <activity android:name=".PerfilUsuario" />
-        <activity android:name=".AdaptadorImagenes" />
+        <activity android:name=".Login" />
         <activity android:name=".SpaceGalleryActivity" />
         <activity android:name=".SpacePhotoActivity" />
         <activity android:name=".SetTipsDeViaje" />

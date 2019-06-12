@@ -117,6 +117,8 @@ public class PerfilUsuario extends AppCompatActivity {
                 progressBar2.setProgress(Integer.valueOf(usuario.getPuntos()));
                 progressBar2.setEnabled(false);
                 showProgress(false);
+                LinearLayout linearLayoutProgressBar=findViewById(R.id.linearLayoutProgressBar);
+                linearLayoutProgressBar.setVisibility(View.GONE);
                 linearLayoutPerfil.setVisibility(View.VISIBLE);
                 if(nivel.getText().toString().equalsIgnoreCase("1")){
                     linearLayoutBronce.setVisibility(View.VISIBLE);

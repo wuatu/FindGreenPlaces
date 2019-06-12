@@ -1,6 +1,8 @@
 package Clases;
 
-public class AtractivoTuristicoMeGusta {
+import java.io.Serializable;
+
+public class AtractivoTuristicoMeGusta implements Serializable {
     String id;
     String idUsuario;
     String idAtractivoTuristico;
@@ -8,6 +10,8 @@ public class AtractivoTuristicoMeGusta {
 
     public AtractivoTuristicoMeGusta() {
     }
+
+
 
     public AtractivoTuristicoMeGusta(String id, String idUsuario, String idAtractivoTuristico, String meGusta) {
         this.id = id;

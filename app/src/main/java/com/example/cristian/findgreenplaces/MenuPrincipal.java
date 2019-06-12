@@ -47,7 +47,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -76,49 +75,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Clases.AtractivoTuristico;
+import Clases.Categoria;
+import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Referencias;
 
 
 public class MenuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, Serializable {
-    Address addres = null;
-    Address currentAddres;
-    ArrayList<AtractivoTuristico> atractivosTuristicosTemp;
-    String[] regions;
-    String[] city;
-    boolean isCiudadORegion=false;
-    int spinerPosition=0;
-    Tag tagBusqueda=new Tag("");
-    Tag tagCategoria=new Tag("");
-    ArrayList<Tag> tags=new ArrayList<>();
-    ImageView imageViewIr;
-    boolean buscarPorCategoria = false;
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-    private FusedLocationProviderClient mFusedLocationClient;
-    DatabaseReference mDatabase;
-    FirebaseDatabase database;
-    SearchView buscarEditText;
-    ArrayList<String> keysAtractivosTuristicos;
-    ArrayList<AtractivoTuristico> atractivoTuristicos;
-    AtractivoTuristico atractivoTuristico;
-    private static String PREFS_KEY = "mispreferencias";
-    private static String SESIONINICIADA = "estado.sesion";
-    private static String IDUSUARIO = "mispreferencias2";
-    private final int REQUEST_ACCESS_FINE = 0;
-    Spinner spinner;
-    LinearLayout linearLayoutFocus;
-    NavigationView navigationView;
-    View hView;
-    ImageView imageViewFotoPerfil;
-    String busqueda;
-    int bandera = 0;
-    TagView tagGroup;
-    int contadorCategorias = 0;
-    View view;
-    String busquedaCategoria;
-    String busquedaCiudad;
+    public Address addres = null;
+    public Address currentAddres;
+    public ArrayList<AtractivoTuristico> atractivosTuristicosTemp;
+    public String[] regions;
+    public String[] city;
+    public boolean isCiudadORegion=false;
+    public int spinerPosition=0;
+    public Tag tagBusqueda=new Tag("");
+    public Tag tagCategoria=new Tag("");
+    public ArrayList<Tag> tags=new ArrayList<>();
+    public ImageView imageViewIr;
+    public boolean buscarPorCategoria = false;
+    public GoogleMap mMap;
+    public GoogleApiClient mGoogleApiClient;
+    public FusedLocationProviderClient mFusedLocationClient;
+    public DatabaseReference mDatabase;
+    public FirebaseDatabase database;
+    public SearchView buscarEditText;
+    public ArrayList<String> keysAtractivosTuristicos;
+    public ArrayList<AtractivoTuristico> atractivoTuristicos;
+    public AtractivoTuristico atractivoTuristico;
+    public static String PREFS_KEY = "mispreferencias";
+    public static String SESIONINICIADA = "estado.sesion";
+    public static String IDUSUARIO = "mispreferencias2";
+    public final int REQUEST_ACCESS_FINE = 0;
+    private static final int FOTOPERFIL = 1;
+    public Spinner spinner;
+    public LinearLayout linearLayoutFocus;
+    public NavigationView navigationView;
+    public View hView;
+    public ImageView imageViewFotoPerfil;
+    public String busqueda;
+    public int bandera = 0;
+    public TagView tagGroup;
+    public int contadorCategorias = 0;
+    public View view;
+    public String busquedaCategoria;
+    public String busquedaCiudad;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,12 +181,26 @@ public class MenuPrincipal extends AppCompatActivity
                     startActivity(intent);
                     //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
                 }
+                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+                linearLayoutDialogo.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
+                linearLayoutDialogo2.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+                linearLayoutDialogo3.setVisibility(View.GONE);
+                imageViewIr.setVisibility(View.VISIBLE);
             }
         });
 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+                linearLayoutDialogo.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
+                linearLayoutDialogo2.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+                linearLayoutDialogo3.setVisibility(View.GONE);
+                imageViewIr.setVisibility(View.VISIBLE);
                 if (ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -241,7 +259,7 @@ public class MenuPrincipal extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuPrincipal.this, FotoPerfil.class);
-                startActivity(intent);
+                startActivityForResult(intent,FOTOPERFIL);
             }
         });
 
@@ -264,10 +282,16 @@ public class MenuPrincipal extends AppCompatActivity
         buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mostrarAtractivoTuristicoPorCiudadOComuna();
+                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+                linearLayoutDialogo.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
+                linearLayoutDialogo2.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+                linearLayoutDialogo3.setVisibility(View.GONE);
+                imageViewIr.setVisibility(View.VISIBLE);
                 busqueda = limpiarAcentos(query);
-
-                if (isCiudadORegion() || isNombre()) {
+                //mostrarAtractivoTuristicoPorCiudadOComuna();
+                if (isCiudadORegion()) {
                     busquedaCiudad=busqueda;
                     if (tags.size() > 0) {
                         int i = 0;
@@ -380,7 +404,7 @@ public class MenuPrincipal extends AppCompatActivity
                             if(tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
                                     tag.text.equalsIgnoreCase("mas me gusta X") ||
                                     tag.text.equalsIgnoreCase("mas visto X") ||
-                                    tag.text.equalsIgnoreCase("categoria X")) {
+                                    tag.text.equalsIgnoreCase("Categoria X")) {
 
                                 tagGroup.remove(i);
                                 tags.remove(i);
@@ -389,18 +413,21 @@ public class MenuPrincipal extends AppCompatActivity
                             }
                             i++;
                         }
-                        if(isBusqueda){
+                        if(isBusqueda || tags.size()>0){
                             repintarMapaConArrayListTemporal(14);
                         }
                         else{
+                            busquedaCiudad=null;
                             repintarMapaConArrayList(14);
                         }
                     }
                     else{
+                        busquedaCiudad=null;
                         repintarMapaConArrayList(14);
                     }
                 }else {
                     if (tags.size()==0){
+                        Log.v("pico4","pico");
                         contadorCategorias = 1;
                         Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
                         tag.layoutColor = getResources().getColor(R.color.colorPrimary);
@@ -408,12 +435,14 @@ public class MenuPrincipal extends AppCompatActivity
                         tags.add(tag);
                         buscar();
                     }else if (tags.size()==1){
+
                         if(tags.get(0).text.equalsIgnoreCase("Mejor Evaluado X") ||
                                 tags.get(0).text.equalsIgnoreCase("mas me gusta X") ||
                         tags.get(0).text.equalsIgnoreCase("mas visto X") ||
                         tags.get(0).text.equalsIgnoreCase("categoria X") ||
                         tags.get(0).text.equalsIgnoreCase("sin filtro X")){
-                            tagGroup.remove(0);
+                            Log.v("pico3","pico");
+                            tagGroup.remove(1);
                             tags.remove(0);
                             Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
                             tag.layoutColor = getResources().getColor(R.color.colorPrimary);
@@ -422,6 +451,7 @@ public class MenuPrincipal extends AppCompatActivity
                             buscar();
                         }
                         else{
+                            Log.v("pico2","pico");
                             Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
                             tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                             tagGroup.addTag(tag);
@@ -430,6 +460,7 @@ public class MenuPrincipal extends AppCompatActivity
                         }
                     }
                     else{
+                        Log.v("pico","pico");
                         Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
                         tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                         tagGroup.remove(1);
@@ -446,7 +477,7 @@ public class MenuPrincipal extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        //set click listener
+        //Elimina tag cuando se presiona sobre el
         tagGroup.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(Tag tag, int i) {
@@ -558,7 +589,7 @@ public class MenuPrincipal extends AppCompatActivity
         }
         if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria")) {
             mMap.clear();
-            if(!isCiudadORegion() && busqueda!=null) {
+            if(busqueda!=null) {
                 if(busquedaCategoria!=null) {
                     getkeyAtractivoTuristico(busquedaCategoria);
                     buscarAtractivoTuristicoPorCategoria();
@@ -847,7 +878,11 @@ public class MenuPrincipal extends AppCompatActivity
                                 limpiaNombre.toUpperCase().indexOf(busqueda.toUpperCase())!=-1) {
                                     repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
                                     atractivosTuristicosTemp.add(atractivoTuristico);
-                                    //atractivoTuristicos.add(atractivoTuristico);
+                                }
+                                if(atractivoTuristicos!=null){
+                                    if (atractivoTuristicos.size()==0){
+                                        atractivoTuristicos.add(atractivoTuristico);
+                                    }
                                 }
                             }
                         }
@@ -1079,10 +1114,11 @@ public class MenuPrincipal extends AppCompatActivity
                 linearLayoutDialogo.setVisibility(View.GONE);
                 LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
                 linearLayoutDialogo2.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+                linearLayoutDialogo3.setVisibility(View.GONE);
                 imageViewIr.setVisibility(View.VISIBLE);
                 atractivoTuristico = buscarAtractivoTuristicoEnArrayListPorNombre(marker);
                 Intent intent = new Intent(MenuPrincipal.this, DialogoVisualizarAtractivoTuristico.class);
-                //Log.v("seee", atractivoTuristico.getNombre());
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
 
@@ -1144,6 +1180,8 @@ public class MenuPrincipal extends AppCompatActivity
                 LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
                 linearLayoutDialogo2.setVisibility(View.GONE);
                 imageViewIr.setVisibility(View.GONE);
+                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+                linearLayoutDialogo3.setVisibility(View.GONE);
             }
         });
 
@@ -1229,7 +1267,6 @@ public class MenuPrincipal extends AppCompatActivity
     private void logout() {
         guardarValorBoolean(MenuPrincipal.this, SESIONINICIADA, false);
         guardarValorString(MenuPrincipal.this, IDUSUARIO, "");
-        LoginManager.getInstance().logOut();
         ejecutarLoginActivity();
 
     }
@@ -1322,4 +1359,302 @@ public class MenuPrincipal extends AppCompatActivity
 
     }
 
+    public Address getAddres() {
+        return addres;
+    }
+
+    public void setAddres(Address addres) {
+        this.addres = addres;
+    }
+
+    public Address getCurrentAddres() {
+        return currentAddres;
+    }
+
+    public void setCurrentAddres(Address currentAddres) {
+        this.currentAddres = currentAddres;
+    }
+
+    public ArrayList<AtractivoTuristico> getAtractivosTuristicosTemp() {
+        return atractivosTuristicosTemp;
+    }
+
+    public void setAtractivosTuristicosTemp(ArrayList<AtractivoTuristico> atractivosTuristicosTemp) {
+        this.atractivosTuristicosTemp = atractivosTuristicosTemp;
+    }
+
+    public String[] getRegions() {
+        return regions;
+    }
+
+    public void setRegions(String[] regions) {
+        this.regions = regions;
+    }
+
+    public String[] getCity() {
+        return city;
+    }
+
+    public void setCity(String[] city) {
+        this.city = city;
+    }
+
+    public void setCiudadORegion(boolean ciudadORegion) {
+        isCiudadORegion = ciudadORegion;
+    }
+
+    public int getSpinerPosition() {
+        return spinerPosition;
+    }
+
+    public void setSpinerPosition(int spinerPosition) {
+        this.spinerPosition = spinerPosition;
+    }
+
+    public Tag getTagBusqueda() {
+        return tagBusqueda;
+    }
+
+    public void setTagBusqueda(Tag tagBusqueda) {
+        this.tagBusqueda = tagBusqueda;
+    }
+
+    public Tag getTagCategoria() {
+        return tagCategoria;
+    }
+
+    public void setTagCategoria(Tag tagCategoria) {
+        this.tagCategoria = tagCategoria;
+    }
+
+    public ArrayList<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public ImageView getImageViewIr() {
+        return imageViewIr;
+    }
+
+    public void setImageViewIr(ImageView imageViewIr) {
+        this.imageViewIr = imageViewIr;
+    }
+
+    public boolean isBuscarPorCategoria() {
+        return buscarPorCategoria;
+    }
+
+    public void setBuscarPorCategoria(boolean buscarPorCategoria) {
+        this.buscarPorCategoria = buscarPorCategoria;
+    }
+
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
+    public void setmMap(GoogleMap mMap) {
+        this.mMap = mMap;
+    }
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
+
+    public void setmGoogleApiClient(GoogleApiClient mGoogleApiClient) {
+        this.mGoogleApiClient = mGoogleApiClient;
+    }
+
+    public FusedLocationProviderClient getmFusedLocationClient() {
+        return mFusedLocationClient;
+    }
+
+    public void setmFusedLocationClient(FusedLocationProviderClient mFusedLocationClient) {
+        this.mFusedLocationClient = mFusedLocationClient;
+    }
+
+    public DatabaseReference getmDatabase() {
+        return mDatabase;
+    }
+
+    public void setmDatabase(DatabaseReference mDatabase) {
+        this.mDatabase = mDatabase;
+    }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    public SearchView getBuscarEditText() {
+        return buscarEditText;
+    }
+
+    public void setBuscarEditText(SearchView buscarEditText) {
+        this.buscarEditText = buscarEditText;
+    }
+
+    public ArrayList<String> getKeysAtractivosTuristicos() {
+        return keysAtractivosTuristicos;
+    }
+
+    public void setKeysAtractivosTuristicos(ArrayList<String> keysAtractivosTuristicos) {
+        this.keysAtractivosTuristicos = keysAtractivosTuristicos;
+    }
+
+    public ArrayList<AtractivoTuristico> getAtractivoTuristicos() {
+        return atractivoTuristicos;
+    }
+
+    public void setAtractivoTuristicos(ArrayList<AtractivoTuristico> atractivoTuristicos) {
+        this.atractivoTuristicos = atractivoTuristicos;
+    }
+
+    public AtractivoTuristico getAtractivoTuristico() {
+        return atractivoTuristico;
+    }
+
+    public void setAtractivoTuristico(AtractivoTuristico atractivoTuristico) {
+        this.atractivoTuristico = atractivoTuristico;
+    }
+
+    public static String getPrefsKey() {
+        return PREFS_KEY;
+    }
+
+    public static void setPrefsKey(String prefsKey) {
+        PREFS_KEY = prefsKey;
+    }
+
+    public static String getSESIONINICIADA() {
+        return SESIONINICIADA;
+    }
+
+    public static void setSESIONINICIADA(String SESIONINICIADA) {
+        MenuPrincipal.SESIONINICIADA = SESIONINICIADA;
+    }
+
+    public static String getIDUSUARIO() {
+        return IDUSUARIO;
+    }
+
+    public static void setIDUSUARIO(String IDUSUARIO) {
+        MenuPrincipal.IDUSUARIO = IDUSUARIO;
+    }
+
+    public int getREQUEST_ACCESS_FINE() {
+        return REQUEST_ACCESS_FINE;
+    }
+
+    public Spinner getSpinner() {
+        return spinner;
+    }
+
+    public void setSpinner(Spinner spinner) {
+        this.spinner = spinner;
+    }
+
+    public LinearLayout getLinearLayoutFocus() {
+        return linearLayoutFocus;
+    }
+
+    public void setLinearLayoutFocus(LinearLayout linearLayoutFocus) {
+        this.linearLayoutFocus = linearLayoutFocus;
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
+    }
+
+    public void setNavigationView(NavigationView navigationView) {
+        this.navigationView = navigationView;
+    }
+
+    public View gethView() {
+        return hView;
+    }
+
+    public void sethView(View hView) {
+        this.hView = hView;
+    }
+
+    public ImageView getImageViewFotoPerfil() {
+        return imageViewFotoPerfil;
+    }
+
+    public void setImageViewFotoPerfil(ImageView imageViewFotoPerfil) {
+        this.imageViewFotoPerfil = imageViewFotoPerfil;
+    }
+
+    public String getBusqueda() {
+        return busqueda;
+    }
+
+    public void setBusqueda(String busqueda) {
+        this.busqueda = busqueda;
+    }
+
+    public int getBandera() {
+        return bandera;
+    }
+
+    public void setBandera(int bandera) {
+        this.bandera = bandera;
+    }
+
+    public TagView getTagGroup() {
+        return tagGroup;
+    }
+
+    public void setTagGroup(TagView tagGroup) {
+        this.tagGroup = tagGroup;
+    }
+
+    public int getContadorCategorias() {
+        return contadorCategorias;
+    }
+
+    public void setContadorCategorias(int contadorCategorias) {
+        this.contadorCategorias = contadorCategorias;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
+    public String getBusquedaCategoria() {
+        return busquedaCategoria;
+    }
+
+    public void setBusquedaCategoria(String busquedaCategoria) {
+        this.busquedaCategoria = busquedaCategoria;
+    }
+
+    public String getBusquedaCiudad() {
+        return busquedaCiudad;
+    }
+
+    public void setBusquedaCiudad(String busquedaCiudad) {
+        this.busquedaCiudad = busquedaCiudad;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FOTOPERFIL && resultCode == RESULT_OK) {
+            String imagen = data.getStringExtra("imagen");
+            Glide.with(getApplicationContext())
+                    .load(imagen)
+                    .fitCenter()
+                    .into(imageViewFotoPerfil);
+        }
+    }
 }

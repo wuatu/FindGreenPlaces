@@ -190,7 +190,15 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         final TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
         textView.setText("Información");
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         setHasOptionsMenu(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -212,7 +220,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         textViewTips.setText(atractivoTuristico.getTipsDeViaje());
         textViewNombre=view.findViewById(R.id.textViewTituloAT2);
         //textViewNombre.setText(atractivoTuristico.getNombre());
-        linearLayoutComentario=view.findViewById(R.id.comentario);
+        linearLayoutComentario=view.findViewById(R.id.linearLayoutComentarios);
         lista=view.findViewById(R.id.ma_lv_lista);
         model=new ArrayList<>();
         botonCalificar=view.findViewById(R.id.botonCalificar);
@@ -294,6 +302,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                     model.add(dataSnapshot1.getValue(Comentario.class));
                     Comentario comentario=dataSnapshot1.getValue(Comentario.class);
                     LinearLayout layoutNombreApellido = view.findViewById(R.id.comentario2);
+
 
                     if(isAdded()) {
                         TextView textViewNombreApellido = new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
@@ -536,12 +545,16 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                             }
                         }).show((FragmentActivity) VisualizarAtractivoTuristicoFragment.this.getActivity());
                 return false;
+            case android.R.id.home:
+                (getActivity()).onBackPressed();
+                return true;
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
 
-        return false;
+
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
@@ -870,5 +883,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             textViewOpiniones2.setText(opiniones);
         }
     }
+
+
 
 }

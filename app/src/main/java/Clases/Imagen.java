@@ -30,6 +30,8 @@ public class Imagen implements Serializable {
         this.visible=visible;
     }
 
+
+
     public String getVisible() {
         return visible;
     }

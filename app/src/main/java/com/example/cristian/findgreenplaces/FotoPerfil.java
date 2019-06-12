@@ -137,6 +137,9 @@ public class FotoPerfil extends AppCompatActivity {
                                 .fitCenter()
                                 .into(imageViewFotoPerfil);
                         Toast.makeText(FotoPerfil.this,"La foto se subio exitosamente!",Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK,
+                                new Intent().putExtra("imagen", urlImagen));
+                        finish();
 
                     } else {
                         // Handle failures

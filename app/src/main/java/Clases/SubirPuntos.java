@@ -15,11 +15,34 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class SubirPuntos {
+import java.io.Serializable;
+
+public class SubirPuntos implements Serializable {
     Usuario usuario;
     DatabaseReference mDatabase;
 
     public SubirPuntos() {
+    }
+
+    public SubirPuntos(Usuario usuario, DatabaseReference mDatabase) {
+        this.usuario = usuario;
+        this.mDatabase = mDatabase;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public DatabaseReference getmDatabase() {
+        return mDatabase;
+    }
+
+    public void setmDatabase(DatabaseReference mDatabase) {
+        this.mDatabase = mDatabase;
     }
 
     public void SubirPuntos(final Activity activity) {

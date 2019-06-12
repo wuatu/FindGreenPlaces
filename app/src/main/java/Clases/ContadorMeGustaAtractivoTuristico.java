@@ -1,6 +1,8 @@
 package Clases;
 
-public class ContadorMeGustaAtractivoTuristico {
+import java.io.Serializable;
+
+public class ContadorMeGustaAtractivoTuristico implements Serializable {
 
         String idUsuario;
         String idAtractivoTuristico;
@@ -15,6 +17,8 @@ public class ContadorMeGustaAtractivoTuristico {
         this.idAtractivoTuristico = idAtractivoTuristico;
         this.idMeGustaAtractivoTuristico = idMeGustaAtractivoTuristico;
     }
+
+
 
     public String getContadorMeGusta() {
         return contadorMeGusta;

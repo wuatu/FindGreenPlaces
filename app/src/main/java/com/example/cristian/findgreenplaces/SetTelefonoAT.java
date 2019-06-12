@@ -76,27 +76,13 @@ public class SetTelefonoAT extends AppCompatActivity {
                     atractivoTuristico.setTelefono(editTextTelefono.getText().toString());
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
-                new AlertDialog.Builder(SetTelefonoAT.this)
-                        .setTitle("Información")
-                        .setMessage("Seguro Quieres Enviar Estos Datos?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                atractivoTuristico.setTelefono(editTextTelefono.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TELEFONO,editTextTelefono.getText().toString());
 
-                                atractivoTuristico.setTelefono(editTextTelefono.getText().toString());
-                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TELEFONO,editTextTelefono.getText().toString());
-
-                                setResult(RESULT_OK,
-                                        new Intent().putExtra("nombre", atractivoTuristico.getTelefono())
-                                                .putExtra("contribucion",contribucion));
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
+                setResult(RESULT_OK,
+                        new Intent().putExtra("nombre", atractivoTuristico.getTelefono())
+                                .putExtra("contribucion",contribucion));
+                finish();
             }
         });
     }

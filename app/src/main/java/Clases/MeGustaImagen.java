@@ -1,6 +1,8 @@
 package Clases;
 
-public class MeGustaImagen {
+import java.io.Serializable;
+
+public class MeGustaImagen implements Serializable {
     String id;
     String idUsuario;
     String idAtractivoTuristico;
@@ -14,6 +16,8 @@ public class MeGustaImagen {
         this.idImagen = idImagen;
         this.meGusta = meGusta;
     }
+
+
 
     public String getId() {
         return id;

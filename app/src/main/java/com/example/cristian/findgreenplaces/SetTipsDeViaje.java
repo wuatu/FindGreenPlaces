@@ -65,25 +65,13 @@ public class SetTipsDeViaje extends AppCompatActivity {
         buttonEnviarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetTipsDeViaje.this)
-                        .setTitle("Editar Tips")
-                        .setMessage("Esta seguro que quiere realizar estos cambios?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setTipsDeViaje(descripcionNueva.getText().toString());
-                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TIPSDEVIAJE,descripcionNueva.getText().toString());
+                atractivoTuristico.setTipsDeViaje(descripcionNueva.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TIPSDEVIAJE,descripcionNueva.getText().toString());
 
-                                setResult(RESULT_OK,
-                                        new Intent().putExtra("nombre", atractivoTuristico.getTipsDeViaje())
+                setResult(RESULT_OK,
+                        new Intent().putExtra("nombre", atractivoTuristico.getTipsDeViaje())
                                 .putExtra("contribucion",contribucion));
-                                finish();
-                                //Toast.makeText(SetTipsDeViaje.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
-
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                finish();
 
             }
         });

@@ -21,14 +21,31 @@ import com.example.cristian.findgreenplaces.AgregarAtractivoTuristico;
 import com.example.cristian.findgreenplaces.Login;
 import com.example.cristian.findgreenplaces.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter {
+public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter implements Serializable {
     Context context;
     ArrayList<AtractivoTuristico> atractivoTuristicos;
     public AdapterListViewContribucionAtractivoTuristico(Context context, ArrayList<AtractivoTuristico> atractivoTuristicos) {
         this.context=context;
+        this.atractivoTuristicos = atractivoTuristicos;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public ArrayList<AtractivoTuristico> getAtractivoTuristicos() {
+        return atractivoTuristicos;
+    }
+
+    public void setAtractivoTuristicos(ArrayList<AtractivoTuristico> atractivoTuristicos) {
         this.atractivoTuristicos = atractivoTuristicos;
     }
 

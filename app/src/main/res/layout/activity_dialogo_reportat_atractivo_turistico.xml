@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     tools:context=".DialogoReportarAtractivoTuristico"
+    android:orientation="vertical"
     android:clipToPadding="false">
 
     <LinearLayout
@@ -24,4 +25,4 @@
             android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="18sp" />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

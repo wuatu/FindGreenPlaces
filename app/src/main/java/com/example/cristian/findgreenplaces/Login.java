@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +63,12 @@ import Clases.UserLoginTask;
 import Clases.Usuario;
 
 
-public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>, Serializable {
 
 
     private UserLoginTask mAuthTask = null;
+
+
 
     public UserLoginTask getmAuthTask() {
         return mAuthTask;
@@ -237,12 +241,10 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     public static String CORREO = "correo";
     public TextView textViewOlvidoContrasña;
     public boolean sesionIniciada=false;
+    LinearLayout linearLayoutProgressBar;
+    ScrollView scrollView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
 
         if(leerValorBoolean(Login.this,SESIONINICIADA)){
             String key=leerValorString(Login.this,IDUSUARIO);
@@ -251,10 +253,15 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             String correo=leerValorString(Login.this,CORREO);
             String url=leerValorString(Login.this,URL);
             IdUsuario idUsuario=new IdUsuario(key,nombre,apellido,correo,url);
-            finish();
             ejecutarMainActivity();
         }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
 
+        linearLayoutProgressBar=findViewById(R.id.linearLayoutProgressBar);
+        scrollView=findViewById(R.id.scroll);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         botonInvitado=findViewById(R.id.boton_invitado);
@@ -352,9 +359,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
     private void ejecutarMainActivity() {
         Intent intent=new Intent(Login.this,MenuPrincipal.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         startActivity(intent);
-        //finish();
+        finish();
     }
 
     @Override
@@ -423,7 +429,10 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            scrollView.setVisibility(View.GONE);
+            linearLayoutProgressBar.setVisibility(View.VISIBLE);
             showProgress(true);
+
             //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -460,6 +469,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
                     }else{
                         showProgress(false);
+                        linearLayoutProgressBar.setVisibility(View.GONE);
+                        scrollView.setVisibility(View.VISIBLE);
                         Toast.makeText(Login.this,"Error, usuario o contraseña incorrecta!",Toast.LENGTH_SHORT).show();
                     }
                 }

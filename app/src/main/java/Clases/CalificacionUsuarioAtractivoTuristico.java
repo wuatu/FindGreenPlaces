@@ -1,7 +1,10 @@
 package Clases;
 
-public class CalificacionUsuarioAtractivoTuristico {
+import java.io.Serializable;
+
+public class CalificacionUsuarioAtractivoTuristico implements Serializable {
     double calificacion;
+
 
     public CalificacionUsuarioAtractivoTuristico(double calificacion) {
         this.calificacion = calificacion;

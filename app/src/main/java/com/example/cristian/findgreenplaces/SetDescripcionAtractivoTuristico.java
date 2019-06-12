@@ -68,23 +68,13 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
         buttonEnviarDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetDescripcionAtractivoTuristico.this)
-                        .setTitle("Editar Descripción")
-                        .setMessage("Esta seguro que quiere realizar estos cambios?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
-                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
+                atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
 
-                                setResult(RESULT_OK,
-                                        new Intent().putExtra("descripcion", atractivoTuristico.getDescripcion()).
-                                                putExtra("contribucion",contribucion));
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                setResult(RESULT_OK,
+                        new Intent().putExtra("descripcion", atractivoTuristico.getDescripcion()).
+                                putExtra("contribucion",contribucion));
+                finish();
 
             }
         });

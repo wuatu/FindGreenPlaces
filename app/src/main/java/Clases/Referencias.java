@@ -1,7 +1,9 @@
 package Clases;
 
 
-public class Referencias {
+import java.io.Serializable;
+
+public class Referencias implements Serializable {
     public static final String ATRACTIVOTURISTICO="atractivoTuristico";
     public static final String CALIFICACIONPROMEDIO="calificacionPromedio";
     public static final String CALIFICACIONUSUARIOATRACTIVOTURISTICO="calificacionUsuarioAtractivoTuristico";
@@ -44,4 +46,7 @@ public class Referencias {
 
 
     public static final String NOMBRE = "nombre";
+
+    public Referencias() {
+    }
 }

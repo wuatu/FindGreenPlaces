@@ -1,6 +1,8 @@
 package Clases;
 
-public class IdUsuario {
+import java.io.Serializable;
+
+public class IdUsuario implements Serializable {
     public static String idUsuario;
     public static String nombreUsuario;
     public static String apellidoUsuario;
@@ -13,6 +15,25 @@ public class IdUsuario {
         apellidoUsuario=apellido;
         correo=correoS;
         url=urls;
+    }
+
+    public IdUsuario() {
+    }
+
+    public static void setIdUsuario(String idUsuario) {
+        IdUsuario.idUsuario = idUsuario;
+    }
+
+    public static void setNombreUsuario(String nombreUsuario) {
+        IdUsuario.nombreUsuario = nombreUsuario;
+    }
+
+    public static void setApellidoUsuario(String apellidoUsuario) {
+        IdUsuario.apellidoUsuario = apellidoUsuario;
+    }
+
+    public static void setCorreo(String correo) {
+        IdUsuario.correo = correo;
     }
 
     public static String getUrl() {

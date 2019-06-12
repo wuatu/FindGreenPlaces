@@ -75,26 +75,13 @@ public class SetPaginaWebAT extends AppCompatActivity {
                     atractivoTuristico.setPaginaWeb(editTextPagina.getText().toString());
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
-                new AlertDialog.Builder(SetPaginaWebAT.this)
-                        .setTitle("Información")
-                        .setMessage("Seguro Quieres Enviar Estos Datos?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setPaginaWeb(editTextPagina.getText().toString());
-                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.PAGINAWEB,editTextPagina.getText().toString());
+                atractivoTuristico.setPaginaWeb(editTextPagina.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.PAGINAWEB,editTextPagina.getText().toString());
 
-                                setResult(RESULT_OK,
-                                        new Intent().putExtra("nombre", atractivoTuristico.getPaginaWeb())
-                                                .putExtra("contribucion",contribucion));
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
+                setResult(RESULT_OK,
+                        new Intent().putExtra("nombre", atractivoTuristico.getPaginaWeb())
+                                .putExtra("contribucion",contribucion));
+                finish();
             }
         });
     }

@@ -1,6 +1,8 @@
 package Clases;
 
-public class CalificacionPromedio {
+import java.io.Serializable;
+
+public class CalificacionPromedio implements Serializable {
     double promedioCalificacion;
     int totalPersonas;
     double sumaDeCalificaciones;
@@ -10,6 +12,8 @@ public class CalificacionPromedio {
         this.totalPersonas = totalPersonas;
         this.sumaDeCalificaciones = sumaDeCalificaciones;
     }
+
+
 
     public double getSumaDeCalificaciones() {
         return sumaDeCalificaciones;

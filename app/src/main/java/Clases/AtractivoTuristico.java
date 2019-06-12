@@ -42,6 +42,30 @@ public class AtractivoTuristico implements Serializable {
         this.urlFoto=urlFoto;
     }
 
+    public AtractivoTuristico(String id, String nombre, String ciudad, String comuna, String descripcion, Double latitud, Double longitud, String tipsDeViaje, String horarioDeAtencion, String telefono, String paginaWeb, String redesSociales, String descripcionCorta, String contadorMeGusta, String contadorReportes, String contadorVisualizaciones, String calificacion, String idUsuario, String visible, String contadorOpiniones, String urlFoto) {
+        this.id = id;
+        this.nombre = nombre;
+        this.ciudad = ciudad;
+        this.comuna = comuna;
+        this.descripcion = descripcion;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.tipsDeViaje = tipsDeViaje;
+        this.horarioDeAtencion = horarioDeAtencion;
+        this.telefono = telefono;
+        this.paginaWeb = paginaWeb;
+        this.redesSociales = redesSociales;
+        this.descripcionCorta = descripcionCorta;
+        this.contadorMeGusta = contadorMeGusta;
+        this.contadorReportes = contadorReportes;
+        this.contadorVisualizaciones = contadorVisualizaciones;
+        this.calificacion = calificacion;
+        this.idUsuario = idUsuario;
+        this.visible = visible;
+        this.contadorOpiniones = contadorOpiniones;
+        this.urlFoto = urlFoto;
+    }
+
     public String getContadorOpiniones() {
         return contadorOpiniones;
     }

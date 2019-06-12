@@ -1,6 +1,8 @@
 package Clases;
 
-public class ComentarioMeGusta {
+import java.io.Serializable;
+
+public class ComentarioMeGusta implements Serializable {
     String id;
     String idUsuario;
     String idAtractivoTuristico;
@@ -10,6 +12,8 @@ public class ComentarioMeGusta {
     public ComentarioMeGusta(){
 
     }
+
+
 
     public ComentarioMeGusta(String id, String idUsuario, String idAtractivoTuristico, String idComentario, String meGustaComentario) {
         this.id = id;

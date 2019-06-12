@@ -88,7 +88,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
-        textView.setText("Contribuir");
+        textView.setText("Vista Previa Contribución");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -248,7 +248,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
                     Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para modificar nombre de atractivo turistico!",Toast.LENGTH_SHORT).show();
                 }else {
-                    if(nivel.equals("1") || nivel.equals("2")){
+                    if(nivel.equals("0") || nivel.equals("1")){
                         if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetNombreAT.class);
                             intent.putExtra("imagenes", imagenes);
@@ -260,7 +260,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para modificar nombre de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("3")){
+                    if(nivel.equals("2") || nivel.equals("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetNombreAT.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
@@ -276,7 +276,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
                     Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para modificar descripción de atractivo turistico!",Toast.LENGTH_SHORT).show();
                 }else {
-                    if(nivel.equals("1") || nivel.equals("2")){
+                    if(nivel.equals("0") || nivel.equals("1")){
                         if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
                             intent.putExtra("imagenes", imagenes);
@@ -287,7 +287,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para modificar descripción de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("3")){
+                    if(nivel.equals("2") || nivel.equals("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
@@ -303,7 +303,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
                     Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
                 }else {
-                    if(nivel.equals("1") || nivel.equals("2")){
+                    if(nivel.equals("0") || nivel.equals("1")){
                         if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
                             intent.putExtra("imagenes", imagenes);
@@ -314,7 +314,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 3 para contribuir en tips de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("3")){
+                    if(nivel.equals("2") || nivel.equals("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
@@ -329,7 +329,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                 if(IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")){
                     Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe registrarse para contribuir en atractivo turistico",Toast.LENGTH_SHORT).show();
                 }else {
-                    if(nivel.equals("1") ){
+                    if(nivel.equals("0") ){
                         if(atractivoTuristico.getIdUsuario().equals(IdUsuario.idUsuario)){
                             Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
                             intent.putExtra("imagenes", imagenes);
@@ -341,7 +341,7 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                             Toast.makeText(SugerirCambioAtractivoTuristico.this,"Debe ser nivel 2 para contribuir en categoria de otro usuario",Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(nivel.equals("2") || nivel.equalsIgnoreCase("3")){
+                    if(nivel.equals("1")|| nivel.equals("2") || nivel.equalsIgnoreCase("3")){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);

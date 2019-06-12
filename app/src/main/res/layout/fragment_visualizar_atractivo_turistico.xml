@@ -6,10 +6,17 @@
     android:orientation="vertical"
     tools:context="Fragment.VisualizarAtractivoTuristicoFragment">
 
-    <include
-        layout="@layout/toolbar_camera"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></include>
+        android:layout_height="wrap_content"
+        android:theme="@style/ToolbarTheme">
+
+        <include
+            layout="@layout/toolbar_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </include>
+    </android.support.design.widget.AppBarLayout>
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
@@ -585,65 +592,72 @@
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <LinearLayout
+                    android:id="@+id/linearLayoutComentarios"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/com_facebook_button_background_color_focused"
                     android:orientation="vertical"
-                    android:paddingBottom="10dp">
+                    tools:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/textView9"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="10dp"
-                        android:text="Comentarios"
-                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
 
-                    <LinearLayout
-                        android:id="@+id/comentario"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:id="@+id/comentario2"
+                        <TextView
+                            android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="10dp"
+                            android:text="Comentarios"
+                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/comentario"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical">
 
+                            <LinearLayout
+                                android:id="@+id/comentario2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="10dp"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
                         </LinearLayout>
+
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
+
+                    <TextView
+                        android:id="@+id/textViewVerMasComentarios"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:text="Ver mas comentarios"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
-
-                <TextView
-                    android:id="@+id/textViewVerMasComentarios"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:text="Ver mas comentarios"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

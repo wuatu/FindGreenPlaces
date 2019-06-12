@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +33,40 @@ public class SpacePhoto implements Parcelable {
     protected SpacePhoto(Parcel in) {
         mUrl = in.readString();
         mTitle = in.readString();
+    }
+
+    public SpacePhoto(String mUrl, String mTitle, SpacePhoto[] getSpacePhotos) {
+        this.mUrl = mUrl;
+        this.mTitle = mTitle;
+        this.getSpacePhotos = getSpacePhotos;
+    }
+
+    public String getmUrl() {
+        return mUrl;
+    }
+
+    public void setmUrl(String mUrl) {
+        this.mUrl = mUrl;
+    }
+
+    public String getmTitle() {
+        return mTitle;
+    }
+
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public SpacePhoto[] getGetSpacePhotos() {
+        return getSpacePhotos;
+    }
+
+    public void setGetSpacePhotos(SpacePhoto[] getSpacePhotos) {
+        this.getSpacePhotos = getSpacePhotos;
+    }
+
+    public static Creator<SpacePhoto> getCREATOR() {
+        return CREATOR;
     }
 
     public static final Creator<SpacePhoto> CREATOR = new Creator<SpacePhoto>() {

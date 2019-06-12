@@ -128,13 +128,16 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_comentarios_at, container, false);
+
         Toolbar toolbar=view.findViewById(R.id.toolbar_camera);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-        TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
+        final TextView textView = (TextView)toolbar.findViewById(R.id.textViewToolbar);
         textView.setText("Comentarios");
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setTitleTextColor(Color.WHITE);
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -271,11 +274,14 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
                             }
                         }).show((FragmentActivity) ComentariosATFrafment.this.getActivity());
                 return false;
+            case android.R.id.home:
+                (getActivity()).onBackPressed();
+                return true;
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
 
-        return false;
+
     }
 
     /**

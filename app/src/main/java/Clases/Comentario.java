@@ -22,8 +22,11 @@ public class Comentario implements Serializable {
     String contadorReportes="0";
     String visible;
 
+
     public Comentario() {
     }
+
+
 
     public Comentario(String id, String comentario, String idUsuario, String nombreUsuario, String apellidoUsuario, String contadorLike, String contadorDislike, String visible) {
         this.id=id;

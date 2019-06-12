@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.cristian.findgreenplaces.DialogoReportarComentario;
 import com.example.cristian.findgreenplaces.DialogoVisualizarAtractivoTuristico;
-import com.example.cristian.findgreenplaces.MenuPrincipal;
 import com.example.cristian.findgreenplaces.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,13 +44,99 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
     View view;
 
     int i=0;
-    public AdapterListViewComentarioAT(Context context, ArrayList<Comentario> comentarios, AtractivoTuristico atractivoTuristico,HashMap<String,ComentarioMeGusta> comentarioMeGustas,View view){
+
+    public AdapterListViewComentarioAT(FirebaseDatabase database, DatabaseReference mDatabase, String comentarioMeGusta, Context context, ArrayList<Comentario> comentarios, HashMap<String, ComentarioMeGusta> comentarioMeGustas, AtractivoTuristico atractivoTuristico, View view, int i) {
+        this.database = database;
+        this.mDatabase = mDatabase;
+        this.comentarioMeGusta = comentarioMeGusta;
+        this.context = context;
+        this.comentarios = comentarios;
+        this.comentarioMeGustas = comentarioMeGustas;
+        this.atractivoTuristico = atractivoTuristico;
+        this.view = view;
+        this.i = i;
+    }
+
+    public AdapterListViewComentarioAT(Context context, ArrayList<Comentario> comentarios, AtractivoTuristico atractivoTuristico, HashMap<String,ComentarioMeGusta> comentarioMeGustas, View view){
         this.context=context;
         this.comentarios=comentarios;
         this.atractivoTuristico=atractivoTuristico;
         this.comentarioMeGustas=comentarioMeGustas;
         this.view= view;
     }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    public DatabaseReference getmDatabase() {
+        return mDatabase;
+    }
+
+    public void setmDatabase(DatabaseReference mDatabase) {
+        this.mDatabase = mDatabase;
+    }
+
+    public String getComentarioMeGusta() {
+        return comentarioMeGusta;
+    }
+
+    public void setComentarioMeGusta(String comentarioMeGusta) {
+        this.comentarioMeGusta = comentarioMeGusta;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public ArrayList<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(ArrayList<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public HashMap<String, ComentarioMeGusta> getComentarioMeGustas() {
+        return comentarioMeGustas;
+    }
+
+    public void setComentarioMeGustas(HashMap<String, ComentarioMeGusta> comentarioMeGustas) {
+        this.comentarioMeGustas = comentarioMeGustas;
+    }
+
+    public AtractivoTuristico getAtractivoTuristico() {
+        return atractivoTuristico;
+    }
+
+    public void setAtractivoTuristico(AtractivoTuristico atractivoTuristico) {
+        this.atractivoTuristico = atractivoTuristico;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
     @Override
     public int getCount() {
         return comentarios.size();

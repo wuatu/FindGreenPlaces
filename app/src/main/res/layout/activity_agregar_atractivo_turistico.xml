@@ -16,7 +16,8 @@
         <include
             layout="@layout/toolbar_camera"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></include>
+            android:layout_height="wrap_content">
+        </include>
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout

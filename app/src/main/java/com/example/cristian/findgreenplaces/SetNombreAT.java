@@ -66,24 +66,14 @@ public class SetNombreAT extends AppCompatActivity {
         butttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(SetNombreAT.this)
-                        .setTitle("Editar Nombre")
-                        .setMessage("Esta seguro que quiere realizar estos cambios?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                atractivoTuristico.setNombre(nombreNuevo.getText().toString());
-                                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.NOMBRE,nombreNuevo.getText().toString());
+                atractivoTuristico.setNombre(nombreNuevo.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.NOMBRE,nombreNuevo.getText().toString());
 
-                                //Toast.makeText(SetNombreAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
-                                setResult(RESULT_OK,
-                                        new Intent().putExtra("nombre", atractivoTuristico.getNombre()).
+                //Toast.makeText(SetNombreAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK,
+                        new Intent().putExtra("nombre", atractivoTuristico.getNombre()).
                                 putExtra("contribucion",contribucion));
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                finish();
 
             }
         });
