@@ -135,14 +135,15 @@ public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
 
                 //atractivoTuristico.setNombre(nombreNuevo.getText().toString());
                 ArrayList<Contribucion> contribuciones=new ArrayList<>();
-                for(Categoria categoria:categorias){
-                    Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.CATEGORIA,categoria.getEtiqueta());
+                for(Categoria categoria:categoriasAñadidas){
+                    Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.CATEGORIA,categoria.getEtiqueta(),Referencias.VISIBLE);
                     contribuciones.add(contribucion);
                 }
 
                 //Toast.makeText(SetNombreAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK,
                         new Intent().putExtra("categorias", categorias).
+                                putExtra("categoriasNuevas", categoriasAñadidas).
                                 putExtra("contribuciones",contribuciones));
                 finish();
 

@@ -77,7 +77,7 @@ public class SetTelefonoAT extends AppCompatActivity {
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
                 atractivoTuristico.setTelefono(editTextTelefono.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TELEFONO,editTextTelefono.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.TELEFONO,editTextTelefono.getText().toString(),Referencias.VISIBLE);
 
                 setResult(RESULT_OK,
                         new Intent().putExtra("nombre", atractivoTuristico.getTelefono())

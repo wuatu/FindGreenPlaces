@@ -67,7 +67,7 @@ public class SetNombreAT extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 atractivoTuristico.setNombre(nombreNuevo.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.NOMBRE,nombreNuevo.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.NOMBRE,nombreNuevo.getText().toString(),Referencias.VISIBLE);
 
                 //Toast.makeText(SetNombreAT.this,"Datos enviados correctamente",Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK,

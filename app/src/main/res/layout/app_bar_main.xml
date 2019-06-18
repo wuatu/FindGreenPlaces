@@ -46,7 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:background="@drawable/dialog_bg"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView29"
@@ -64,7 +65,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="120dp">
+        android:paddingLeft="10dp"
+        android:paddingTop="115dp"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -81,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="Contribuye, gana puntos y\n desbloquea nuevo contenido"
+                android:text="Contribuye y desbloquea nuevo contenido"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
@@ -92,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end|center_horizontal"
         android:layout_marginRight="73dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="36dp"
         android:background="@drawable/dialog_bg"
         android:orientation="horizontal">
 
@@ -102,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:text="Añadir Nuevo\nAtractivo Turístico "
+            android:text="Nuevo Atractivo Turístico "
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

@@ -177,24 +177,14 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
 
                         for ( Comentario comentario : model)
                         {
-                            //comentario.contexto(ComentariosATFrafment.this.getActivity());
                             comentario.setImageViewLike(R.drawable.likeoff);
                             comentario.setImageViewDislike(R.drawable.dislikeoff);
-                            //comentario.getImageViewDislike().setTag(R.drawable.dislikeoff);
                             if(comentarioMeGustas.get(comentario.getId())!=null){
                                 if(comentarioMeGustas.get(comentario.getId()).getMeGustaComentario().equals(Referencias.MEGUSTA)) {
-                                    /*comentario.getImageViewLike().setImageResource(R.drawable.likeon);
-                                    comentario.getImageViewLike().setTag(R.drawable.likeon);
-                                    comentario.getImageViewDislike().setImageResource(R.drawable.dislikeoff);
-                                    comentario.getImageViewDislike().setTag(R.drawable.dislikeoff);*/
                                     comentario.setImageViewLike(R.drawable.likeon);
                                     comentario.setImageViewDislike(R.drawable.dislikeoff);
                                 }
                                 if(comentarioMeGustas.get(comentario.getId()).getMeGustaComentario().equals(Referencias.NOMEGUSTA)) {
-                                    /*comentario.getImageViewDislike().setImageResource(R.drawable.dislikeon);
-                                    comentario.getImageViewDislike().setTag(R.drawable.dislikeon);
-                                    comentario.getImageViewLike().setImageResource(R.drawable.likeoff);
-                                    comentario.getImageViewLike().setTag(R.drawable.likeoff);*/
                                     comentario.setImageViewLike(R.drawable.likeoff);
                                     comentario.setImageViewDislike(R.drawable.dislikeon);
                                 }

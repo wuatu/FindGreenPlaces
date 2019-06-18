@@ -58,6 +58,7 @@ public class DialogoReportarAtractivoTuristico extends AppCompatActivity {
                     atractivoTuristico.setVisible(Referencias.INVISIBLE);
                     atractivoTuristico.setContadorReportes(String.valueOf(contadorReportes));
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
+                    mDatabase.child(Referencias.CONTRIBUCIONES).child(atractivoTuristico.getIdUsuario()).child(Referencias.ATRACTIVOTURISTICO).setValue(atractivoTuristico);
                 }else {
                     atractivoTuristico.setContadorReportes(String.valueOf(contadorReportes));
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);

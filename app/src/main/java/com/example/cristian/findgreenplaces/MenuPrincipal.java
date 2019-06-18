@@ -25,7 +25,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -75,8 +74,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Clases.AtractivoTuristico;
-import Clases.Categoria;
-import Clases.Contribucion;
+import Clases.CustomAdapter;
 import Clases.IdUsuario;
 import Clases.Referencias;
 
@@ -84,6 +82,9 @@ import Clases.Referencias;
 public class MenuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, Serializable {
     public Address addres = null;
+    LinearLayout linearLayoutDialogo;
+    LinearLayout linearLayoutDialogo2;
+    LinearLayout linearLayoutDialogo3;
     public Address currentAddres;
     public ArrayList<AtractivoTuristico> atractivosTuristicosTemp;
     public String[] regions;
@@ -91,16 +92,14 @@ public class MenuPrincipal extends AppCompatActivity
     public boolean isCiudadORegion=false;
     public int spinerPosition=0;
     public Tag tagBusqueda=new Tag("");
-    public Tag tagCategoria=new Tag("");
     public ArrayList<Tag> tags=new ArrayList<>();
     public ImageView imageViewIr;
-    public boolean buscarPorCategoria = false;
     public GoogleMap mMap;
     public GoogleApiClient mGoogleApiClient;
     public FusedLocationProviderClient mFusedLocationClient;
     public DatabaseReference mDatabase;
     public FirebaseDatabase database;
-    public SearchView buscarEditText;
+    public SearchView searchViewBuscar;
     public ArrayList<String> keysAtractivosTuristicos;
     public ArrayList<AtractivoTuristico> atractivoTuristicos;
     public AtractivoTuristico atractivoTuristico;
@@ -117,10 +116,19 @@ public class MenuPrincipal extends AppCompatActivity
     public String busqueda;
     public int bandera = 0;
     public TagView tagGroup;
-    public int contadorCategorias = 0;
+
     public View view;
     public String busquedaCategoria;
+
+    public boolean isFiltroOtros=false;
+    public boolean isCiudadOComuna=false;
+
+    public boolean isSinFiltro=false;
+    public int posicionCiudadRegionCategoria=0;
+    public int posicionFiltroOtros=0;
+
     public String busquedaCiudad;
+
 
 
 
@@ -133,11 +141,25 @@ public class MenuPrincipal extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE);
 
         }
+        imageViewIr=findViewById(R.id.imageViewIr);
         atractivosTuristicosTemp= new ArrayList<>();
         linearLayoutFocus = findViewById(R.id.layoutfocus);
         spinner = findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opciones, R.layout.layout_item_spinner);
-        spinner.setAdapter(adapter1);
+        /*ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opciones, R.layout.layout_item_spinner);
+        spinner.setAdapter(adapter1);*/
+        String list[]=new String[5];
+        list[0]="Sin Filtros";
+        list[1]="Mejor Evaluado";
+        list[2]="Mas Me Gusta";
+        list[3]="Mas Visto";
+        list[4]="Default";
+
+        int hidingItemIndex = 4;
+
+        CustomAdapter dataAdapter = new CustomAdapter(MenuPrincipal.this, R.layout.layout_item_spinner, list, hidingItemIndex);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
 
         Toolbar toolbar = findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
@@ -153,13 +175,14 @@ public class MenuPrincipal extends AppCompatActivity
             AlertNoGps();
         }
 
-        if(isOnlineNet()){
-            LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo2);
-            linearLayoutDialogo.setVisibility(View.GONE);
+        if(!isOnlineNet()){
+
+            muestraMensajeSinConexion();
+            quitaMensajes2();
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        FloatingActionButton floatingButtonAgregarAtractivoTuristico = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton floatingButtonMiUbicacion = (FloatingActionButton) findViewById(R.id.fab2);
         final float density = getResources().getDisplayMetrics().density;
         final Drawable drawable = getResources().getDrawable(R.drawable.lupa);
         final int width = Math.round(25 * density);
@@ -169,7 +192,7 @@ public class MenuPrincipal extends AppCompatActivity
         regions = getResources().getStringArray(R.array.region_array);
         city = getResources().getStringArray(R.array.ciudad_array);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingButtonAgregarAtractivoTuristico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (IdUsuario.getIdUsuario().equalsIgnoreCase("invitado")) {
@@ -181,26 +204,14 @@ public class MenuPrincipal extends AppCompatActivity
                     startActivity(intent);
                     //setContentView(R.layout.activity_dialogo_visualizar_atractivo_turistico);
                 }
-                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
-                linearLayoutDialogo.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
-                linearLayoutDialogo2.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
-                linearLayoutDialogo3.setVisibility(View.GONE);
-                imageViewIr.setVisibility(View.VISIBLE);
+                quitaMensajes();
             }
         });
 
-        fab2.setOnClickListener(new View.OnClickListener() {
+        floatingButtonMiUbicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
-                linearLayoutDialogo.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
-                linearLayoutDialogo2.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
-                linearLayoutDialogo3.setVisibility(View.GONE);
-                imageViewIr.setVisibility(View.VISIBLE);
+                quitaMensajes();
                 if (ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MenuPrincipal.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -273,117 +284,19 @@ public class MenuPrincipal extends AppCompatActivity
 
 
 
-        buscarEditText = findViewById(R.id.autocomplete_region);
-
-        buscarEditText.setFocusable(false);
-        buscarEditText.setIconified(true);
-        buscarEditText.setQueryHint("Buscar");
-
-        buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
-                linearLayoutDialogo.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
-                linearLayoutDialogo2.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
-                linearLayoutDialogo3.setVisibility(View.GONE);
-                imageViewIr.setVisibility(View.VISIBLE);
-                busqueda = limpiarAcentos(query);
-                //mostrarAtractivoTuristicoPorCiudadOComuna();
-                if (isCiudadORegion()) {
-                    busquedaCiudad=busqueda;
-                    if (tags.size() > 0) {
-                        int i = 0;
-                        int j = 0;
-                        boolean isBusqueda = false;
-                        for (Tag tag : tags) {
-                            if (!tag.text.equalsIgnoreCase("Mejor Evaluado X") &&
-                                    !tag.text.equalsIgnoreCase("mas me gusta X") &&
-                                    !tag.text.equalsIgnoreCase("mas visto X") &&
-                                    !tag.text.equalsIgnoreCase("categoria X")) {
-                                isBusqueda = true;
-                                j = i;
-                            }
-                            i++;
-                        }
-                        if (isBusqueda) {
-                            tags.remove(j);
-                            tagGroup.remove(j);
-                            Tag tag = new Tag(query + " " + "X");
-                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                            tagGroup.addTag(tag);
-
-                            tags.add(tag);
-                        } else {
-                            Tag tag = new Tag(query + " " + "X");
-                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                            tagGroup.addTag(tag);
-
-                            tags.add(tag);
-                        }
-
-                    } else {
-                        tagGroup.removeAll();
-                        tags.clear();
-                        Tag tag = new Tag(query + " " + "X");
-                        tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                        tagGroup.addTag(tag);
-
-                        tags.add(tag);
-
-
-                    }
-
-
-                    if (tags.size() == 2) {
-                        mostrarAtractivoTuristicoPorCiudadOComuna();
-
-                    } else {
-                        buscar();
-                    }
-
-                    return true;
-                }
-                else{
-                    busquedaCategoria=busqueda;
-                    spinner.setSelection(4);
-                    buscar();
-                    return true;
-                }
-            }
-
-
-            @Override
-            public boolean onQueryTextChange(String newText) { return true; }
-
-        });
-        buscarEditText.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
-
-
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-        tagGroup = (TagView)findViewById(R.id.tag_group);
 
         // Le pasamos las regiones al adaptador
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, regions);
         // finalmente le asignamos el adaptador a nuestro elemento
-        //buscarEditText.setAdapter(adapter);
+        //searchViewBuscar.setAdapter(adapter);
         atractivoTuristicos = new ArrayList();
-        //buscarEditText=findViewById(R.id.editTextBuscar);
+        //searchViewBuscar=findViewById(R.id.editTextBuscar);
         keysAtractivosTuristicos = new ArrayList();
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -393,85 +306,212 @@ public class MenuPrincipal extends AppCompatActivity
                 .build();
 
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+        imageViewIr.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
-                    if(tags.size()>0){
-                        int i=0;
-                        boolean isBusqueda=false;
-                        for(Tag tag:tags){
-                            if(tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
+            public void onClick(View v) {
+                if(atractivoTuristico!=null) {
+                    if (!atractivoTuristico.getLatitud().equals("")) {
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + atractivoTuristico.getLatitud() + "," + atractivoTuristico.getLongitud() + "&travelmode=driving"));
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+
+        tagGroup = (TagView)findViewById(R.id.tag_group);
+        searchViewBuscar = findViewById(R.id.autocomplete_region);
+        searchViewBuscar.setFocusable(false);
+        searchViewBuscar.setIconified(true);
+        searchViewBuscar.setQueryHint("Buscar");
+
+        searchViewBuscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                quitaMensajes();
+
+                busqueda=limpiarAcentos(query);
+                busquedaCategoria=busqueda;
+                //le saca el espacio al final de la busqueda
+                if(busqueda.substring((busqueda.length()-1),busqueda.length()).equalsIgnoreCase(" ")){
+                    busqueda=busqueda.substring(0,busqueda.length()-1);
+                }
+
+                    isCiudadORegion=true;
+
+                    if (tags.size() > 0) {
+                        int i = 0;
+                        int j = 0;
+                        boolean isBusqueda = false;
+                        for (Tag tag : tags) {
+                            if (tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
                                     tag.text.equalsIgnoreCase("mas me gusta X") ||
-                                    tag.text.equalsIgnoreCase("mas visto X") ||
-                                    tag.text.equalsIgnoreCase("Categoria X")) {
+                                    tag.text.equalsIgnoreCase("mas visto X")){
 
-                                tagGroup.remove(i);
-                                tags.remove(i);
-                                isBusqueda=true;
-
+                            }else{
+                                isBusqueda = true;
+                                j = i;
                             }
                             i++;
                         }
-                        if(isBusqueda || tags.size()>0){
-                            repintarMapaConArrayListTemporal(14);
+                        if (isBusqueda) {
+                            Tag tag = new Tag(query + " " + "X");
+                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                            tagGroup.getTags().set(j,tag);
+                            tags.set(j,tag);
+                            Tag tagAux=new Tag("");
+                            tagGroup.addTag(tagAux);
+                            tagGroup.remove(tagGroup.getTags().size()-1);
+                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                            posicionCiudadRegionCategoria=j;
+
+                        } else {
+                            Tag tag = new Tag(query + " " + "X");
+                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                            tagGroup.addTag(tag);
+                            tags.add(tag);
+                            posicionCiudadRegionCategoria=tags.size()-1;
                         }
-                        else{
-                            busquedaCiudad=null;
-                            repintarMapaConArrayList(14);
+
+                    } else {
+                        tagGroup.removeAll();
+                        tags.clear();
+                        Tag tag = new Tag(query + " " + "X");
+                        tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                        tagGroup.addTag(tag);
+                        tags.add(tag);
+                        posicionCiudadRegionCategoria=0;
+                    }
+
+                mostrarAtractivoTuristicoPorCiudadOComuna();
+
+                    return true;
+
+            }
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) { return true; }
+
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int posicionItemSeleccionado, long id) {
+                if(posicionItemSeleccionado==0){
+                    ArrayList<Tag> auxTags=new ArrayList<>();
+                    for (Tag tag : tagGroup.getTags()) {
+                        if (tag.text.equalsIgnoreCase("Mejor Evaluado X") || tag.text.equalsIgnoreCase("mas me gusta X") || tag.text.equalsIgnoreCase("mas visto X") || tag.text.equalsIgnoreCase("categoria X")) {
+                            Tag tag2=tag;
+                            auxTags.add(tag2);
+                            identificaYEliminaFiltrosDeBusqueda(tag);
+                            Log.v("filtro",tag.text);
                         }
+
+                        //buscaAtractivosTuristicosConOsinFiltro();
+                    }
+                    int i=1;
+                    for (Tag tag:auxTags){
+                        tagGroup.getTags().remove(tag);
+                        i++;
+                    }
+                    Tag tagAux=new Tag("");
+                    tagGroup.addTag(tagAux);
+                    tagGroup.remove(tagGroup.getTags().size()-1);
+                    Log.v("filtrotagsize",String.valueOf(tagGroup.getTags().size()));
+                    auxTags=new ArrayList<>();
+                    for (Tag tag : tags) {
+                        if (tag.text.equalsIgnoreCase("Mejor Evaluado X") || tag.text.equalsIgnoreCase("mas me gusta X") || tag.text.equalsIgnoreCase("mas visto X") || tag.text.equalsIgnoreCase("categoria X")) {
+                            Tag tag2=tag;
+                            auxTags.add(tag2);
+                            Log.v("filtro2",tag.text);
+                        }
+                        //buscaAtractivosTuristicosConOsinFiltro();
+                    }
+                    for (Tag tag:auxTags){
+                        tags.remove(tag);
+
+                    }
+                    Log.v("filtroTags",String.valueOf(tags.size()));
+
+                    if(tags.size()>0){
+                        isFiltroOtros=false;
+
+                        isCiudadOComuna=true;
+                        isSinFiltro=true;
+                        repintarMapaConArrayListTemporal(14);
                     }
                     else{
+                        isFiltroOtros=false;
+                        isCiudadOComuna=false;
+                        isSinFiltro=true;
                         busquedaCiudad=null;
                         repintarMapaConArrayList(14);
                     }
-                }else {
-                    if (tags.size()==0){
-                        Log.v("pico4","pico");
-                        contadorCategorias = 1;
+                }
+
+                else if (posicionItemSeleccionado == 4) {
+                    //quitaMensajes();
+                    View v = null;
+                    TextView tv = new TextView(getApplicationContext());
+                    tv.setVisibility(View.GONE);
+                    v = tv;
+                }
+                else{
+                    quitaMensajes();
+                    //agrega palabra o una categoria cuando no hay tag dentro
+                    if(tags.size()==0){
                         Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
                         tag.layoutColor = getResources().getColor(R.color.colorPrimary);
                         tagGroup.addTag(tag);
                         tags.add(tag);
-                        buscar();
-                    }else if (tags.size()==1){
-
-                        if(tags.get(0).text.equalsIgnoreCase("Mejor Evaluado X") ||
-                                tags.get(0).text.equalsIgnoreCase("mas me gusta X") ||
-                        tags.get(0).text.equalsIgnoreCase("mas visto X") ||
-                        tags.get(0).text.equalsIgnoreCase("categoria X") ||
-                        tags.get(0).text.equalsIgnoreCase("sin filtro X")){
-                            Log.v("pico3","pico");
-                            tagGroup.remove(1);
-                            tags.remove(0);
-                            Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
-                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                            tagGroup.addTag(tag);
-                            tags.add(tag);
-                            buscar();
-                        }
-                        else{
-                            Log.v("pico2","pico");
-                            Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
-                            tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                            tagGroup.addTag(tag);
-                            tags.add(tag);
-                            buscar();
-                        }
+                        identificaYAgregaFiltrosDeBusqueda(tag);
+                        buscaAtractivosTuristicosConOsinFiltro();
                     }
-                    else{
-                        Log.v("pico","pico");
-                        Tag tag = new Tag(spinner.getSelectedItem().toString() + " " + "X");
-                        tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                        tagGroup.remove(1);
-                        tags.remove(0);
-                        tagGroup.addTag(tag);
-                        tags.add(tag);
-                        buscar();
+                    //agrega palabra o una categoria cuando hay un tag dentro
+                    else {
+                         if (posicionItemSeleccionado != 0 ) {
+                            int i=0;
+                            Tag tag3=null;
+                            for (Tag tag : tags) {
+                                if (tag.text.equalsIgnoreCase("Mejor Evaluado X") || tag.text.equalsIgnoreCase("mas me gusta X") || tag.text.equalsIgnoreCase("mas visto X")) {
+                                    posicionFiltroOtros=i;
+                                    tag3=tag;
+                                }
+                                i++;
+                            }
+                            if(tag3!=null) {
+                                Tag tag2 = new Tag(spinner.getSelectedItem().toString() + " " + "X");
+                                tag2.layoutColor = getResources().getColor(R.color.colorPrimary);
+                                tagGroup.getTags().remove(posicionFiltroOtros);
+                                tagGroup.getTags().add(posicionFiltroOtros,tag2);
+                                Tag tag=new Tag("");
+                                tagGroup.addTag(tag);
+                                tagGroup.remove(tagGroup.getTags().size()-1);
+                                tags.set(posicionFiltroOtros,tag2);
+                                //identificaYAgregaFiltrosDeBusqueda(tag2);
+                                buscaAtractivosTuristicosConOsinFiltro();
 
+                            }
+                            else {
+                                Tag tag2 = new Tag(spinner.getSelectedItem().toString() + " " + "X");
+                                tag2.layoutColor = getResources().getColor(R.color.colorPrimary);
+                                tagGroup.addTag(tag2);
+                                tags.add(tag2);
+                                identificaYAgregaFiltrosDeBusqueda(tag2);
+                                buscaAtractivosTuristicosConOsinFiltro();
+                            }
+
+
+
+
+                        }
                     }
                 }
-                Log.v("tags2",String.valueOf(tags.size()));
+
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
@@ -481,43 +521,57 @@ public class MenuPrincipal extends AppCompatActivity
         tagGroup.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(Tag tag, int i) {
-                Log.v("tag",tag.text);
-                if(tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
-                        tag.text.equalsIgnoreCase("Mas Me gusta X") ||
-                        tag.text.equalsIgnoreCase("Mas Visto X") ||
-                        tag.text.equalsIgnoreCase("Categoria X") ||
-                        tag.text.equalsIgnoreCase("Sin Filtros X")){
-                    tagGroup.remove(i);
-                    tags.remove(i);
-                    spinner.setSelection(0);
+                identificaYEliminaFiltrosDeBusqueda(tag);
+                tagGroup.remove(i);
+                tags.remove(i);
+                boolean isFiltro=false;
+                if (tag.text.equalsIgnoreCase("Mejor Evaluado X") || tag.text.equalsIgnoreCase("mas me gusta X") || tag.text.equalsIgnoreCase("mas visto X")) {
+                    isFiltro=true;
+                }
 
 
-                }else {
-                    /*tagGroup.removeAll();
-                    tags.clear();
-                    atractivosTuristicosTemp.clear();
-                    repintarMapaConArrayList(14);
-                    for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
+
+                atractivosTuristicosTemp.clear();
+                if (tags.size() == 1) {
+                    if(isFiltro) {
+
+                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
+                            atractivosTuristicosTemp.add(atractivoTuristico);
+                        }
+
+                        mostrarAtractivoTuristicoPorCiudadOComuna();
+                        spinner.setSelection(4);
+                    }
+                    else{
+                        repintarMapaConArrayList(1f);
+                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
+                            atractivosTuristicosTemp.add(atractivoTuristico);
+                        }
+                        //Log.v("tagctm",String.valueOf(tags.size()));
+                        for (Tag tag2 : tags) {
+                            if (tag2.text.equalsIgnoreCase("Mejor Evaluado X")){
+                                spinner.setSelection(1);
+                                buscaAtractivosTuristicosConOsinFiltro();
+                            } else if(tag2.text.equalsIgnoreCase("mas me gusta X")){
+                                spinner.setSelection(2);
+                                buscaAtractivosTuristicosConOsinFiltro();
+                            } else if(tag2.text.equalsIgnoreCase("mas visto X")){
+                                spinner.setSelection(3);
+                                buscaAtractivosTuristicosConOsinFiltro();
+                            } else{
+                                spinner.setSelection(4);
+                            }
+                        }
+                    }
+                }
+
+                if (tags.size() == 0) {
+                    spinner.setSelection(4);
+                    for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
                         atractivosTuristicosTemp.add(atractivoTuristico);
-                    }*/
-                    //spinner.setSelection(0);
-                    tagGroup.remove(i);
-                    tags.remove(i);
-                    atractivosTuristicosTemp.clear();
-                    if (tags.size() == 1) {
-                        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
-                            atractivosTuristicosTemp.add(atractivoTuristico);
-                        }
-                        repintarMapaConArrayListTemporal(14);
-                        buscar();
                     }
-                    if (tags.size() == 0) {
-                        for(AtractivoTuristico atractivoTuristico: atractivoTuristicos){
-                            atractivosTuristicosTemp.add(atractivoTuristico);
-                        }
-                        repintarMapaConArrayListTemporal(14);
-                        repintarMapaConArrayList(14);
-                    }
+                //repintarMapaConArrayListTemporal(14);
+                    repintarMapaConArrayList(14);
                 }
             }
         });
@@ -528,17 +582,55 @@ public class MenuPrincipal extends AppCompatActivity
             }
         });
 
-        imageViewIr=findViewById(R.id.imageViewIr);
-        imageViewIr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+atractivoTuristico.getLatitud()+","+atractivoTuristico.getLongitud()+"&travelmode=driving"));
-                startActivity(intent);
-            }
-        });
+        mostrarAtractivoTuristicoPorRegionInicio();
 
     }
+
+    private void identificaYAgregaFiltrosDeBusqueda(Tag tag) {
+        if (tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
+                tag.text.equalsIgnoreCase("mas me gusta X") ||
+                tag.text.equalsIgnoreCase("mas visto X")) {
+            isFiltroOtros=true;
+        }
+        else{
+            isCiudadOComuna=true;
+        }
+    }
+
+    private void identificaYEliminaFiltrosDeBusqueda(Tag tag) {
+        if (tag.text.equalsIgnoreCase("Mejor Evaluado X") ||
+                tag.text.equalsIgnoreCase("mas me gusta X") ||
+                tag.text.equalsIgnoreCase("mas visto X")) {
+            isFiltroOtros=false;
+        }
+        else{
+            isCiudadOComuna=false;
+        }
+    }
+
+    private void quitaMensajes() {
+        linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+        linearLayoutDialogo.setVisibility(View.GONE);
+        linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
+        linearLayoutDialogo2.setVisibility(View.GONE);
+        linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+        linearLayoutDialogo3.setVisibility(View.GONE);
+
+        imageViewIr.setVisibility(View.GONE);
+    }
+    private void quitaMensajes2() {
+        LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
+        linearLayoutDialogo.setVisibility(View.GONE);
+        LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
+        linearLayoutDialogo3.setVisibility(View.GONE);
+
+        imageViewIr.setVisibility(View.GONE);
+    }
+    private void muestraMensajeSinConexion() {
+        LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo2);
+        linearLayoutDialogo.setVisibility(View.VISIBLE);
+    }
+
 
     public boolean isNombre(){
         for(AtractivoTuristico atractivoTuristico:atractivoTuristicos){
@@ -567,7 +659,7 @@ public class MenuPrincipal extends AppCompatActivity
     public Boolean isOnlineNet() {
 
         try {
-            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
+            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
 
             int val           = p.waitFor();
             boolean reachable = (val == 0);
@@ -581,13 +673,13 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
 
-    public void buscar() {
-        Log.v("busqueda2",busqueda);
+    public void buscaAtractivosTuristicosConOsinFiltro() {
+        /*Log.v("busqueda2",busqueda);
         if (spinner.getSelectedItem().toString().equalsIgnoreCase("sin filtros")) {
             //mMap.clear();
             mostrarAtractivoTuristicoPorCiudadOComuna();
-        }
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria")) {
+        }*/
+        /*if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria")) {
             mMap.clear();
             if(busqueda!=null) {
                 if(busquedaCategoria!=null) {
@@ -595,7 +687,7 @@ public class MenuPrincipal extends AppCompatActivity
                     buscarAtractivoTuristicoPorCategoria();
                 }
             }
-        }
+        }*/
         if (spinner.getSelectedItem().toString().equalsIgnoreCase("mas me gusta")) {
             getMasMeGustaAtractivoTuristico();
         }
@@ -609,26 +701,7 @@ public class MenuPrincipal extends AppCompatActivity
         }
     }
 
-    public void BuscarConFiltroSpinner() {
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("categoria")) {
-            mMap.clear();
-            if(!isCiudadORegion()) {
-                getkeyAtractivoTuristico(busqueda);
-                buscarAtractivoTuristicoPorCategoria();
-            }
-        }
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("mas me gusta")) {
 
-            getMasMeGustaAtractivoTuristico();
-        }
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("mejor evaluado")) {
-            getMejorCalificadosAtractivoTuristico();
-        }
-        if (spinner.getSelectedItem().toString().equalsIgnoreCase("mas visto")) {
-            //mMap.clear();
-            getMasVistosAtractivoTuristico();
-        }
-    }
 
 
 
@@ -811,6 +884,7 @@ public class MenuPrincipal extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 atractivoTuristicos.clear();
                 mMap.clear();
+                atractivosTuristicosTemp.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
                     String limpiaCiudad=limpiarAcentos(atractivoTuristico.getCiudad());
@@ -836,8 +910,6 @@ public class MenuPrincipal extends AppCompatActivity
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Address address=ubicacionAddressMoveCamera();
-                //if(address!=null) {
                 Geocoder geo = new Geocoder(MenuPrincipal.this);
                 int maxResultados = 1;
                 List<Address> adress = null;
@@ -851,58 +923,17 @@ public class MenuPrincipal extends AppCompatActivity
                         LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
                         currentAddres=adress.get(0);
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-                    } else {
-                        Toast.makeText(MenuPrincipal.this, "No se encuentan datos", Toast.LENGTH_SHORT).show();
+                        buscarAtractivoTuristicoPorCategoria(busqueda);
                         return;
                     }
                 }
-                if (adress != null) {
-                    /*if ((!limpiarAcentos(adress.get(0).getAdminArea()).equalsIgnoreCase(limpiarAcentos(currentAddres.getAdminArea())))
-                            || isRegion() || atractivoTuristicos.size()<=0 ||
-                    (!limpiarAcentos(adress.get(0).getLocality()).equalsIgnoreCase(limpiarAcentos(currentAddres.getLocality())))) {*/
-                        Log.v("busqueda4", busqueda);
-                        //atractivoTuristicos.clear();
-                        atractivosTuristicosTemp.clear();
-                        mMap.clear();
-                        currentAddres = adress.get(0);
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                            AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
-                            String limpiaCiudad = limpiarAcentos(atractivoTuristico.getCiudad());
-                            String limpiaRegion = limpiarAcentos(atractivoTuristico.getComuna());
-                            String limpiaNombre = limpiarAcentos(atractivoTuristico.getNombre());
-
-                            if (atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
-
-                                if (limpiaCiudad.equalsIgnoreCase(busqueda) || limpiaRegion.equalsIgnoreCase(busqueda) ||
-                                        limpiaRegion.toUpperCase().indexOf(busqueda.toUpperCase()) != -1 ||
-                                limpiaNombre.toUpperCase().indexOf(busqueda.toUpperCase())!=-1) {
-                                    repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
-                                    atractivosTuristicosTemp.add(atractivoTuristico);
-                                }
-                                if(atractivoTuristicos!=null){
-                                    if (atractivoTuristicos.size()==0){
-                                        atractivoTuristicos.add(atractivoTuristico);
-                                    }
-                                }
-                            }
-                        }
-                        BuscarConFiltroSpinner();
-                    /*} else {
-                        Log.v("busqueda6", busqueda);
-                        //mMap.clear();
-                        atractivosTuristicosTemp.clear();
-                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
-                            if (atractivoTuristico.getCiudad().equalsIgnoreCase(busqueda) || atractivoTuristico.getComuna().equalsIgnoreCase(busqueda)) {
-                                repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
-                                atractivosTuristicosTemp.add(atractivoTuristico);
-                            }
-                        }
-                    }*/
+                buscarAtractivoTuristicoPorCategoria(busqueda);
+                if(atractivosTuristicosTemp.size()==0){
+                    mMap.clear();
+                    Toast.makeText(MenuPrincipal.this, "No se encuentran resultados de búsqueda", Toast.LENGTH_SHORT).show();
                 }
-            }
-            //}
-
-
+                return;
+                }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -943,17 +974,47 @@ public class MenuPrincipal extends AppCompatActivity
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     for (DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
                         String categoria=dataSnapshot2.getKey();
-                        //Log.v("quee", categoria);
-                        //Log.v("texto", texto);
-                        if (texto.equalsIgnoreCase(categoria)) {
+                        boolean keyEncontrada=false;
+                        if(texto.equalsIgnoreCase(categoria)){
                             keysAtractivosTuristicos.add(dataSnapshot1.getKey());
                             break;
                         }
-                    }
-                }
-                if (keysAtractivosTuristicos != null) {
-                    if (keysAtractivosTuristicos.size() > 0) {
-                        //Toast.makeText(MenuPrincipal.this, "No existen categorias", Toast.LENGTH_SHORT).show();
+                        if (texto.contains(" ")) {
+                            String[] textoIngresado = texto.split(" ");
+                            if(categoria.contains(" ")){
+                                String[] categorias = categoria.split(" ");
+                                for (int i=0; i<textoIngresado.length;i++) {
+                                    for(int j=0;j<categorias.length;j++) {
+                                        if (textoIngresado[i].toUpperCase().equalsIgnoreCase(categorias[j].toUpperCase())) {
+                                            keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                            Log.v("partss",textoIngresado[i]);
+                                            Log.v("partss",categoria);
+                                            keyEncontrada=true;
+                                            break;
+                                        }
+                                        if(keyEncontrada){
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                String[] parts = texto.split(" ");
+                                for (int i=0; i<parts.length;i++) {
+                                    if (parts[i].toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
+                                        keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if (texto.toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
+                                keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                break;
+                            }
+                        }
+
                     }
                 }
             }
@@ -962,24 +1023,25 @@ public class MenuPrincipal extends AppCompatActivity
         });
     }
     //busca los atractivos turisticos por llave
-    public void buscarAtractivoTuristicoPorCategoria() {
+    public void buscarAtractivoTuristicoPorCategoria(String busqueda) {
+        getkeyAtractivoTuristico(busqueda);
         mDatabase.child("atractivoturistico").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mMap.clear();
+                atractivosTuristicosTemp.clear();
                 for (String keyAtractivoTuristico : keysAtractivosTuristicos) {
                     Query q = mDatabase.child("atractivoTuristico").child(keyAtractivoTuristico);
                     q.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             AtractivoTuristico atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
-                            if(busquedaCiudad!=null) {
-                                if (limpiarAcentos(atractivoTuristico.getComuna()).toUpperCase().equalsIgnoreCase(busquedaCiudad) || limpiarAcentos(atractivoTuristico.getCiudad()).toUpperCase().equalsIgnoreCase(busquedaCiudad)) {
+                                if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
                                     repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
+                                    atractivosTuristicosTemp.add(atractivoTuristico);
                                 }
-                            }
-                            else{
-                                repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
-                            }
+                                buscaAtractivosTuristicosConOsinFiltro();
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -1110,12 +1172,7 @@ public class MenuPrincipal extends AppCompatActivity
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
-                linearLayoutDialogo.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
-                linearLayoutDialogo2.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
-                linearLayoutDialogo3.setVisibility(View.GONE);
+                quitaMensajes();
                 imageViewIr.setVisibility(View.VISIBLE);
                 atractivoTuristico = buscarAtractivoTuristicoEnArrayListPorNombre(marker);
                 Intent intent = new Intent(MenuPrincipal.this, DialogoVisualizarAtractivoTuristico.class);
@@ -1160,7 +1217,7 @@ public class MenuPrincipal extends AppCompatActivity
                                 if(adress.size()>0){
                                     currentAddres=adress.get(0);
                                     busqueda=limpiarAcentos(adress.get(0).getAdminArea());
-                                    mostrarAtractivoTuristicoPorRegionInicio();
+                                    //mostrarAtractivoTuristicoPorRegionInicio();
                                 }
                             }
 
@@ -1175,13 +1232,7 @@ public class MenuPrincipal extends AppCompatActivity
 
             @Override
             public void onMapClick(LatLng arg0) {
-                LinearLayout linearLayoutDialogo=findViewById(R.id.layoutDialogo);
-                linearLayoutDialogo.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo2=findViewById(R.id.layoutDialogo2);
-                linearLayoutDialogo2.setVisibility(View.GONE);
-                imageViewIr.setVisibility(View.GONE);
-                LinearLayout linearLayoutDialogo3=findViewById(R.id.layoutDialogo3);
-                linearLayoutDialogo3.setVisibility(View.GONE);
+                quitaMensajes();
             }
         });
 
@@ -1212,8 +1263,8 @@ public class MenuPrincipal extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
-        buscarEditText.setQuery("", false);
+        //mostrarAtractivoTuristicoPorRegionInicio();
+        searchViewBuscar.setQuery("", false);
         //mMap.requestFocus();
     }
 
@@ -1235,7 +1286,7 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -1419,13 +1470,6 @@ public class MenuPrincipal extends AppCompatActivity
         this.tagBusqueda = tagBusqueda;
     }
 
-    public Tag getTagCategoria() {
-        return tagCategoria;
-    }
-
-    public void setTagCategoria(Tag tagCategoria) {
-        this.tagCategoria = tagCategoria;
-    }
 
     public ArrayList<Tag> getTags() {
         return tags;
@@ -1441,14 +1485,6 @@ public class MenuPrincipal extends AppCompatActivity
 
     public void setImageViewIr(ImageView imageViewIr) {
         this.imageViewIr = imageViewIr;
-    }
-
-    public boolean isBuscarPorCategoria() {
-        return buscarPorCategoria;
-    }
-
-    public void setBuscarPorCategoria(boolean buscarPorCategoria) {
-        this.buscarPorCategoria = buscarPorCategoria;
     }
 
     public GoogleMap getmMap() {
@@ -1491,12 +1527,12 @@ public class MenuPrincipal extends AppCompatActivity
         this.database = database;
     }
 
-    public SearchView getBuscarEditText() {
-        return buscarEditText;
+    public SearchView getSearchViewBuscar() {
+        return searchViewBuscar;
     }
 
-    public void setBuscarEditText(SearchView buscarEditText) {
-        this.buscarEditText = buscarEditText;
+    public void setSearchViewBuscar(SearchView searchViewBuscar) {
+        this.searchViewBuscar = searchViewBuscar;
     }
 
     public ArrayList<String> getKeysAtractivosTuristicos() {
@@ -1613,14 +1649,6 @@ public class MenuPrincipal extends AppCompatActivity
 
     public void setTagGroup(TagView tagGroup) {
         this.tagGroup = tagGroup;
-    }
-
-    public int getContadorCategorias() {
-        return contadorCategorias;
-    }
-
-    public void setContadorCategorias(int contadorCategorias) {
-        this.contadorCategorias = contadorCategorias;
     }
 
     public View getView() {

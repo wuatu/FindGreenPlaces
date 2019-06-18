@@ -70,6 +70,7 @@ public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter i
             LayoutInflater layoutInflater=(LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView=layoutInflater.inflate(R.layout.row_recycler_view_contribucion_atractivo_turistico,null);
         }
+
         TextView nombre=(TextView)convertView.findViewById(R.id.textViewTitulo);
         TextView ciudad=(TextView)convertView.findViewById(R.id.textViewCiudad);
         TextView comuna=(TextView)convertView.findViewById(R.id.textViewComuna);

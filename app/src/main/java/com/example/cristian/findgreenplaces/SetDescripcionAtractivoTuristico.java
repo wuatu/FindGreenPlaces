@@ -69,7 +69,7 @@ public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 atractivoTuristico.setDescripcion(descripcionNueva.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.DESCRIPCION,descripcionNueva.getText().toString(),Referencias.VISIBLE);
 
                 setResult(RESULT_OK,
                         new Intent().putExtra("descripcion", atractivoTuristico.getDescripcion()).

@@ -76,7 +76,7 @@ public class SetRedesSocialesAT extends AppCompatActivity {
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
                 atractivoTuristico.setRedesSociales(editTextRedes.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.REDESSOCIALES,editTextRedes.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.REDESSOCIALES,editTextRedes.getText().toString(),Referencias.VISIBLE);
 
                 setResult(RESULT_OK,
                         new Intent().putExtra("nombre", atractivoTuristico.getRedesSociales())

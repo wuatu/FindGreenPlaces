@@ -128,7 +128,7 @@ public class Buscar_Maps extends AppCompatActivity
         final int width = Math.round(25 * density);
         final int height = Math.round(25 * density);
         drawable.setBounds(0, 0, width, height);
-        //buscarEditText.setCompoundDrawables(drawable,null,null,null);
+        //searchViewBuscar.setCompoundDrawables(drawable,null,null,null);
         //drawable.setBounds(0,0,50,50);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,19 +189,19 @@ public class Buscar_Maps extends AppCompatActivity
         if (IdUsuario.getIdUsuario() == null) {
             ejecutarLoginActivity();
         }
-        /*buscarEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*searchViewBuscar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    buscar();
-                    buscarEditText.clearFocus();
+                    buscaAtractivosTuristicosConOsinFiltro();
+                    searchViewBuscar.clearFocus();
                     linearLayoutFocus.requestFocus();
                     //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    dismissKeyboard(buscarEditText,MenuPrincipal.this);
+                    dismissKeyboard(searchViewBuscar,MenuPrincipal.this);
                     Toast.makeText(MenuPrincipal.this,"Ciudad encontrada!",Toast.LENGTH_SHORT).show();
-                    //buscarEditText.setCursorVisible(false);
-                    buscarEditText.setFocusable(false);
-                    buscarEditText.setFocusableInTouchMode(true);
+                    //searchViewBuscar.setCursorVisible(false);
+                    searchViewBuscar.setFocusable(false);
+                    searchViewBuscar.setFocusableInTouchMode(true);
                     return true;
                 }
                 return false;
@@ -210,7 +210,7 @@ public class Buscar_Maps extends AppCompatActivity
         });*/
 
         buscarEditText.setIconified(false);
-        //buscarEditText.setFocusable(true);
+        //searchViewBuscar.setFocusable(true);
         buscarEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -253,9 +253,9 @@ public class Buscar_Maps extends AppCompatActivity
         buscarEditText.setSuggestionsAdapter(busStopCursorAdapter);
 
 
-        //buscarEditText.setAdapter(adapter);
+        //searchViewBuscar.setAdapter(adapter);
         atractivoTuristicos = new ArrayList();
-        //buscarEditText=findViewById(R.id.editTextBuscar);
+        //searchViewBuscar=findViewById(R.id.editTextBuscar);
         keysAtractivosTuristicos = new ArrayList();
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference();
@@ -353,7 +353,7 @@ public class Buscar_Maps extends AppCompatActivity
     }
 
     /*public Address buscarPorNombreCiudad(){
-        buscarEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        searchViewBuscar.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             LatLng latLng=null;
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -361,7 +361,7 @@ public class Buscar_Maps extends AppCompatActivity
                 int maxResultados = 1;
                 List<Address> adress = null;
                 try {
-                    adress = geo.getFromLocationName(buscarEditText.getText().toString(), maxResultados);
+                    adress = geo.getFromLocationName(searchViewBuscar.getText().toString(), maxResultados);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

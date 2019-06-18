@@ -67,7 +67,7 @@ public class SpaceGalleryActivity extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
                         Imagen imagen = dataSnapshot2.getValue(Imagen.class);
                         if(imagen.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
-                            if (imagen.getIdUsuario().equalsIgnoreCase(IdUsuario.idUsuario)) {
+                            if (imagen.getIdUsuario().equalsIgnoreCase(IdUsuario.idUsuario) && imagen.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
                                 imagenes.add(imagen);
                             }
 

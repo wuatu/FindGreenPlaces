@@ -96,8 +96,11 @@ public class VisualizarContribucionAtractivoTuristico extends AppCompatActivity 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //atractivoTuristicos.removeAll(atractivoTuristicos);
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    AtractivoTuristico atractivoTuristico=dataSnapshot1.getValue(AtractivoTuristico.class);
-                    atractivoTuristicos.add(atractivoTuristico);
+
+                        AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
+                    if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                        atractivoTuristicos.add(atractivoTuristico);
+                    }
                 }
                 //Log.v("atractivoo",String.valueOf(atractivoTuristicos.size()));
                 adapter=new AdapterListViewContribucionAtractivoTuristico(VisualizarContribucionAtractivoTuristico.this,atractivoTuristicos);
@@ -107,8 +110,9 @@ public class VisualizarContribucionAtractivoTuristico extends AppCompatActivity 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         try{
-                            atractivoTuristico = (AtractivoTuristico) adapter.getItem(position);
-                            listener.onSuccess(atractivoTuristico);
+                                atractivoTuristico = (AtractivoTuristico) adapter.getItem(position);
+                                listener.onSuccess(atractivoTuristico);
+
                         }catch (Exception e){
                             e.printStackTrace();
                         }

@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,11 +31,11 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Calendar;
 import java.util.Date;
 
-import Clases.AtractivoTuristico;
 import Clases.CurrentDate;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.SubirPuntos;
 
 public class SubirFoto extends AppCompatActivity {
     DatabaseReference mDatabase;
@@ -118,6 +116,9 @@ public class SubirFoto extends AppCompatActivity {
                             mDatabase.child("imagenesContribuidas").child(IdUsuario.getIdUsuario()).child(key).setValue(imagen);
 
                             Toast.makeText(SubirFoto.this,"La foto se subio exitosamente",Toast.LENGTH_SHORT).show();
+                            SubirPuntos.subirPuntosUsuarioQueContribuye(SubirFoto.this,1);
+                            Toast.makeText(SubirFoto.this,"Subes "+1+" punto",Toast.LENGTH_SHORT).show();
+
                             setResult(RESULT_OK,
                                     new Intent().putExtra("imagen", imagen.getUrl()));
                             finish();

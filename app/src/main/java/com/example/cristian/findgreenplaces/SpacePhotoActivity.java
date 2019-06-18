@@ -1,4 +1,6 @@
 package com.example.cristian.findgreenplaces;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -36,6 +38,7 @@ import Clases.Imagen;
 import Clases.MeGustaImagen;
 import Clases.Referencias;
 import Clases.SpacePhoto;
+import Clases.SubirPuntos;
 import Clases.Usuario;
 
 /**
@@ -192,7 +195,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
             textViewNLike.setText(String.valueOf(contadorLike));
             imagen.setContadorLike(String.valueOf(contadorLike));
             mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
-            aumentaPuntos();
+            SubirPuntos.aumentaPuntosOtrosUsuarios(SpacePhotoActivity.this,imagen.getIdUsuario(),1);
         }
         else{
             mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(imagen.getIdAtractivo()).child(imagen.getId()).removeValue();
@@ -205,7 +208,7 @@ public class SpacePhotoActivity extends AppCompatActivity {
                 imagen.setContadorLike(String.valueOf(contadorLike));
                 mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).setValue(imagen);
             }
-            disminuyePuntos();
+            SubirPuntos.disminuyePuntosOtrosUsuarios(SpacePhotoActivity.this,imagen.getIdUsuario(),1);
         }
             }
         });
@@ -216,76 +219,6 @@ public class SpacePhotoActivity extends AppCompatActivity {
                 intent.putExtra("atractivoTuristico",atractivoTuristico);
                 intent.putExtra("imagen",imagen);
                 startActivity(intent);
-            }
-        });
-    }
-
-    //Consulta disminuye 1 punto cada vez que un usuario quita el "me gusta" a una foto
-    public void disminuyePuntos(){
-
-        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(imagen.getIdUsuario());
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                int puntos=Integer.valueOf(usuario.getPuntos());
-                if(puntos>0){
-                    puntos=puntos-1;
-                    if(puntos<0){
-                        int nivel= Integer.valueOf(usuario.getNivel());
-                        if(nivel==2){
-                            usuario.setNivel("1");
-                            usuario.setPuntos("99");
-                            usuario.setNombreNivel(Referencias.PRINCIPIANTE);
-                        }
-                        if(nivel==3){
-                            usuario.setNivel("2");
-                            usuario.setPuntos("99");
-                            usuario.setNombreNivel(Referencias.AVANZADO);
-                        }
-                    }else{
-                        usuario.setPuntos(String.valueOf(puntos));
-                    }
-                    databaseReference1.setValue(usuario);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    //Consulta aumenta 1 punto cada vez que un usuario agrega el "me gusta" a una foto
-    public void aumentaPuntos(){
-        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(imagen.getIdUsuario());
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                int puntos=Integer.valueOf(usuario.getPuntos())+1;
-                if(puntos>=100){
-                    int nivel= Integer.valueOf(usuario.getNivel());
-                    if(nivel==1){
-                        usuario.setNivel("2");
-                        usuario.setPuntos("0");
-                        usuario.setNombreNivel(Referencias.AVANZADO);
-                    }
-                    if(nivel==2){
-                        usuario.setNivel("3");
-                        usuario.setPuntos("0");
-                        usuario.setNombreNivel(Referencias.EXPERTO);
-                    }
-                }else{
-                    usuario.setPuntos(String.valueOf(puntos));
-                }
-                databaseReference1.setValue(usuario);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }

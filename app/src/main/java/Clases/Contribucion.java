@@ -8,16 +8,25 @@ public class Contribucion implements Serializable {
     String idUsuario;
     String contribucionNombre;
     String contribucion;
+    String visible;
 
-    public Contribucion(String id, String idAtractivoTuristico, String idUsuario, String contribucionNombre, String contribucion) {
+    public Contribucion(String id, String idAtractivoTuristico, String idUsuario, String contribucionNombre, String contribucion, String visible) {
         this.id = id;
         this.idAtractivoTuristico = idAtractivoTuristico;
         this.idUsuario = idUsuario;
         this.contribucionNombre = contribucionNombre;
         this.contribucion = contribucion;
+        this.visible=visible;
     }
 
 
+    public String getVisible() {
+        return visible;
+    }
+
+    public void setVisible(String visible) {
+        this.visible = visible;
+    }
 
     public String getId() {
         return id;

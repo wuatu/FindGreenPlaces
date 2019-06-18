@@ -77,7 +77,7 @@ public class SetHorarioDeAtencion extends AppCompatActivity {
                 }
 
                 atractivoTuristico.setHorarioDeAtencion(editTextHorario.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.HORARIODEATENCION,editTextHorario.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.HORARIODEATENCION,editTextHorario.getText().toString(),Referencias.VISIBLE);
 
                 setResult(RESULT_OK,
                         new Intent().putExtra("nombre", atractivoTuristico.getHorarioDeAtencion())

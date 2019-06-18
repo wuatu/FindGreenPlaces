@@ -3,7 +3,9 @@ package com.example.cristian.findgreenplaces;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.util.DisplayMetrics;
@@ -17,6 +19,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +52,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
     private RatingBar ratingBar;
     private TextView textViewratingBar;
     private TextView textViewOpiniones;
+    private LinearLayout linearLayoutProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +67,15 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         linearLayout=findViewById(R.id.contenedorDialogoAT);
         //getSupportActionBar().hide();
 
+
         DisplayMetrics dm= new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int ancho=dm.widthPixels;
         int alto=dm.heightPixels;
         getWindow().setLayout((int) (ancho*.99),(int)(alto*.30));
         getWindow().setGravity(Gravity.BOTTOM);
+
+        linearLayoutProgressBar=findViewById(R.id.LinearLayoutProgressBar);
 
         titulo = (TextView) findViewById(R.id.textViewTituloAT);
         titulo.setText(atractivoTuristico.getNombre());
@@ -75,30 +85,40 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         textViewOpiniones=findViewById(R.id.textViewOpinionesn);
         ratingBar=findViewById(R.id.rating);
         textViewratingBar=findViewById(R.id.textViewRatingBar);
-        /*mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                CalificacionPromedio calificacionPromedio=dataSnapshot.getValue(CalificacionPromedio.class);
-                if(calificacionPromedio!=null){
-                    String calificacion=String.valueOf(calificacionPromedio.getPromedioCalificacion());
-                    textViewratingBar.setText(calificacion.substring(0,3));
-                    ratingBar.setRating(Float.parseFloat(calificacion));
-                    textViewOpiniones.setText(String.valueOf(calificacionPromedio.getTotalPersonas()));
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });*/
         textViewratingBar.setText(atractivoTuristico.getCalificacion());
         ratingBar.setRating(Float.parseFloat(atractivoTuristico.getCalificacion()));
         textViewOpiniones.setText(String.valueOf(atractivoTuristico.getContadorOpiniones()));
         ratingBar.setEnabled(false);
-        Glide.with(getApplicationContext())
+
+
+        Glide.with(DialogoVisualizarAtractivoTuristico.this)
                 .load(atractivoTuristico.getUrlFoto())
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        if(isFromMemoryCache){
+                            linearLayoutProgressBar.setVisibility(View.GONE);
+                        }
+                        else{
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    linearLayoutProgressBar.setVisibility(View.GONE);
+                                }
+                            }, 500);
+                        }
+                        return false;
+                    }
+                })
                 .centerCrop()
                 .into(foto);
+
         linearLayout();
     }
 
@@ -107,46 +127,15 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getImagenesAtractivoTuristico();
-            }
-        });
-    }
-    private void getImagenesAtractivoTuristico(){
-
-        Query q=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId());
-        Log.v("oooh", q.getRef().toString());
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    Imagen imagen=dataSnapshot1.getValue(Imagen.class);
-                    imagenes.add(imagen);
-                }
-                finish();
                 Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
-                intent.putExtra("imagenes",imagenes);
-                Log.v("ooooh",String.valueOf(imagenes.size()));
+                //intent.putExtra("imagenes",imagenes);
+                //Log.v("ooooh",String.valueOf(imagenes.size()));
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);
-
-                /*if(imagenes.size()>0) {
-
-                    Glide.with(getApplicationContext())
-                            .load(imagenes.get(0).getUrl())
-
-                            .centerCrop()
-                            .into(foto);
-                }
-                    linearLayout();*/
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                finish();
             }
         });
-    /**/
     }
+
 
 }

@@ -1,6 +1,9 @@
 package Clases;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -213,7 +216,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     comentarios.get(position).setImageViewDislike(R.drawable.dislikeoff);
                     imageViewDislike.setTag(R.drawable.dislikeoff);
                     imageViewDislike.setImageResource(R.drawable.dislikeoff);
-                    disminuyePuntos(position);
+                    SubirPuntos.disminuyePuntosOtrosUsuarios((Activity) context,comentarios.get(position).getIdUsuario(),1);
                 }
                 else{
                     Log.v("leyla", imageViewLike.getTag().toString()+"3");
@@ -246,7 +249,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                     imageViewLike.setTag(R.drawable.likeon);
                     imageViewLike.setImageResource(R.drawable.likeon);
 
-                    aumentaPuntos(position);
+                    SubirPuntos.aumentaPuntosOtrosUsuarios((Activity) context,comentarios.get(position).getIdUsuario(),1);
 
                 }
             }
@@ -269,7 +272,8 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
                         comentarios.get(position).setImageViewLike(R.drawable.likeoff);
                         imageViewLike.setTag(R.drawable.likeoff);
                         imageViewLike.setImageResource(R.drawable.likeoff);
-                        disminuyePuntos(position);
+                        SubirPuntos.disminuyePuntosOtrosUsuarios((Activity) context,comentarios.get(position).getIdUsuario(),1);
+
                     }
 
                     //cambio el contador de like de la base de datos y del objeto
@@ -295,8 +299,6 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
 
                     imageViewDislike.setTag(R.drawable.dislikeon);
                     imageViewDislike.setImageResource(R.drawable.dislikeon);
-
-
 
                 }
 
@@ -355,74 +357,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
     }
     }
 
-    //Consulta aumenta 1 punto cada vez que un usuario agrega el "me gusta" a una foto
-    public void aumentaPuntos(int position){
-        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(comentarios.get(position).getIdUsuario());
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                int puntos=Integer.valueOf(usuario.getPuntos())+1;
-                if(puntos>=100){
-                    int nivel= Integer.valueOf(usuario.getNivel());
-                    if(nivel==1){
-                        usuario.setNivel("2");
-                        usuario.setPuntos("0");
-                        usuario.setNombreNivel(Referencias.AVANZADO);
-                    }
-                    if(nivel==2){
-                        usuario.setNivel("3");
-                        usuario.setPuntos("0");
-                        usuario.setNombreNivel(Referencias.EXPERTO);
-                    }
-                }else{
-                    usuario.setPuntos(String.valueOf(puntos));
-                }
-                databaseReference1.setValue(usuario);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
 
-    //Consulta disminuye 1 punto cada vez que un usuario quita el "me gusta" a una foto
-    public void disminuyePuntos(int position){
-
-        final DatabaseReference databaseReference1= mDatabase.child(Referencias.USUARIO).child(comentarios.get(position).getIdUsuario());
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                int puntos=Integer.valueOf(usuario.getPuntos());
-                if(puntos>0){
-                    puntos=puntos-1;
-                    if(puntos<0){
-                        int nivel= Integer.valueOf(usuario.getNivel());
-                        if(nivel==2){
-                            usuario.setNivel("1");
-                            usuario.setPuntos("99");
-                            usuario.setNombreNivel(Referencias.PRINCIPIANTE);
-                        }
-                        if(nivel==3){
-                            usuario.setNivel("2");
-                            usuario.setPuntos("99");
-                            usuario.setNombreNivel(Referencias.AVANZADO);
-                        }
-                    }else{
-                        usuario.setPuntos(String.valueOf(puntos));
-                    }
-                    databaseReference1.setValue(usuario);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
 }
 

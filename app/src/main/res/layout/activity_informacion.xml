@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Informacion"
-    android:orientation="vertical">
+    tools:context=".Informacion">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -45,13 +44,13 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="2) AhoraTurismo no se hace responsable del uso inadecuado del contenido de la aplicación." />
+            android:text="2) AhoraTurismo no se hace responsable del mal uso de la aplicación." />
 
         <TextView
             android:id="@+id/textView22"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Antes de subir información por favor asegurarse que NO vulnere derechos de autor. Sino el contenido será eliminado." />
+            android:text="3) Antes de subir información favor asegurarse que NO vulnere derechos de autor. Sino el contenido será eliminado." />
 
         <TextView
             android:id="@+id/textView23"
@@ -66,7 +65,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
-            android:text="1) Para acumular puntos puede agregar un atractivo turístico nuevo, comentar, añadir imágenes, o contribuyendo en otras publicaciones." />
+            android:text="1) Para acumular puntos debe contribuir en la aplicación." />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2) Las contribuciones y los puntos son los siguientes:\n - Agregar un atractivo turístico: 5 puntos\n - Comentar: 1 punto\n - Añadir una imagen: 1 punto \n - Sugerir cambios: 1 punto (por contribución)\n - Dar me gusta: 1 punto\n - Calificar: 1 punto" />
 
         <TextView
             android:id="@+id/textView25"
@@ -74,13 +79,23 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="2) Para subir de nivel usted debe acumular una cantidad de 100 puntos." />
+            android:text="3) Para subir de nivel usted debe acumular 100 puntos." />
 
         <TextView
             android:id="@+id/textView26"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3) Usted puede desbloquear nuevo contenido al subir de nivel." />
+            android:text="4) Al subir de nivel se desbloquea nuevo contenido!." />
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="50dp"
+            android:text="Diviertete, Descubre, Aprende!"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

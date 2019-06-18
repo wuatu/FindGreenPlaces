@@ -1,6 +1,8 @@
 package Fragment;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -63,6 +65,7 @@ import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.SubirPuntos;
 import Clases.Usuario;
 
 import static android.app.Activity.RESULT_OK;
@@ -174,7 +177,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         }
         atractivoTuristico = ((AtractivoTuristico)getArguments().getSerializable("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getArguments().getSerializable("imagenes"));
-        Log.v("oooh",String.valueOf(imagenes.size()));
+//        Log.v("oooh",String.valueOf(imagenes.size()));
 
     }
 
@@ -575,13 +578,13 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                             child(IdUsuario.getIdUsuario()).
                             child(atractivoTuristico.getId()).removeValue();
 
-                    int a=(Integer.valueOf(atractivoTuristico.getContadorMeGusta()));
-                    if(a>0){
-                        a=a-1;
-                        atractivoTuristico.setContadorMeGusta(String.valueOf(a));
+                    int contadorMegusta=(Integer.valueOf(atractivoTuristico.getContadorMeGusta()));
+                    if(contadorMegusta>0){
+                        contadorMegusta=contadorMegusta-1;
+                        atractivoTuristico.setContadorMeGusta(String.valueOf(contadorMegusta));
                         textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
 
-                        //aumetar en 1 el me gusta del atractivo turistico en la base de datos
+                        //disminuye en 1 el me gusta del atractivo turistico en la base de datos
                         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                     }
                     //disminuye en 1 los puntos de un usuario cada vez que quitan "me gusta"
@@ -590,39 +593,17 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 ArrayList<String> idUsuarios=new ArrayList<>();
                                 for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                                    String idUsuario=dataSnapshot1.getKey();
+                                    final String idUsuario=dataSnapshot1.getKey();
                                     idUsuarios.add(idUsuario);
                                     final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(idUsuario);
                                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                                            int puntos=Integer.valueOf(usuario.getPuntos());
-                                            if(puntos>0){
-                                                puntos=puntos-1;
-                                                if(puntos<0){
-                                                    int nivel= Integer.valueOf(usuario.getNivel());
-                                                    if(nivel==2){
-                                                        usuario.setNivel("1");
-                                                        usuario.setPuntos("99");
-                                                        usuario.setNombreNivel(Referencias.PRINCIPIANTE);
-
-                                                    }
-                                                    if(nivel==3){
-                                                        usuario.setNivel("2");
-                                                        usuario.setNivel("99");
-                                                        usuario.setNombreNivel(Referencias.AVANZADO);
-                                                    }
-                                                }else{
-                                                    usuario.setPuntos(String.valueOf(puntos));
-                                                }
-                                                databaseReference.setValue(usuario);
-                                            }
+                                            SubirPuntos.disminuyePuntosOtrosUsuarios(getActivity(),usuario.getId(),1);
                                         }
                                         @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
+                                        public void onCancelled(@NonNull DatabaseError databaseError) { }
                                     });
                                 }
 
@@ -647,8 +628,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                             child(IdUsuario.getIdUsuario()).
                             child(atractivoTuristico.getId()).
                             setValue(atractivoTuristicoMeGusta);
-                    String a=String.valueOf(Integer.valueOf(atractivoTuristico.getContadorMeGusta())+1);
-                    atractivoTuristico.setContadorMeGusta(a);
+                    String contadorMeGusta=String.valueOf(Integer.valueOf(atractivoTuristico.getContadorMeGusta())+1);
+                    atractivoTuristico.setContadorMeGusta(contadorMeGusta);
                     textViewContadorLike.setText(atractivoTuristico.getContadorMeGusta());
 
                     //aumetar en 1 el me gusta del atractivo turistico en la base de datos
@@ -658,39 +639,17 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                     mDatabase.child(Referencias.CONTRIBUCIONESPORAT).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ArrayList<String> idUsuarios=new ArrayList<>();
                             for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                                String idUsuario=dataSnapshot1.getKey();
-                                idUsuarios.add(idUsuario);
+                                final String idUsuario=dataSnapshot1.getKey();
                                 final DatabaseReference databaseReference=mDatabase.child(Referencias.USUARIO).child(idUsuario);
                                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         Usuario usuario=dataSnapshot.getValue(Usuario.class);
-                                        int puntos=Integer.valueOf(usuario.getPuntos())+1;
-                                        if(puntos>=100){
-                                            int nivel= Integer.valueOf(usuario.getNivel());
-                                            if(nivel==1){
-                                                usuario.setNivel("2");
-                                                usuario.setPuntos("0");
-                                                usuario.setNombreNivel(Referencias.AVANZADO);
-                                            }
-                                            if(nivel==2){
-                                                usuario.setNivel("3");
-                                                usuario.setPuntos("0");
-                                                usuario.setNombreNivel(Referencias.EXPERTO);
-                                            }
-                                        }else{
-                                            usuario.setPuntos(String.valueOf(puntos));
-
-                                        }
-                                        databaseReference.setValue(usuario);
+                                        SubirPuntos.aumentaPuntosOtrosUsuarios(getActivity(),usuario.getId(),1);
                                     }
-
                                     @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
+                                    public void onCancelled(@NonNull DatabaseError databaseError) { }
                                 });
                             }
 
@@ -814,6 +773,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         .load(imagenes.get(0).getUrl())
                         .fitCenter()
                         .centerCrop()
+                        .placeholder(R.drawable.cargando)
                         .into(imageView);
 
     }

@@ -76,7 +76,7 @@ public class SetPaginaWebAT extends AppCompatActivity {
                     mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).setValue(atractivoTuristico);
                 }
                 atractivoTuristico.setPaginaWeb(editTextPagina.getText().toString());
-                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.PAGINAWEB,editTextPagina.getText().toString());
+                Contribucion contribucion=new Contribucion("",atractivoTuristico.getId(),IdUsuario.getIdUsuario(),Referencias.PAGINAWEB,editTextPagina.getText().toString(),Referencias.VISIBLE);
 
                 setResult(RESULT_OK,
                         new Intent().putExtra("nombre", atractivoTuristico.getPaginaWeb())

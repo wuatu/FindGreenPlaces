@@ -19,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
-import Clases.Categoria;
 import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Imagen;
@@ -174,10 +173,11 @@ public class InformacionAdicionalAT extends AppCompatActivity {
                                             child(key).
                                             setValue(contribucion);
                                 }
-                                SubirPuntos subirPuntos=new SubirPuntos();
                                 setResult(RESULT_OK, new Intent().putExtra("atractivoTuristico", atractivoTuristico).
                                         putExtra("contribuciones",contribuciones));
-                                subirPuntos.SubirPuntos(InformacionAdicionalAT.this);
+                                SubirPuntos.subirPuntosUsuarioQueContribuye(InformacionAdicionalAT.this,1);
+                                Toast.makeText(InformacionAdicionalAT.this,"Subes "+1+" punto",Toast.LENGTH_SHORT).show();
+
                                 finish();
                             }
                         })

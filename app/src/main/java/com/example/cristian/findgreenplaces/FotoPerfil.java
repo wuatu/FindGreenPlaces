@@ -128,7 +128,7 @@ public class FotoPerfil extends AppCompatActivity {
                         Uri downloadUri = task.getResult();
                         urlImagen = downloadUri.toString();
                         IdUsuario.setUrl(urlImagen);
-                        guardarValorString(FotoPerfil.this,URL,IdUsuario.getUrl());
+                        guardarValorString(FotoPerfil.this,URL,urlImagen);
                         mDatabase.child(Referencias.USUARIO).
                                 child(IdUsuario.getIdUsuario()).child("urlFotoPerfil").setValue(urlImagen);
                         Log.v("descargar",urlImagen);
@@ -139,7 +139,8 @@ public class FotoPerfil extends AppCompatActivity {
                         Toast.makeText(FotoPerfil.this,"La foto se subio exitosamente!",Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK,
                                 new Intent().putExtra("imagen", urlImagen));
-                        finish();
+                        //finish();
+
 
                     } else {
                         // Handle failures

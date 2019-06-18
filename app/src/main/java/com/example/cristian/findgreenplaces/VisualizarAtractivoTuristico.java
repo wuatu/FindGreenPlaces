@@ -8,12 +8,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -117,10 +122,11 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_atractivo_turistico);
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
-        imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        //imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        imagenes=new ArrayList<>();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
-
+        getImagenesAtractivoTuristico();
         int contadorVisualizaciones=Integer.valueOf(atractivoTuristico.getContadorVisualizaciones())+1;
         atractivoTuristico.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
         //textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
@@ -129,7 +135,27 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        iniciaFragment();
+
+    }
+    private void getImagenesAtractivoTuristico(){
+
+        Query q=mDatabase.child(Referencias.IMAGENES).child(atractivoTuristico.getId());
+        Log.v("oooh", q.getRef().toString());
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    Imagen imagen=dataSnapshot1.getValue(Imagen.class);
+                    imagenes.add(imagen);
+                }
+                iniciaFragment();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

@@ -96,15 +96,21 @@ import java.util.Locale;
 
 import Clases.AtractivoTuristico;
 import Clases.Categoria;
+import Clases.Contribucion;
 import Clases.CurrentDate;
 import Clases.IdUsuario;
 import Clases.Imagen;
 import Clases.Referencias;
+import Clases.SubirPuntos;
+import Clases.Usuario;
 import Fragment.VisualizarAtractivoTuristicoFragment;
 
 public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener,Serializable {
     Address addres = null;
+    Usuario usuario;
     private GoogleMap mMap;
+    public ArrayList<String> keysAtractivosTuristicos;
+    public ArrayList<AtractivoTuristico> atractivosTuristicosTemp;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
     String[] regions;
@@ -170,7 +176,8 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         regions = getResources().getStringArray(R.array.region_array);
-
+        keysAtractivosTuristicos = new ArrayList();
+        atractivosTuristicosTemp= new ArrayList<>();
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -528,6 +535,9 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     Snackbar.make(v, "Debe Agregar al Menos un Marcador de Ubicacion!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
+                else if(urlImagen.equalsIgnoreCase("")){
+                    Toast.makeText(AgregarAtractivoTuristico.this,"Debes subir una imagen",Toast.LENGTH_SHORT).show();
+                }
                 else{
                     new AlertDialog.Builder(AgregarAtractivoTuristico.this)
                             .setTitle("Nuevo Atractivo Turístico")
@@ -566,12 +576,27 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                                         contadorCategorias++;
                                         textViewCategoria.setText("");
                                     }
-
+                                    if(!textViewNombre.getText().toString().isEmpty())
+                                    {
+                                        tituloCategoria.setVisibility(View.VISIBLE);
+                                        String sX="   x";
+                                        String stringLimpio= MenuPrincipal.limpiarAcentos(textViewNombre.getText().toString());
+                                        String sCategoria=stringLimpio;
+                                        Categoria categoria=new Categoria(sCategoria);
+                                        categorias.add(categoria);
+                                        sCategoria=sCategoria.concat(sX);
+                                        Tag tag=new Tag(sCategoria);
+                                        tagGroup.addTag(tag);
+                                        contadorCategorias++;
+                                        textViewCategoria.setText("");
+                                    }
                     String nombre=textViewNombre.getText().toString();
                     if(nombre.contains("null")){
 
                         nombre.replace("null", "");
                     }
+
+
 
 
                     String ciudad=textViewCiudad.getText().toString();
@@ -608,14 +633,35 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     });
                     mDatabase.child(Referencias.CONTRIBUCIONES).child(IdUsuario.getIdUsuario()).child(Referencias.ATRACTIVOTURISTICO).child(keyAtractivoTuristico).setValue(atractivoTuristico);
 
-                                    Intent intent = new Intent(AgregarAtractivoTuristico.this, MenuPrincipal.class);
-                                    startActivity(intent);
+                                    //Intent intent = new Intent(AgregarAtractivoTuristico.this, MenuPrincipal.class);
+                                    //startActivity(intent);
+                                    //sube puntos por contribuir
+                                    SubirPuntos.subirPuntosUsuarioQueContribuye(AgregarAtractivoTuristico.this,5);
+                                    Toast.makeText(AgregarAtractivoTuristico.this,"Subes "+5+" puntos",Toast.LENGTH_SHORT).show();
+
+                                    //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
+                                    DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
+                                            child(keyAtractivoTuristico).
+                                            child(IdUsuario.getIdUsuario()).push();
+                                    String key=databaseReference.getKey();
+                                    Contribucion contribucion=new Contribucion("",keyAtractivoTuristico,IdUsuario.getIdUsuario(),Referencias.ATRACTIVOTURISTICO,Referencias.ATRACTIVOTURISTICO,Referencias.VISIBLE);
+                                    contribucion.setId(key);
+                                    databaseReference.setValue(contribucion);
+
+                                    //añade contribucion (a tabla "contribucionPorUsuario") por usuario
+                                    mDatabase.child(Referencias.CONTRIBUCIONESPORUSUARIO).
+                                            child(IdUsuario.getIdUsuario()).
+                                            child(keyAtractivoTuristico).
+                                            child(key).
+                                            setValue(contribucion);
+
                                     Toast.makeText(AgregarAtractivoTuristico.this,"El atractivo turístico se creado exitosamente!",Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null)
                             .show();
+
                 }
             }
         });
@@ -771,7 +817,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
 
     private void mostrarAtractivoTuristicoPorCiudadOComunaInicio(String locality) {
-        mMap.clear();
+        //mMap.clear();
         for (AtractivoTuristico atractivoTuristico: atractivoTuristicos) {
             if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
                 double latitud, longitud;
@@ -794,8 +840,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Address address=ubicacionAddressMoveCamera();
-                //if(address!=null) {
                 Geocoder geo = new Geocoder(AgregarAtractivoTuristico.this);
                 int maxResultados = 1;
                 List<Address> adress = null;
@@ -809,61 +853,50 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                         LatLng latLng = new LatLng(adress.get(0).getLatitude(), adress.get(0).getLongitude());
                         currentAddres=adress.get(0);
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-                    } else {
-                        Toast.makeText(AgregarAtractivoTuristico.this, "No se encuentan datos", Toast.LENGTH_SHORT).show();
+                        buscarAtractivoTuristicoPorCategoria(busqueda);
                         return;
                     }
                 }
-                if (adress != null) {
-                    /*if ((!limpiarAcentos(adress.get(0).getAdminArea()).equalsIgnoreCase(limpiarAcentos(currentAddres.getAdminArea())))
-                            || isRegion() || atractivoTuristicos.size()<=0 ||
-                    (!limpiarAcentos(adress.get(0).getLocality()).equalsIgnoreCase(limpiarAcentos(currentAddres.getLocality())))) {*/
-                    Log.v("busqueda4", busqueda);
-                    atractivoTuristicos.clear();
+                buscarAtractivoTuristicoPorCategoria(busqueda);
+                if(atractivosTuristicosTemp.size()==0){
+                    //mMap.clear();
+                    Toast.makeText(AgregarAtractivoTuristico.this, "No se resultados de búsqueda", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    mMap.clear();
-                    currentAddres = adress.get(0);
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        AtractivoTuristico atractivoTuristico = dataSnapshot1.getValue(AtractivoTuristico.class);
-                        String limpiaCiudad = MenuPrincipal.limpiarAcentos(atractivoTuristico.getCiudad());
-                        String limpiaRegion = MenuPrincipal.limpiarAcentos(atractivoTuristico.getComuna());
-                        Log.v("busqueda5", limpiaRegion);
+            }
+        });
+    }
 
-
-                            /*String[] palabras = busqueda.split("\\W+");
-                            for (String palabra : palabras) {
-                                if (limpiaRegion.contains(palabra)) {
-
-                                    Log.v("busqueda6",limpiaRegion+"asasas");
-                                }
-                            }*/
-
-                           /* if(limpiaRegion.indexOf(busqueda)!=-1){
-                                Log.v("busqueda6",limpiaRegion+"asasas");
-                            }*/
-                        if (atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
-
-                            if (limpiaCiudad.equalsIgnoreCase(busqueda) || limpiaRegion.equalsIgnoreCase(busqueda) || limpiaRegion.indexOf(busqueda) != -1) {
-                                repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
-                                atractivoTuristicos.add(atractivoTuristico);
-                            }
-                        }
-                    }
-                    /*} else {
-                        Log.v("busqueda6", busqueda);
-                        //mMap.clear();
-                        atractivosTuristicosTemp.clear();
-                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
-                            if (atractivoTuristico.getCiudad().equalsIgnoreCase(busqueda) || atractivoTuristico.getComuna().equalsIgnoreCase(busqueda)) {
+    //busca los atractivos turisticos por llave
+    public void buscarAtractivoTuristicoPorCategoria(String busqueda) {
+        getkeyAtractivoTuristico(busqueda);
+        mDatabase.child("atractivoturistico").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //mMap.clear();
+                atractivosTuristicosTemp.clear();
+                for (String keyAtractivoTuristico : keysAtractivosTuristicos) {
+                    Query q = mDatabase.child("atractivoTuristico").child(keyAtractivoTuristico);
+                    q.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            AtractivoTuristico atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
+                            if(atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
                                 repintarMapaConFiltroDeBusqueda(atractivoTuristico, 0, R.drawable.marcador);
                                 atractivosTuristicosTemp.add(atractivoTuristico);
                             }
-                        }
-                    }*/
-                }
-            }
-            //}
 
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    });
+                }
+                keysAtractivosTuristicos.clear();
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -871,6 +904,64 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             }
         });
     }
+
+    //Obtiene todas las llaves de los atractivos turisticos que coinciden con el criterio buscado
+    public void getkeyAtractivoTuristico(final String texto) {
+        mDatabase.child("categoriaAtractivoTuristico").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
+                        String categoria=dataSnapshot2.getKey();
+                        boolean keyEncontrada=false;
+                        if(texto.equalsIgnoreCase(categoria)){
+                            keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                            break;
+                        }
+                        if (texto.contains(" ")) {
+                            String[] textoIngresado = texto.split(" ");
+                            if(categoria.contains(" ")){
+                                String[] categorias = categoria.split(" ");
+                                for (int i=0; i<textoIngresado.length;i++) {
+                                    for(int j=0;j<categorias.length;j++) {
+                                        if (textoIngresado[i].toUpperCase().equalsIgnoreCase(categorias[j].toUpperCase())) {
+                                            keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                            Log.v("partss",textoIngresado[i]);
+                                            Log.v("partss",categoria);
+                                            keyEncontrada=true;
+                                            break;
+                                        }
+                                        if(keyEncontrada){
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                String[] parts = texto.split(" ");
+                                for (int i=0; i<parts.length;i++) {
+                                    if (parts[i].toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
+                                        keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if (texto.toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
+                                keysAtractivosTuristicos.add(dataSnapshot1.getKey());
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId, String scalificacion) {
         double calificacion=Double.valueOf(scalificacion);
