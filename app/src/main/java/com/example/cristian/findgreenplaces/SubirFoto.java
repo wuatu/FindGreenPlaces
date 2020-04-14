@@ -120,7 +120,7 @@ public class SubirFoto extends AppCompatActivity {
                             Toast.makeText(SubirFoto.this,"Subes "+1+" punto",Toast.LENGTH_SHORT).show();
 
                             setResult(RESULT_OK,
-                                    new Intent().putExtra("imagen", imagen.getUrl()));
+                                    new Intent().putExtra("imagen", imagen));
                             finish();
                         } else {
                             Toast.makeText(SubirFoto.this,"Error al subir foto",Toast.LENGTH_SHORT).show();

@@ -175,6 +175,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        urlImagen="";
         regions = getResources().getStringArray(R.array.region_array);
         keysAtractivosTuristicos = new ArrayList();
         atractivosTuristicosTemp= new ArrayList<>();

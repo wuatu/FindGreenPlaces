@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="bottom"
     android:layout_marginBottom="2dp"
+    android:orientation="vertical"
     tools:context=".DialogoVisualizarAtractivoTuristico"
-    tools:layout_editor_absoluteY="442dp"
-    android:orientation="vertical">
+    tools:layout_editor_absoluteY="442dp">
 
     <LinearLayout
         android:id="@+id/contenedorDialogoAT"
@@ -35,116 +35,125 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:gravity="center|center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageViewMiniFotoAtractivoTuristico"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:src="@drawable/addimagen"
-                android:text="Subir Imagen" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:id="@+id/LinearLayoutContenido"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewTituloAT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Titulo"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RatingBar
-                    android:id="@+id/rating"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="0.1" />
-                <!--android:translationX="-60dp"
-                    android:scaleX="0.5"
-                    android:scaleY="0.4"-->
-
-
-            </LinearLayout>
+            android:orientation="horizontal"
+            tools:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="4"
+                android:gravity="center|center_vertical"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewRatingBarPromedio"
-                    android:layout_width="110dp"
+                <ImageView
+                    android:id="@+id/imageViewMiniFotoAtractivoTuristico"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Promedio:"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewRatingBar"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5px"
-                    android:layout_weight="2"
-                    android:text="0"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/textViewOpiniones"
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Opiniones:"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewOpinionesn"
-                    android:layout_width="102dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5px"
-                    android:layout_weight="1"
-                    android:text="0"
-                    android:textSize="12sp" />
-
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:src="@drawable/addimagen"
+                    android:text="Subir Imagen" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="1"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewDescripcion"
+                    android:id="@+id/textViewTituloAT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Titulo"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/rating"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:stepSize="0.1" />
+                    <!--android:translationX="-60dp"
+                    android:scaleX="0.5"
+                    android:scaleY="0.4"-->
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewRatingBarPromedio"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Promedio:"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewRatingBar"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5px"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textViewOpiniones"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Opiniones:"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewOpinionesn"
+                        android:layout_width="102dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5px"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_weight="1"
-                    android:text="aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa mas...  " />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewDescripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa mas...  " />
+
+                </LinearLayout>
 
             </LinearLayout>
-
         </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

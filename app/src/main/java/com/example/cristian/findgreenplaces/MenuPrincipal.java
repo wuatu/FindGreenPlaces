@@ -527,42 +527,45 @@ public class MenuPrincipal extends AppCompatActivity
                 boolean isFiltro=false;
                 if (tag.text.equalsIgnoreCase("Mejor Evaluado X") || tag.text.equalsIgnoreCase("mas me gusta X") || tag.text.equalsIgnoreCase("mas visto X")) {
                     isFiltro=true;
+                    repintarMapaConArrayListTemporal(1);
                 }
-
-
-
-                atractivosTuristicosTemp.clear();
-                if (tags.size() == 1) {
-                    if(isFiltro) {
-
-                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
-                            atractivosTuristicosTemp.add(atractivoTuristico);
-                        }
-
-                        mostrarAtractivoTuristicoPorCiudadOComuna();
-                        spinner.setSelection(4);
+                else {
+                    repintarMapaConArrayList(1f);
+                    for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
+                        atractivosTuristicosTemp.add(atractivoTuristico);
                     }
-                    else{
-                        repintarMapaConArrayList(1f);
-                        for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
-                            atractivosTuristicosTemp.add(atractivoTuristico);
-                        }
-                        //Log.v("tagctm",String.valueOf(tags.size()));
-                        for (Tag tag2 : tags) {
-                            if (tag2.text.equalsIgnoreCase("Mejor Evaluado X")){
-                                spinner.setSelection(1);
-                                buscaAtractivosTuristicosConOsinFiltro();
-                            } else if(tag2.text.equalsIgnoreCase("mas me gusta X")){
-                                spinner.setSelection(2);
-                                buscaAtractivosTuristicosConOsinFiltro();
-                            } else if(tag2.text.equalsIgnoreCase("mas visto X")){
-                                spinner.setSelection(3);
-                                buscaAtractivosTuristicosConOsinFiltro();
-                            } else{
-                                spinner.setSelection(4);
+                    /*atractivosTuristicosTemp.clear();
+                    if (tags.size() == 1) {
+                        if (isFiltro) {
+
+                            for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
+                                atractivosTuristicosTemp.add(atractivoTuristico);
+                            }
+
+                            mostrarAtractivoTuristicoPorCiudadOComuna();
+                            spinner.setSelection(4);
+                        } else {
+                            repintarMapaConArrayList(1f);
+                            for (AtractivoTuristico atractivoTuristico : atractivoTuristicos) {
+                                atractivosTuristicosTemp.add(atractivoTuristico);
+                            }
+                            //Log.v("tagctm",String.valueOf(tags.size()));
+                            for (Tag tag2 : tags) {
+                                if (tag2.text.equalsIgnoreCase("Mejor Evaluado X")) {
+                                    spinner.setSelection(1);
+                                    buscaAtractivosTuristicosConOsinFiltro();
+                                } else if (tag2.text.equalsIgnoreCase("mas me gusta X")) {
+                                    spinner.setSelection(2);
+                                    buscaAtractivosTuristicosConOsinFiltro();
+                                } else if (tag2.text.equalsIgnoreCase("mas visto X")) {
+                                    spinner.setSelection(3);
+                                    buscaAtractivosTuristicosConOsinFiltro();
+                                } else {
+                                    spinner.setSelection(4);
+                                }
                             }
                         }
-                    }
+                    }*/
                 }
 
                 if (tags.size() == 0) {
@@ -684,7 +687,7 @@ public class MenuPrincipal extends AppCompatActivity
             if(busqueda!=null) {
                 if(busquedaCategoria!=null) {
                     getkeyAtractivoTuristico(busquedaCategoria);
-                    buscarAtractivoTuristicoPorCategoria();
+                    AtractivoTuristicoPorCategoria();
                 }
             }
         }*/
@@ -967,7 +970,7 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
     //Obtiene todas las llaves de los atractivos turisticos que coinciden con el criterio buscado
-    public void getkeyAtractivoTuristico(final String texto) {
+    public void getkeyAtractivoTuristico(final String busqueda) {
         mDatabase.child("categoriaAtractivoTuristico").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -975,20 +978,18 @@ public class MenuPrincipal extends AppCompatActivity
                     for (DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
                         String categoria=dataSnapshot2.getKey();
                         boolean keyEncontrada=false;
-                        if(texto.equalsIgnoreCase(categoria)){
+                        if(busqueda.equalsIgnoreCase(categoria)){
                             keysAtractivosTuristicos.add(dataSnapshot1.getKey());
                             break;
                         }
-                        if (texto.contains(" ")) {
-                            String[] textoIngresado = texto.split(" ");
+                        if (busqueda.contains(" ")) {
+                            String[] textoIngresado = busqueda.split(" ");
                             if(categoria.contains(" ")){
                                 String[] categorias = categoria.split(" ");
                                 for (int i=0; i<textoIngresado.length;i++) {
                                     for(int j=0;j<categorias.length;j++) {
                                         if (textoIngresado[i].toUpperCase().equalsIgnoreCase(categorias[j].toUpperCase())) {
                                             keysAtractivosTuristicos.add(dataSnapshot1.getKey());
-                                            Log.v("partss",textoIngresado[i]);
-                                            Log.v("partss",categoria);
                                             keyEncontrada=true;
                                             break;
                                         }
@@ -999,7 +1000,7 @@ public class MenuPrincipal extends AppCompatActivity
                                 }
                             }
                             else{
-                                String[] parts = texto.split(" ");
+                                String[] parts = busqueda.split(" ");
                                 for (int i=0; i<parts.length;i++) {
                                     if (parts[i].toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
                                         keysAtractivosTuristicos.add(dataSnapshot1.getKey());
@@ -1009,7 +1010,7 @@ public class MenuPrincipal extends AppCompatActivity
                             }
                         }
                         else{
-                            if (texto.toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
+                            if (busqueda.toUpperCase().equalsIgnoreCase(categoria.toUpperCase())) {
                                 keysAtractivosTuristicos.add(dataSnapshot1.getKey());
                                 break;
                             }
@@ -1024,6 +1025,7 @@ public class MenuPrincipal extends AppCompatActivity
     }
     //busca los atractivos turisticos por llave
     public void buscarAtractivoTuristicoPorCategoria(String busqueda) {
+        busqueda=busqueda.concat(" ");
         getkeyAtractivoTuristico(busqueda);
         mDatabase.child("atractivoturistico").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

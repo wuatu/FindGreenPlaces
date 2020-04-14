@@ -34,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cunoraz.tagview.Tag;
 import com.example.cristian.findgreenplaces.AgregarAtractivoTuristico;
 import com.example.cristian.findgreenplaces.MenuPrincipal;
 import com.example.cristian.findgreenplaces.R;
@@ -55,11 +56,15 @@ import com.vansuita.pickimage.listeners.IPickResult;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
+import Clases.Categoria;
 import Clases.Comentario;
+import Clases.Contribucion;
 import Clases.Imagen;
 import Clases.Referencias;
 import Clases.SpacePhoto;
 import Clases.Usuario;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +83,7 @@ public class FotosATFragment extends android.app.Fragment {
     ArrayList<Comentario> model;
     View view;
     DatabaseReference mDatabase;
+    private final int FOTO=0;
     FirebaseDatabase database;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -140,7 +146,18 @@ public class FotosATFragment extends android.app.Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitleTextColor(Color.WHITE);
+        iniciaGaleria();
 
+        return view;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.camara, menu);
+        return;
+    }
+
+    public void iniciaGaleria(){
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -157,15 +174,8 @@ public class FotosATFragment extends android.app.Fragment {
                 i++;
             }
         }
-        FotosATFragment.ImageGalleryAdapter adapter = new FotosATFragment.ImageGalleryAdapter(getContext(), getSpacePhotos);
+        FotosATFragment.ImageGalleryAdapter adapter = new FotosATFragment.ImageGalleryAdapter(view.getContext(), getSpacePhotos);
         recyclerView.setAdapter(adapter);
-        return view;
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.camara, menu);
-        return;
     }
 
     @Override
@@ -182,7 +192,7 @@ public class FotosATFragment extends android.app.Fragment {
                                 intent.putExtra("atractivoTuristico", atractivoTuristico.getId());
                                 intent.putExtra("imagen",uri.toString());
                                 Log.v("descargar",uri.toString());
-                                startActivity(intent);
+                                startActivityForResult(intent,FOTO);
 
                             }
                         })
@@ -320,6 +330,16 @@ public class FotosATFragment extends android.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FOTO && resultCode == RESULT_OK) {
+            Imagen imagen = (Imagen) data.getSerializableExtra("imagen");
+            imagenes.add(imagen);
+            iniciaGaleria();
+        }
+
     }
 
 }

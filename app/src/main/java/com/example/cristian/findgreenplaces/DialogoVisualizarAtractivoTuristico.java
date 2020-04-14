@@ -53,6 +53,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
     private TextView textViewratingBar;
     private TextView textViewOpiniones;
     private LinearLayout linearLayoutProgressBar;
+    private LinearLayout linearLayoutContenido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
         getWindow().setGravity(Gravity.BOTTOM);
 
         linearLayoutProgressBar=findViewById(R.id.LinearLayoutProgressBar);
+        linearLayoutContenido=linearLayout=findViewById(R.id.contenedorDialogoAT);
 
         titulo = (TextView) findViewById(R.id.textViewTituloAT);
         titulo.setText(atractivoTuristico.getNombre());
@@ -104,12 +106,14 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         if(isFromMemoryCache){
                             linearLayoutProgressBar.setVisibility(View.GONE);
+                            linearLayoutContenido.setVisibility(View.VISIBLE);
                         }
                         else{
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 public void run() {
                                     linearLayoutProgressBar.setVisibility(View.GONE);
+                                    linearLayoutContenido.setVisibility(View.VISIBLE);
                                 }
                             }, 500);
                         }

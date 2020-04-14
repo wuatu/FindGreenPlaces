@@ -15,25 +15,39 @@
       },
       "oauth_client": [
         {
+          "client_id": "39387556941-sinae9r0nca473nrh9jne1thjdpdgnj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cristian.findgreenplaces",
+            "certificate_hash": "120b9e854b0104a195eb8144cd7b44fe4e77ea2c"
+          }
+        },
+        {
+          "client_id": "39387556941-u1uslcgmp0otcudatuch8jrtg17go1nm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cristian.findgreenplaces",
+            "certificate_hash": "9ec71c28b8c1d413f8c32020175c86aa5e4428f8"
+          }
+        },
+        {
           "client_id": "39387556941-3ifuer7hdqenbcc8rf4sgiumnkt9erbq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC4-ICbv6EH9xXa17yFC-578rqbCenTgQg"
+          "current_key": "AIzaSyCp4sDC9QqgwQGI2xfqwhycw1W8GqV9wec"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39387556941-3ifuer7hdqenbcc8rf4sgiumnkt9erbq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
