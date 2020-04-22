@@ -1,8 +1,6 @@
 package Fragment;
 
-import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,10 +9,14 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+import androidx.viewpager.widget.ViewPager;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,15 +25,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
 import com.example.cristian.findgreenplaces.DialogoReportarAtractivoTuristico;
@@ -41,6 +48,7 @@ import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SubirFoto;
 import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,6 +63,7 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 
+import Clases.AdapterSliderVisualizacionDeFotos;
 import Clases.AtractivoTuristico;
 import Clases.AtractivoTuristicoMeGusta;
 import Clases.CalificacionPromedio;
@@ -64,6 +73,7 @@ import Clases.ConocesEsteLugar;
 import Clases.Contribucion;
 import Clases.IdUsuario;
 import Clases.Imagen;
+import Clases.MeGustaImagen;
 import Clases.Referencias;
 import Clases.SubirPuntos;
 import Clases.Usuario;
@@ -101,7 +111,9 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private LinearLayout linearLayoutAñadirInformacionAdicional;
 
     private RatingBar ratingBar2;
+    private LinearLayout linearLayoutImageView;
     private ImageView imageView;
+    private LinearLayout linearLayoutProgressBar3;
     private TextView textViewratingBar2;
 
     private TextView textViewOpiniones2;
@@ -128,6 +140,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     ImageView imageViewLike;
     LatLng currentLatLng;
     TextView textViewVisualizaciones;
+
+    CircularProgressDrawable circularProgressDrawable;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -202,6 +216,11 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 getActivity().onBackPressed();
             }
         });
+
+        circularProgressDrawable=new CircularProgressDrawable(getActivity().getApplicationContext());
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
@@ -339,6 +358,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         textViewDescripcionAT =view.findViewById(R.id.textViewDescripcionAT);
         //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         imageView=view.findViewById(R.id.imageViewVAT);
+        linearLayoutImageView=view.findViewById(R.id.linearLayoutImageViewVAT);
+        linearLayoutProgressBar3=view.findViewById(R.id.linearLayoutProgressBar3);
 
         getImagenesAtractivoTuristico();
         //textViewratingBar=view.findViewById(R.id.textViewRatingBar);
@@ -768,14 +789,51 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    private void getImagenesAtractivoTuristico(){
-                Glide.with(VisualizarAtractivoTuristicoFragment.this)
-                        .load(imagenes.get(0).getUrl())
-                        .fitCenter()
-                        .centerCrop()
-                        .placeholder(R.drawable.cargando)
-                        .into(imageView);
 
+    private void getImagenesAtractivoTuristico(){
+        if(imagenes.size()>0) {
+            String imageUrl[] =new String[imagenes.size()];
+            for(int i=0;i<imagenes.size();i++){
+                imageUrl[i]=imagenes.get(i).getUrl();
+            }
+            ViewPager viewPager=view.findViewById(R.id.view_pager);
+            AdapterSliderVisualizacionDeFotos adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotos(VisualizarAtractivoTuristicoFragment.this.getActivity().getApplicationContext(),imageUrl);
+            viewPager.setAdapter(adapterSliderVisualizacionDeFotos);
+
+            /*
+            Glide.with(VisualizarAtractivoTuristicoFragment.this)
+                    .load(imagenes.get(0).getUrl())
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            if (isFromMemoryCache) {
+                                linearLayoutProgressBar3.setVisibility(View.GONE);
+                                linearLayoutImageView.setVisibility(View.VISIBLE);
+                            } else {
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        linearLayoutProgressBar3.setVisibility(View.GONE);
+                                        linearLayoutImageView.setVisibility(View.VISIBLE);
+                                        //linearLayoutProgressBar.setVisibility(View.GONE);
+                                        //linearLayoutContenido.setVisibility(View.VISIBLE);
+                                    }
+                                }, 500);
+                            }
+                            return false;
+                        }
+                    })
+                    .centerCrop()
+                    .placeholder(circularProgressDrawable)
+                    .into(imageView);
+                    */
+
+        }
     }
 
     public static void setMargins (View v, int l, int t, int r, int b) {

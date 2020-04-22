@@ -4,10 +4,14 @@ import java.io.Serializable;
 
 public class MeGustaImagen implements Serializable {
     String id;
-    String idUsuario;
     String idAtractivoTuristico;
     String idImagen;
+    String idUsuario;
     String meGusta="";
+
+    public MeGustaImagen(){
+
+    }
 
     public MeGustaImagen(String id, String idUsuario, String idAtractivoTuristico, String idImagen, String meGusta) {
         this.id = id;

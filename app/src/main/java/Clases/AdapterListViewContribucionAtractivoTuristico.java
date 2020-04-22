@@ -1,29 +1,21 @@
 package Clases;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
-import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.cristian.findgreenplaces.AgregarAtractivoTuristico;
-import com.example.cristian.findgreenplaces.Login;
 import com.example.cristian.findgreenplaces.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter implements Serializable {
     Context context;

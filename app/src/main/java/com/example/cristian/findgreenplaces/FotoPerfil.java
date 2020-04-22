@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -33,7 +33,6 @@ import com.google.firebase.storage.UploadTask;
 
 import Clases.IdUsuario;
 import Clases.Referencias;
-import Clases.Usuario;
 
 public class FotoPerfil extends AppCompatActivity {
     private static String PREFS_KEY = "mispreferencias";

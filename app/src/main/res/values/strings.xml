@@ -14,6 +14,36 @@
     <string name="title_home">Información</string>
     <string name="title_dashboard">Comentarios</string>
     <string name="title_notifications">Ir</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">AhoraTurismo</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <!-- Strings related to login -->
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="facebook_app_id">310737502896290</string>
+    <string name="fb_login_protocol_scheme">fb310737502896290</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">El email ingresado es invalido</string>
+    <string name="error_invalid_password">La constraseña es muy corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo debe ser llenado</string>
+    <string name="permission_rationale">"Se requiere permisos de contactos para acceder a sus email."
+    </string>
+    <string name="title_activity_registrar">Registrar</string>
+    <string name="title_activity_set_descripcion_atractivo_turistico2">
+        SetDescripcionAtractivoTuristico2
+    </string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_sugerir_cambio_atractivo_turistico">
+        SugerirCambioAtractivoTuristico
+    </string>
+    <string name="title_activity_informacion_adicional_atractivo_turistico">
+        InformacionAdicionalAtractivoTuristico
+    </string>
+    <string name="title_activity_subir_foto">SubirFoto</string>
+    <string name="title_activity_dialogo_filtro_de_busqueda">DialogoFiltroDeBusqueda</string>
     <string-array name="region_array">
         <item>Region Metropolitana</item>
         <item>Region de Arica y Parinacota</item>
@@ -398,34 +428,4 @@
         <item>Ignorada</item>
 
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">AhoraTurismo</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="facebook_app_id">310737502896290</string>
-    <string name="fb_login_protocol_scheme">fb310737502896290</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">El email ingresado es invalido</string>
-    <string name="error_invalid_password">La constraseña es muy corta</string>
-    <string name="error_incorrect_password">La contraseña es incorrecta</string>
-    <string name="error_field_required">Este campo debe ser llenado</string>
-    <string name="permission_rationale">"Se requiere permisos de contactos para acceder a sus email."
-    </string>
-    <string name="title_activity_registrar">Registrar</string>
-    <string name="title_activity_set_descripcion_atractivo_turistico2">
-        SetDescripcionAtractivoTuristico2
-    </string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_activity_sugerir_cambio_atractivo_turistico">
-        SugerirCambioAtractivoTuristico
-    </string>
-    <string name="title_activity_informacion_adicional_atractivo_turistico">
-        InformacionAdicionalAtractivoTuristico
-    </string>
-    <string name="title_activity_subir_foto">SubirFoto</string>
-    <string name="title_activity_dialogo_filtro_de_busqueda">DialogoFiltroDeBusqueda</string>
 </resources>

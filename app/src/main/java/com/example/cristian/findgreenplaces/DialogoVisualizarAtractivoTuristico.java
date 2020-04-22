@@ -1,15 +1,12 @@
 package com.example.cristian.findgreenplaces;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -19,24 +16,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import Clases.AtractivoTuristico;
-import Clases.CalificacionPromedio;
 import Clases.Imagen;
-import Clases.Referencias;
 
 public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity implements Serializable {
 
@@ -132,7 +122,7 @@ public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity imple
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DialogoVisualizarAtractivoTuristico.this, VisualizarAtractivoTuristico.class);
-                //intent.putExtra("imagenes",imagenes);
+                intent.putExtra("imagenes",imagenes);
                 //Log.v("ooooh",String.valueOf(imagenes.size()));
                 intent.putExtra("atractivoTuristico", atractivoTuristico);
                 startActivity(intent);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,16 +21,16 @@
         android:src="@drawable/indicaciones"
         android:visibility="gone" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="228dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="30dp"
         android:src="@drawable/add_more"
-        app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
+        app:backgroundTint="@color/colorPrimary"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="110dp"
         android:src="@drawable/ubicacion"
-        app:backgroundTint="@color/colorPrimary"></android.support.design.widget.FloatingActionButton>
+        app:backgroundTint="@color/colorPrimary"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
     <LinearLayout
         android:id="@+id/layoutDialogo2"
@@ -73,11 +73,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_bg"
-
-
             android:gravity="center"
             android:orientation="horizontal">
-
             <TextView
                 android:id="@+id/textView30"
                 android:layout_width="match_parent"
@@ -109,4 +106,20 @@
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center">
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

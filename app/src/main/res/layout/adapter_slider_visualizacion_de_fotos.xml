@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".VisualizacionDeImagen"
     android:layout_weight="1"
-    android:orientation="vertical"
     android:background="#00ffffff">
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
             layout="@layout/toolbar_foto"
@@ -20,36 +23,36 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/activity_character"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/common_google_signin_btn_text_dark_focused">
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/common_google_signin_btn_text_dark_focused"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-        <LinearLayout
-            android:id="@+id/activity_character"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            class="de.cybergen.ui.layout.WrapContentHeightViewPager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@color/common_google_signin_btn_text_dark_focused"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00ffffff">
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@color/common_google_signin_btn_text_dark_focused"
-                android:scaleType="fitCenter" />
+        </androidx.viewpager.widget.ViewPager>
 
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/my_custom_background"
-        android:orientation="vertical">
+        android:background="@color/common_google_signin_btn_text_dark_focused"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:id="@+id/as"
@@ -76,14 +79,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:gravity="center"
-                        android:text="Por" />
+                        android:text="Por"
+                        android:textColor="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/textViewNombre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Cristian Farias" />
+                        android:text="Cristian Farias"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -98,7 +103,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:gravity="center"
-                        android:text="Publicado" />
+                        android:text="Publicado"
+                        android:textColor="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/textViewFecha"
@@ -106,7 +112,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="05-02-2019" />
+                        android:text="05-02-2019"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -193,7 +200,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Me gusta" />
+                        android:text="Me gusta"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -219,7 +227,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:text="Visualizaciones" />
+                            android:text="Visualizaciones"
+                            android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/textViewVisualizacion"
@@ -227,7 +236,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:text="28" />
+                            android:text="28"
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -241,7 +251,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:text="Me gusta" />
+                            android:text="Me gusta"
+                            android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/textViewNLike"
@@ -249,11 +260,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:text="100" />
+                            android:text="100"
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

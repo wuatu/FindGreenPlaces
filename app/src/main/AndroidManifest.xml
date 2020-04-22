@@ -7,19 +7,6 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-feature android:name="android.hardware.camera" />
-
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:name=".FindGreenPlacesApp"
         android:allowBackup="true"
@@ -27,8 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
+        <activity android:name=".VisualizacionDeImagen"></activity>
         <activity android:name=".Informacion" />
         <activity android:name=".AcercaDe" />
         <!--
@@ -37,12 +24,8 @@
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBDiWRE59WyyFv3_puecdU-ASBIZInBzic" />
-
         <activity
             android:name=".MenuPrincipal"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -55,6 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".DialogoVisualizarAtractivoTuristico"
             android:label="@string/title_activity_visualizar_atractivo_turistico"
@@ -90,11 +74,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
         <activity
             android:name=".Registrar"
             android:label="@string/title_activity_registrar"
@@ -102,9 +81,11 @@
         <activity
             android:name=".SetCalificacionAtractivoTuristico"
             android:label="Cambiar Calificación" />
+
         <activity
             android:name=".SetCategoriasAtractivoTuristico"
             android:label="Actualizar Categorias" />
+
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
             android:label="Atractivos Turísticos Contribuidos" />
@@ -124,9 +105,29 @@
         <activity android:name=".SpacePhotoActivity" />
         <activity android:name=".SetTipsDeViaje" />
         <activity android:name=".SetDescripcionAtractivoTuristico" />
+        <activity
+            android:name=".SubirFoto"
+            android:label="@string/title_activity_subir_foto"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Buscar_Maps"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SetNombreAT" />
 
+        <activity android:name=".EditarPerfil" />
+
+        <activity android:name=".OlvidoContrasena" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBDiWRE59WyyFv3_puecdU-ASBIZInBzic" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2540802263036850~7111763443" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"
             android:exported="false"
             android:grantUriPermissions="true"
@@ -136,17 +137,22 @@
                 android:resource="@xml/picker_provider_paths" />
         </provider>
 
-        <activity
-            android:name=".SubirFoto"
-            android:label="@string/title_activity_subir_foto"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".Buscar_Maps"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SetNombreAT" />
-        <activity android:name=".EditarPerfil" />
-        <activity android:name=".OlvidoContrasena" />
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

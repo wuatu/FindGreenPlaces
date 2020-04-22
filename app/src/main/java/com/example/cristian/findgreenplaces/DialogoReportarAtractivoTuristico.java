@@ -1,8 +1,8 @@
 
 package com.example.cristian.findgreenplaces;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 import Clases.AtractivoTuristico;
 import Clases.Comentario;
 import Clases.IdUsuario;
-import Clases.Imagen;
 import Clases.Referencias;
 import Clases.Usuario;
 

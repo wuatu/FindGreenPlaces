@@ -1,6 +1,5 @@
 package Fragment;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,16 +9,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,23 +28,23 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+import androidx.viewpager.widget.ViewPager;
+
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cunoraz.tagview.Tag;
-import com.example.cristian.findgreenplaces.AgregarAtractivoTuristico;
-import com.example.cristian.findgreenplaces.MenuPrincipal;
 import com.example.cristian.findgreenplaces.R;
-import com.example.cristian.findgreenplaces.SpaceGalleryActivity;
 import com.example.cristian.findgreenplaces.SpacePhotoActivity;
 import com.example.cristian.findgreenplaces.SubirFoto;
+import com.example.cristian.findgreenplaces.VisualizacionDeImagen;
+import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -55,14 +53,14 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 
+import Clases.AdapterSliderVisualizacionDeFotos;
 import Clases.AtractivoTuristico;
-import Clases.Categoria;
 import Clases.Comentario;
-import Clases.Contribucion;
+import Clases.IdUsuario;
 import Clases.Imagen;
+import Clases.MeGustaImagen;
 import Clases.Referencias;
 import Clases.SpacePhoto;
-import Clases.Usuario;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -75,6 +73,7 @@ import static android.app.Activity.RESULT_OK;
  * create an instance of this fragment.
  */
 public class FotosATFragment extends android.app.Fragment {
+    CircularProgressDrawable circularProgressDrawable;
     private static final int MY_PERMISSIONS_REQUEST_CAMARA = 1;
     ArrayList<Imagen> imagenes;
     AtractivoTuristico atractivoTuristico;
@@ -84,6 +83,7 @@ public class FotosATFragment extends android.app.Fragment {
     View view;
     DatabaseReference mDatabase;
     private final int FOTO=0;
+    private static final int IMAGENES = 1;
     FirebaseDatabase database;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -127,7 +127,6 @@ public class FotosATFragment extends android.app.Fragment {
         }
         atractivoTuristico = ((AtractivoTuristico)getArguments().getSerializable("atractivoTuristico"));
         imagenes=((ArrayList<Imagen>)getArguments().getSerializable("imagenes"));
-        Log.v("imagenesctm",imagenes.get(0).getUrl());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -147,6 +146,11 @@ public class FotosATFragment extends android.app.Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitleTextColor(Color.WHITE);
         iniciaGaleria();
+
+        circularProgressDrawable=new CircularProgressDrawable(getActivity().getApplicationContext());
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
 
         return view;
     }
@@ -252,13 +256,12 @@ public class FotosATFragment extends android.app.Fragment {
 
         @Override
         public void onBindViewHolder(FotosATFragment.ImageGalleryAdapter.MyViewHolder holder, int position) {
-
             SpacePhoto spacePhoto = mSpacePhotos[position];
             ImageView imageView = holder.mPhotoImageView;
 
             Glide.with(mContext)
                     .load(spacePhoto.getUrl())
-                    .placeholder(R.drawable.cargando)
+                    .placeholder(circularProgressDrawable)
                     .into(imageView);
         }
 
@@ -280,8 +283,33 @@ public class FotosATFragment extends android.app.Fragment {
 
             @Override
             public void onClick(View view) {
+                mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<MeGustaImagen> meGustaImagens=new ArrayList<>();
+                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                            if (dataSnapshot1.exists()) {
+                                    Log.v("llegue",dataSnapshot1.getKey());
+                                    MeGustaImagen meGustaImagen = dataSnapshot1.getValue(MeGustaImagen.class);
+                                    meGustaImagens.add(meGustaImagen);
 
-                int position = getAdapterPosition();
+                            }
+                        }
+                        int position = getAdapterPosition();
+                        Intent intent = new Intent(mContext, VisualizacionDeImagen.class);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("meGustaImagens", meGustaImagens);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent,IMAGENES);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                /*int position = getAdapterPosition();
                 if(position != RecyclerView.NO_POSITION) {
                     SpacePhoto spacePhoto = mSpacePhotos[position];
 
@@ -290,7 +318,7 @@ public class FotosATFragment extends android.app.Fragment {
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
                     intent.putExtra("imagen", imagenes.get(position));
                     startActivity(intent);
-                }
+                }*/
             }
         }
 
@@ -338,6 +366,10 @@ public class FotosATFragment extends android.app.Fragment {
             Imagen imagen = (Imagen) data.getSerializableExtra("imagen");
             imagenes.add(imagen);
             iniciaGaleria();
+        }
+        if (requestCode == IMAGENES && resultCode == RESULT_OK) {
+            ArrayList<Imagen> imagens=(ArrayList<Imagen>) data.getSerializableExtra("imagenes");
+            imagenes=imagens;
         }
 
     }
