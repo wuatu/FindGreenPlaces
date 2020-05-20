@@ -71,9 +71,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import Clases.AtractivoTuristico;
-import Clases.Categoria;
-import Clases.IdUsuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Categoria;
+import Clases.Utils.IdUsuario;
 
 public class Buscar_Maps extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, Serializable {

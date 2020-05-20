@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Utils;
 
 
 import java.io.Serializable;
@@ -11,6 +11,7 @@ public class Referencias implements Serializable {
     public static final String IMAGENES="imagenes";
     public static final String KEYSATRACTIVOTURISTICO="keysAtractivosTuristicos";
     public static final String USUARIO="usuario";
+    public static final String USUARIOFOTODEPERFIL="usuariofotodeperfil";
     public static final String CONTRIBUCIONES="contribuciones";
     public static final String ATRACTIVOTURISTICOESCOMENTADOPORUSUARIO="atractivoTuristicoEsComentadoPorUsuario";
     public static final String CONTADORLIKE="contadorLike";

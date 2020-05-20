@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Models;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ public class Usuario implements Serializable {
     int mes;
     int año;
     String password;
-    String urlFotoPerfil="@drawable/com_facebook_profile_picture_blank_square";
+    String urlFotoPerfil="";
     String nivel;
     String puntos;
     String contribuciones;

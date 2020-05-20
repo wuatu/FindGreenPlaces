@@ -16,7 +16,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,30 +24,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
 import com.example.cristian.findgreenplaces.DialogoReportarAtractivoTuristico;
-import com.example.cristian.findgreenplaces.InformacionAdicionalAT;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.SetCalificacionAtractivoTuristico;
 import com.example.cristian.findgreenplaces.SubirFoto;
 import com.example.cristian.findgreenplaces.SugerirCambioAtractivoTuristico;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,20 +53,19 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 
-import Clases.AdapterSliderVisualizacionDeFotos;
-import Clases.AtractivoTuristico;
-import Clases.AtractivoTuristicoMeGusta;
-import Clases.CalificacionPromedio;
-import Clases.Categoria;
-import Clases.Comentario;
-import Clases.ConocesEsteLugar;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.MeGustaImagen;
-import Clases.Referencias;
-import Clases.SubirPuntos;
-import Clases.Usuario;
+import Clases.Adapter.AdapterSliderVisualizacionDeFotos;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.AtractivoTuristicoMeGusta;
+import Clases.Models.CalificacionPromedio;
+import Clases.Models.Categoria;
+import Clases.Models.Comentario;
+import Clases.Models.ConocesEsteLugar;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
+import Clases.Models.Usuario;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -93,8 +82,21 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private static final int CALIFICACION = 8;
     ArrayList<Categoria> categorias=new ArrayList<>();
     private TextView textViewTitulo;
+
+    //description
     private TextView textViewDescripcionAT;
+    private LinearLayout linearLayoutDescripcion;
+    private boolean descriptionIsExpanded=false;
+    private ImageView descriptionImageView;
+    private LinearLayout linearLayoutDescripcionExpanded;
+
+    //Recomendaciones de viaje
     private TextView textViewTips;
+    private LinearLayout linearLayoutRecomendaciones;
+    private LinearLayout linearLayoutRecomendacionesExtended;
+    private ImageView recomendacionesImageView;
+    private boolean recomendacionesIsExtended;
+
     private TextView textViewHorario;
     private TextView textViewTelefono;
     private TextView textViewpagina;
@@ -104,11 +106,17 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     private LinearLayout linearLayoutPagina;
     private LinearLayout linearLayoutRedes;
 
+    boolean categoriaIsVisible;
     private TextView textViewSugerirCambio;
     private TextView textViewAñadirInformacionAdicional;
 
     private TextView textViewNombre;
+
+    //informacion adicional
+    private LinearLayout linearLayoutInformacion;
     private LinearLayout linearLayoutAñadirInformacionAdicional;
+    private boolean informacionIsExtended;
+    private ImageView informacionImageView;
 
     private RatingBar ratingBar2;
     private LinearLayout linearLayoutImageView;
@@ -126,6 +134,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
     Button botonCalificar;
 
     LinearLayout linearLayoutcategorias;
+    LinearLayout linearLatyoutCategoriasExpanded;
+    ImageView categoriasMas;
     TagView tagGroup;
 
     String nivel="";
@@ -224,9 +234,15 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+
+        //informacion adicional
         linearLayoutAñadirInformacionAdicional=view.findViewById(R.id.linearLatyoutInformacionAdicional);
+        linearLayoutInformacion=view.findViewById(R.id.linearLayoutInformacion);
+        informacionImageView=view.findViewById(R.id.InformacionMasImageView);
+        informacionIsExtended=false;
+
         textViewVisualizaciones=view.findViewById(R.id.textViewVisualizacion);
-        textViewAñadirInformacionAdicional=view.findViewById(R.id.textViewAñadirInformacionAdicional);
+        //textViewAñadirInformacionAdicional =view.findViewById(R.id.textViewAñadirInformacionAdicional);
 
         textViewHorario=view.findViewById(R.id.textViewHorario);
         textViewTelefono=view.findViewById(R.id.textViewTelefono);
@@ -238,8 +254,29 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         linearLayoutRedes=view.findViewById(R.id.linearLatyoutRedes);
 
         textViewVerMasComentarios=view.findViewById(R.id.textViewVerMasComentarios);
+        //recomendaciones de viaje
         textViewTips=view.findViewById(R.id.textViewTipsAT);
+        linearLayoutRecomendaciones=view.findViewById(R.id.linearLayoutRecomendaciones);
+        linearLayoutRecomendacionesExtended=view.findViewById(R.id.linearLayoutRecomendacionesExtended);
+        recomendacionesImageView=view.findViewById(R.id.recomendacionesMasImageView);
+        recomendacionesIsExtended=false;
         textViewTips.setText(atractivoTuristico.getTipsDeViaje());
+        linearLayoutRecomendacionesExtended.setVisibility(View.GONE);
+        linearLayoutRecomendaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(recomendacionesIsExtended==false){
+                    recomendacionesIsExtended=true;
+                    linearLayoutRecomendacionesExtended.setVisibility(View.VISIBLE);
+                    recomendacionesImageView.setVisibility(View.GONE);
+                } else{
+                    recomendacionesIsExtended=false;
+                    linearLayoutRecomendacionesExtended.setVisibility(View.GONE);
+                    recomendacionesImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         textViewNombre=view.findViewById(R.id.textViewTituloAT2);
         //textViewNombre.setText(atractivoTuristico.getNombre());
         linearLayoutComentario=view.findViewById(R.id.linearLayoutComentarios);
@@ -305,12 +342,26 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         linearLayoutLike=view.findViewById(R.id.linearLayoutLike);
         //setListViewHeightBasedOnChildren(lista);
         ImageView imageViewIr=view.findViewById(R.id.imageViewIr);
+
         imageViewIr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+atractivoTuristico.getLatitud()+","+atractivoTuristico.getLongitud()+"&travelmode=driving"));
                 startActivity(intent);
+            }
+        });
+
+        ImageView imageViewContribuir=view.findViewById(R.id.imageViewContribuir);
+        imageViewContribuir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SugerirCambioAtractivoTuristico.class);
+                intent.putExtra("imagenes", imagenes);
+                intent.putExtra("atractivoTuristico", atractivoTuristico);
+                intent.putExtra("categorias", categorias);
+                //startActivity(intent);
+                startActivityForResult(intent,CONTRIBUCION);
             }
         });
 //https://www.google.com/maps/dir/?api=1&origin=47.5951518,-122.3316393&destination=47.5951518,-112.3316393&travelmode=driving
@@ -332,6 +383,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         textViewNombreApellido.setTextColor(Color.BLACK);
                         textViewNombreApellido.setText(comentario.getNombreUsuario() + " " + comentario.getApellidoUsuario());
 
+
                         TextView textViewComentario = new TextView(VisualizarAtractivoTuristicoFragment.this.getActivity());
                         textViewComentario.setText(comentario.getComentario());
 
@@ -352,12 +404,32 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
 
             }
         });
-        textViewSugerirCambio=(TextView) view.findViewById(R.id.textViewSugerirCambio);
+
         textViewTitulo = (TextView) view.findViewById(R.id.textViewTituloAT2);
         textViewTitulo.setText(atractivoTuristico.getNombre());
+
+        //Description
         textViewDescripcionAT =view.findViewById(R.id.textViewDescripcionAT);
-        //textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
-        imageView=view.findViewById(R.id.imageViewVAT);
+        linearLayoutDescripcion=view.findViewById(R.id.linearLayoutDescripcion);
+        descriptionIsExpanded=false;
+        descriptionImageView=view.findViewById(R.id.descripcionMasImageView);
+        textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
+        linearLayoutDescripcionExpanded=view.findViewById(R.id.linearLayoutDescripcionExpanded);
+        linearLayoutDescripcionExpanded.setVisibility(View.GONE);
+        linearLayoutDescripcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(descriptionIsExpanded==false){
+                    linearLayoutDescripcionExpanded.setVisibility(View.VISIBLE);
+                    descriptionIsExpanded=true;
+                    descriptionImageView.setVisibility(View.GONE);
+                } else{
+                    linearLayoutDescripcionExpanded.setVisibility(View.GONE);
+                    descriptionIsExpanded=false;
+                    descriptionImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         linearLayoutImageView=view.findViewById(R.id.linearLayoutImageViewVAT);
         linearLayoutProgressBar3=view.findViewById(R.id.linearLayoutProgressBar3);
 
@@ -368,17 +440,33 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         textViewratingBar2.setOnClickListener(this);
 
         ratingBar2=view.findViewById(R.id.rating2);
-        ratingBar2.setClickable(false);
+        ratingBar2.setClickable(true);
 
+        categoriaIsVisible=false;
         linearLayoutcategorias=view.findViewById(R.id.linearLatyoutCategorias);
+        linearLatyoutCategoriasExpanded=view.findViewById(R.id.linearLatyoutCategoriasExpanded);
+        categoriasMas=view.findViewById(R.id.categoriasMasImageView);
+
+        linearLatyoutCategoriasExpanded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(categoriaIsVisible==false){
+                    Log.v("visible","visible");
+                    categoriaIsVisible=true;
+                    linearLayoutcategorias.setVisibility(View.VISIBLE);
+                    categoriasMas.setVisibility(View.GONE);
+                } else{
+                    categoriaIsVisible=false;
+                    Log.v("visible","false");
+                    linearLayoutcategorias.setVisibility(View.GONE);
+                    categoriasMas.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         tagGroup = (TagView)view.findViewById(R.id.tag_group2);
 
         //textViewOpiniones=view.findViewById(R.id.textViewOpinionesn);
         textViewOpiniones2=view.findViewById(R.id.textViewOpiniones2);
-
-
-
-        textViewDescripcionAT.setText(atractivoTuristico.getDescripcion());
         textViewVisualizaciones.setText(atractivoTuristico.getContadorVisualizaciones());
 
             mDatabase.child(Referencias.CATEGORIAATRACTIVOTURISTICO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -394,6 +482,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                         }
                         tagGroup.addTag(tag);
                         categorias.add(categoria);
+                        linearLayoutcategorias.setVisibility(View.GONE);
                     }
                 }
 
@@ -403,17 +492,6 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 }
             });
 
-        textViewSugerirCambio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(VisualizarAtractivoTuristicoFragment.this.getActivity(), SugerirCambioAtractivoTuristico.class);
-                intent.putExtra("imagenes", imagenes);
-                intent.putExtra("atractivoTuristico", atractivoTuristico);
-                intent.putExtra("categorias", categorias);
-                //startActivity(intent);
-                startActivityForResult(intent,CONTRIBUCION);
-            }
-        });
         //consulta para saber nivel de usuario
         mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario()).child(Referencias.NIVEL).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -450,9 +528,32 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             linearLayoutRedes.setVisibility(view.VISIBLE);
             textViewRedes.setText(atractivoTuristico.getRedesSociales());
         }
+        /*
         if (i==4){
             textViewAñadirInformacionAdicional.setVisibility(view.GONE);
-        }
+        }*/
+
+        //informacion adicional
+        linearLayoutAñadirInformacionAdicional.setVisibility(View.GONE);
+        linearLayoutInformacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(informacionIsExtended==false){
+                    linearLayoutAñadirInformacionAdicional.setVisibility(View.VISIBLE);
+                    informacionIsExtended=true;
+                    informacionImageView.setVisibility(View.GONE);
+                    linearLayoutAñadirInformacionAdicional.setVisibility(View.VISIBLE);
+                } else{
+                    linearLayoutAñadirInformacionAdicional.setVisibility(View.GONE);
+                    informacionIsExtended=false;
+                    informacionImageView.setVisibility(View.VISIBLE);
+                    linearLayoutAñadirInformacionAdicional.setVisibility(View.GONE);
+
+                }
+            }
+        });
+
+        /*
         textViewAñadirInformacionAdicional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -480,6 +581,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 }
             }
         });
+        */
         mDatabase.child(Referencias.CALIFICACIONPROMEDIO).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -502,7 +604,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         textViewratingBar2.setText(atractivoTuristico.getCalificacion());
         ratingBar2.setRating(Float.parseFloat(atractivoTuristico.getCalificacion()));
         textViewOpiniones2.setText(String.valueOf(atractivoTuristico.getContadorOpiniones()));
-        ratingBar2.setEnabled(false);
+        ratingBar2.setEnabled(true);
 
         textViewVerMasComentarios();
         botonCalificar();
@@ -549,7 +651,10 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         switch (item.getItemId()) {
             case R.id.camara:
                 //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
-                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                PickImageDialog.build(new PickSetup()
+                        .setTitle("Selecciona una opción")
+                        .setSystemDialog(true)
+                )
                         .setOnPickResult(new IPickResult() {
                             @Override
                             public void onPickResult(PickResult r) {
@@ -728,6 +833,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
         linearLayout.addView(textView);
         linearLayout.addView(textView1);
         linearLayoutAñadirInformacionAdicional.addView(linearLayout);
+        linearLayoutAñadirInformacionAdicional.setVisibility(View.GONE);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -797,42 +904,8 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 imageUrl[i]=imagenes.get(i).getUrl();
             }
             ViewPager viewPager=view.findViewById(R.id.view_pager);
-            AdapterSliderVisualizacionDeFotos adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotos(VisualizarAtractivoTuristicoFragment.this.getActivity().getApplicationContext(),imageUrl);
+            final AdapterSliderVisualizacionDeFotos adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotos(VisualizarAtractivoTuristicoFragment.this.getActivity().getApplicationContext(),imageUrl,(VisualizarAtractivoTuristico) VisualizarAtractivoTuristicoFragment.this.getActivity());
             viewPager.setAdapter(adapterSliderVisualizacionDeFotos);
-
-            /*
-            Glide.with(VisualizarAtractivoTuristicoFragment.this)
-                    .load(imagenes.get(0).getUrl())
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            if (isFromMemoryCache) {
-                                linearLayoutProgressBar3.setVisibility(View.GONE);
-                                linearLayoutImageView.setVisibility(View.VISIBLE);
-                            } else {
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        linearLayoutProgressBar3.setVisibility(View.GONE);
-                                        linearLayoutImageView.setVisibility(View.VISIBLE);
-                                        //linearLayoutProgressBar.setVisibility(View.GONE);
-                                        //linearLayoutContenido.setVisibility(View.VISIBLE);
-                                    }
-                                }, 500);
-                            }
-                            return false;
-                        }
-                    })
-                    .centerCrop()
-                    .placeholder(circularProgressDrawable)
-                    .into(imageView);
-                    */
-
         }
     }
 
@@ -843,6 +916,20 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
             v.requestLayout();
         }
     }
+
+    /*public void creaFragmentFotos(){
+        Fragment fragmentFotosAT=new FotosATFragment();
+        Bundle args = new Bundle();
+        // envio el atractivo turistico serialzable al fragment
+        args.putSerializable("atractivoTuristico", atractivoTuristico);
+        args.putSerializable("imagenes",imagenes);
+        fragmentFotosAT.setArguments(args);
+        transaction=getFragmentManager().beginTransaction();
+        transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentFotosAT); // give your fragment container id in first parameter
+        //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();
+        //finish();
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

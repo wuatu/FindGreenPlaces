@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Utils;
 
 import androidx.annotation.NonNull;
 import android.util.Log;
@@ -13,6 +13,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import Clases.Models.Imagen;
+import Clases.Models.AtractivoTuristico;
 import Interfaz.OnGetDataListenerImagenes;
 
 public class GetImagenes implements Serializable {

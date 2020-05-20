@@ -26,10 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
-import Clases.SpacePhoto;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Models.SpacePhoto;
 
 /**
  * Created by Chike on 2/12/2017.

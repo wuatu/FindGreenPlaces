@@ -1,7 +1,6 @@
-package Clases;
+package Clases.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
 
 /**
  * Created by Chike on 2/11/2017.

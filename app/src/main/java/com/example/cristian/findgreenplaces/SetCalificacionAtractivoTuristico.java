@@ -1,7 +1,5 @@
 package com.example.cristian.findgreenplaces;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
@@ -28,14 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.CalificacionPromedio;
-import Clases.CalificacionUsuarioAtractivoTuristico;
-import Clases.Comentario;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
-import Clases.SubirPuntos;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.CalificacionPromedio;
+import Clases.Models.CalificacionUsuarioAtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
 
 public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
     DatabaseReference mDatabase;
@@ -51,11 +49,13 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
     EditText editTextComentar;
     TextView textViewTituloComentar;
     private void getImagenesAtractivoTuristico(){
-        Glide.with(SetCalificacionAtractivoTuristico.this)
-                .load(imagenes.get(0).getUrl())
-                .fitCenter()
-                .centerCrop()
-                .into(imageView);
+        if(imagenes.size()>0) {
+            Glide.with(SetCalificacionAtractivoTuristico.this)
+                    .load(imagenes.get(0).getUrl())
+                    .fitCenter()
+                    .centerCrop()
+                    .into(imageView);
+        }
 
     }
     @Override
@@ -161,7 +161,7 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
 
                         Toast.makeText(SetCalificacionAtractivoTuristico.this,"Calificación enviada exitosamente!",Toast.LENGTH_SHORT).show();
                         SubirPuntos.aumentaPuntosOtrosUsuarios(SetCalificacionAtractivoTuristico.this,IdUsuario.getIdUsuario(),1);
-                        Toast.makeText(SetCalificacionAtractivoTuristico.this,"Subes "+1+" punto",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SetCalificacionAtractivoTuristico.this,"Subes "+1+" punto",Toast.LENGTH_SHORT).show();
 
                         setResult(RESULT_OK,
                                 new Intent().putExtra("nombre", atractivoTuristico.getNombre()).
@@ -212,23 +212,6 @@ public class SetCalificacionAtractivoTuristico extends AppCompatActivity {
             }
         });
 
-        Button cancelar=findViewById(R.id.buttonCancelar);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(SetCalificacionAtractivoTuristico.this)
-                        .setTitle("Cancelar Calificación")
-                        .setMessage("Esta seguro que quiere cancelar?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-            }
-        });
     }
     private void calculaNuevaCalificacionPromedio(int getTotlaPersonas, double getSumaCalificaciones, float calificacionUsuario) {
         double nuevaSumaCalificaciones=getSumaCalificaciones+calificacionUsuario;

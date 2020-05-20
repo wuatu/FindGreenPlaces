@@ -1,8 +1,6 @@
-package Clases;
+package Clases.Adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
 
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -16,6 +14,8 @@ import com.example.cristian.findgreenplaces.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import Clases.Models.AtractivoTuristico;
 
 public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter implements Serializable {
     Context context;

@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +15,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -32,7 +32,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -83,13 +82,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import Clases.AtractivoTuristico;
-import Clases.Categoria;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Referencias;
-import Clases.SubirPuntos;
-import Clases.Usuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Categoria;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
+import Clases.Models.Usuario;
 
 public class AgregarAtractivoTuristico extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,LocationListener,GoogleApiClient.OnConnectionFailedListener,Serializable {
     Address addres = null;
@@ -123,6 +122,9 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     Button buttonAceptar;
     Button buttonCancelar;
     TextView tituloCategoria;
+    TextView direccion;
+    TextView latlon;
+    TextView longitud;
     ArrayList<Tag> sCategorias;
     TagView tagGroup;
     ArrayList<Categoria> categorias;
@@ -138,6 +140,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     private final int REQUEST_ACCESS_WRITE_EXTERNAL_STORAGE=0;
     SearchView buscarEditText;
     Button buttonOcultarMapa;
+    Button buttonOcultarMapa2;
     RelativeLayout relativeLayoutMapa;
     DatabaseReference databaseReference;
     @Override
@@ -150,7 +153,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_ACCESS_WRITE_EXTERNAL_STORAGE);
             }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
@@ -160,6 +163,12 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        LocationManager locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            AlertNoGps();
+
+        }
 
         urlImagen="";
         regions = getResources().getStringArray(R.array.region_array);
@@ -202,23 +211,26 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
         relativeLayoutMapa=findViewById(R.id.layoutMapa);
         buttonOcultarMapa=findViewById(R.id.ocultarMapa);
+        buttonOcultarMapa2=findViewById(R.id.ocultarMapa2);
         buttonOcultarMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(buttonOcultarMapa.getText().toString().equalsIgnoreCase("Listo")){
-                    buttonOcultarMapa.setText("abrir mapa");
-                    relativeLayoutMapa.setVisibility(View.GONE);
-                }else{
-                    buttonOcultarMapa.setText("Listo");
-                    relativeLayoutMapa.setVisibility(View.VISIBLE);
-                }
+                relativeLayoutMapa.setVisibility(View.GONE);
+            }
+        });
+        buttonOcultarMapa2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutMapa.setVisibility(View.VISIBLE);
             }
         });
         // Referencia al elemento en la vista
         textViewCategoria = (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
 
-        //busqueda= ((String) getIntent().getStringExtra("busqueda"));
+        direccion=findViewById(R.id.textViewDireccion);
+        latlon=findViewById(R.id.textViewLatLon);
 
+        //busqueda= ((String) getIntent().getStringExtra("busqueda"));
         buscarEditText = findViewById(R.id.autocomplete_region2);
         buscarEditText.setFocusable(false);
         buscarEditText.setIconified(true);
@@ -311,7 +323,10 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
     }
 
-
+    public void direccionLatLon(String direccion, Double lat, Double lon){
+        this.direccion.setText(direccion);
+        this.latlon.setText(lat+", "+lon);
+    }
 
 
     public void subirImagen(){
@@ -320,7 +335,14 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             @Override
             public void onClick(View v) {
                 //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
-                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                PickImageDialog.build(new PickSetup()
+                        .setTitle("Selecciona una opción")
+                        .setTitleColor(R.color.colorPrimary)
+                        .setCancelText("Cancelar")
+                        .setCancelTextColor(R.color.colorPrimary)
+                        .setCameraButtonText("Cámara")
+                        .setGalleryButtonText("Galería")
+                        .setSystemDialog(true))
                         .setOnPickResult(new IPickResult() {
                             @Override
                             public void onPickResult(PickResult r) {
@@ -480,7 +502,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         textViewCiudad=(TextView)findViewById(R.id.editTextCiudad);
         textViewComuna=(TextView)findViewById(R.id.editTextComuna);
         textViewDescripcion=(TextView)findViewById(R.id.editTextDescripcion);
-        textViewDescripcion.setOnTouchListener(new View.OnTouchListener() {
+/*        textViewDescripcion.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (v.getId() == R.id.editTextDescripcion) {
@@ -494,6 +516,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 return false;
             }
         });
+        */
         textViewDireccion=(TextView)findViewById(R.id.editTextDireccion);
         buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -624,7 +647,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                                     //startActivity(intent);
                                     //sube puntos por contribuir
                                     SubirPuntos.subirPuntosUsuarioQueContribuye(AgregarAtractivoTuristico.this,5);
-                                    Toast.makeText(AgregarAtractivoTuristico.this,"Subes "+5+" puntos",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(AgregarAtractivoTuristico.this,"Subes "+5+" puntos",Toast.LENGTH_SHORT).show();
 
                                     //añade contribucion (a tabla "contribucionPorAt") por atractivo turistio
                                     DatabaseReference databaseReference=mDatabase.child(Referencias.CONTRIBUCIONESPORAT).
@@ -689,10 +712,24 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             ciudad=addresses.get(0).getLocality();//curico
             //city=addresses.get(0).getCountryName();//Chile
             region=addresses.get(0).getAdminArea();//Region
-            direccion=addresses.get(0).getThoroughfare()+" "+addresses.get(0).getFeatureName();//Region
+            if(addresses.get(0).getThoroughfare()!=null ){
+                if((!addresses.get(0).getThoroughfare().equalsIgnoreCase("null") && !addresses.get(0).getThoroughfare().equalsIgnoreCase("Unnamed Road"))){
+                    direccion=addresses.get(0).getThoroughfare()+" ";
+                }
+            }
+            if(addresses.get(0).getFeatureName()!=null){
+                if((!addresses.get(0).getFeatureName().equalsIgnoreCase("null") && !addresses.get(0).getFeatureName().equalsIgnoreCase("Unnamed Road"))) {
+                    direccion= direccion+addresses.get(0).getFeatureName();
+                }
+            }
+             if(direccion=="") {
+                direccion ="Sin dirección";
+            }
             textViewCiudad.setText(ciudad);
             textViewComuna.setText(region);
             textViewDireccion.setText(direccion);
+            this.direccion.setText(direccion);
+            this.latlon.setText(lat+", "+lng);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -720,23 +757,18 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             @Override
             public void onCameraIdle() {
                 LatLng center=mMap.getCameraPosition().target;
-
                 if(currentMarker==null){
                     currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
                     currentMarker.setVisible(false);
+                    getStringAddress(center.latitude,center.longitude);
                 }
                 else{
-
                     currentMarker.remove();
                     currentMarker=mMap.addMarker(marker.position(center).title("Nueva posición"));
                     currentMarker.setVisible(false);
                     LatLng latLng=currentMarker.getPosition();
                     getStringAddress(latLng.latitude,latLng.longitude);
-
                 }
-
-
-
             }
         });
 
@@ -800,8 +832,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             }
         });
     }
-
-
 
     private void mostrarAtractivoTuristicoPorCiudadOComunaInicio(String locality) {
         //mMap.clear();
@@ -1008,6 +1038,23 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
 
         buscarEditText.setQuery("", false);
         //mMap.requestFocus();
+    }
+
+    public void AlertNoGps(){
+        new androidx.appcompat.app.AlertDialog.Builder(AgregarAtractivoTuristico.this)
+                .setTitle("Activar GPS")
+                .setMessage("El sistema de GPS está desactivado, ¿Desea Activarlo?")
+                //.setIcon(R.drawable.aporte)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(getIntent());
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
     }
 
 }

@@ -53,7 +53,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:padding="5dp"
+        android:padding="10dp"
+        android:background="@drawable/my_custom_background"
         app:layout_constraintTop_toBottomOf="parent">
 
 
@@ -80,19 +81,40 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+
+
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="3"
             android:gravity="bottom"
             android:orientation="vertical">
-
-            <ImageView
+            <Button
                 android:id="@+id/imageViewEnviar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:text="Publicar"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_height="35dp"
+                android:background="@drawable/my_button_green">
+
+            </Button>
+            <!--<ImageView
+                android:id="@+id/imageViewEnviar"
+                android:layout_width="27dp"
+                android:layout_height="32dp"
                 android:layout_gravity="bottom"
                 android:src="@drawable/enviar" />
+
+
+            <TextView
+                android:id="@+id/imageViewEnviar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Publicar"
+                android:textColor="@android:color/white"></TextView>
+                    -->
         </LinearLayout>
+
 
 
     </LinearLayout>

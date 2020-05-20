@@ -18,12 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
-import Clases.SubirPuntos;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
 
 public class InformacionAdicionalAT extends AppCompatActivity {
     TextView textViewHorario;

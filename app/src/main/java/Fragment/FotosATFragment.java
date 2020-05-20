@@ -4,17 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,16 +27,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-import androidx.viewpager.widget.ViewPager;
 
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cristian.findgreenplaces.R;
-import com.example.cristian.findgreenplaces.SpacePhotoActivity;
 import com.example.cristian.findgreenplaces.SubirFoto;
 import com.example.cristian.findgreenplaces.VisualizacionDeImagen;
-import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,14 +47,13 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.util.ArrayList;
 
-import Clases.AdapterSliderVisualizacionDeFotos;
-import Clases.AtractivoTuristico;
-import Clases.Comentario;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.MeGustaImagen;
-import Clases.Referencias;
-import Clases.SpacePhoto;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Models.MeGustaImagen;
+import Clases.Utils.Referencias;
+import Clases.Models.SpacePhoto;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -85,6 +78,7 @@ public class FotosATFragment extends android.app.Fragment {
     private final int FOTO=0;
     private static final int IMAGENES = 1;
     FirebaseDatabase database;
+    public RecyclerView recyclerView;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -165,7 +159,7 @@ public class FotosATFragment extends android.app.Fragment {
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_images);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_images);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         SpacePhoto[] getSpacePhotos=new SpacePhoto[imagenes.size()];
@@ -187,7 +181,10 @@ public class FotosATFragment extends android.app.Fragment {
         switch (item.getItemId()) {
             case R.id.camara:
                 //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
-                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                PickImageDialog.build(new PickSetup()
+                        .setTitle("Selecciona una opción")
+                        .setSystemDialog(true)
+                )
                         .setOnPickResult(new IPickResult() {
                             @Override
                             public void onPickResult(PickResult r) {
@@ -329,6 +326,15 @@ public class FotosATFragment extends android.app.Fragment {
             mContext = context;
             mSpacePhotos = spacePhotos;
         }
+
+        /*public void iniciaFotos(int position){
+            Intent intent = new Intent(mContext, VisualizacionDeImagen.class);
+            intent.putExtra("atractivoTuristico", atractivoTuristico);
+            intent.putExtra("imagenes", imagenes);
+            intent.putExtra("meGustaImagens", meGustaImagens);
+            intent.putExtra("position", position);
+            startActivityForResult(intent,IMAGENES);
+        }*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event

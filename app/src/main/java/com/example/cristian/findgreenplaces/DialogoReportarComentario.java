@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,11 +17,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Clases.AtractivoTuristico;
-import Clases.Comentario;
-import Clases.IdUsuario;
-import Clases.Referencias;
-import Clases.Usuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class DialogoReportarComentario extends AppCompatActivity {
     Comentario comentario;
@@ -49,7 +48,6 @@ public class DialogoReportarComentario extends AppCompatActivity {
         comentario= (Comentario) getIntent().getSerializableExtra("comentario");
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
 //        position=(int) getIntent().getSerializableExtra("position");
-        Log.v("agus", comentario.getApellidoUsuario());
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

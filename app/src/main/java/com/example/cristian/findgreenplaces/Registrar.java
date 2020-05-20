@@ -23,8 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import Clases.Referencias;
-import Clases.Usuario;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class Registrar extends AppCompatActivity {
     Button botonRegistrar;

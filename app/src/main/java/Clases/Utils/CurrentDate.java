@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Utils;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

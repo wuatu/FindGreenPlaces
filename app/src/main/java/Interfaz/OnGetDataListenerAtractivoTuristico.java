@@ -1,6 +1,6 @@
 package Interfaz;
 
-import Clases.AtractivoTuristico;
+import Clases.Models.AtractivoTuristico;
 
 public interface OnGetDataListenerAtractivoTuristico {
     void onSuccess(AtractivoTuristico atractivoTuristico);

@@ -29,9 +29,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Clases.IdUsuario;
-import Clases.Referencias;
-import Clases.Usuario;
+import java.util.ArrayList;
+
+import Clases.Models.Comentario;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Models.MeGustaImagen;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class PerfilUsuario extends AppCompatActivity {
     FirebaseDatabase database;
@@ -45,13 +50,13 @@ public class PerfilUsuario extends AppCompatActivity {
     LinearLayout linearLayoutBronce;
     LinearLayout linearLayoutPlata;
     LinearLayout linearLayoutOro;
-
+    ArrayList<Imagen> imagenes;
+    private static final int IMAGENES = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_usuario);
-
         Toolbar toolbar=findViewById(R.id.toolbar_camera);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
@@ -60,17 +65,33 @@ public class PerfilUsuario extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         buttonEditarPerfil=findViewById(R.id.buttonEditarPerfil);
         linearLayoutPerfil=findViewById(R.id.linearLayoutPerfil);
-
         linearLayoutMedallas=findViewById(R.id.LayoutMedallas);
         linearLayoutBronce=findViewById(R.id.LayoutBronce);
         linearLayoutPlata=findViewById(R.id.LayoutPlata);
         linearLayoutOro=findViewById(R.id.LayoutOro);
+        imagenes=new ArrayList();
         //barra circular
         progressBar=findViewById(R.id.progressBar1);
         showProgress(true);
+        database=FirebaseDatabase.getInstance();
+        mDatabase=database.getReference();
+        mDatabase.child(Referencias.USUARIOFOTODEPERFIL).
+                child(IdUsuario.getIdUsuario()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    Imagen imagen= dataSnapshot1.getValue(Imagen.class);
+                    imagenes.add(imagen);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         progressBar2=findViewById(R.id.seekBar);
 
@@ -92,7 +113,35 @@ public class PerfilUsuario extends AppCompatActivity {
             Log.v("aburri",IdUsuario.getUrl());
 
         }
+        imageViewFotoPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<MeGustaImagen> meGustaImagens=new ArrayList<>();
+                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                            if (dataSnapshot1.exists()) {
+                                Log.v("llegue",dataSnapshot1.getKey());
+                                MeGustaImagen meGustaImagen = dataSnapshot1.getValue(MeGustaImagen.class);
+                                meGustaImagens.add(meGustaImagen);
 
+                            }
+                        }
+                        Intent intent = new Intent(PerfilUsuario.this, VisualizacionDeImagen.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("meGustaImagens", meGustaImagens);
+                        intent.putExtra("position", 0);
+                        startActivityForResult(intent,IMAGENES);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
         mDatabase.child(Referencias.USUARIO).child(IdUsuario.getIdUsuario()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,6 +166,7 @@ public class PerfilUsuario extends AppCompatActivity {
                 LinearLayout linearLayoutProgressBar=findViewById(R.id.linearLayoutProgressBar);
                 linearLayoutProgressBar.setVisibility(View.GONE);
                 linearLayoutPerfil.setVisibility(View.VISIBLE);
+                /*
                 if(nivel.getText().toString().equalsIgnoreCase("1")){
                     linearLayoutBronce.setVisibility(View.VISIBLE);
                     linearLayoutMedallas.setVisibility(View.VISIBLE);
@@ -131,7 +181,7 @@ public class PerfilUsuario extends AppCompatActivity {
                     linearLayoutBronce.setVisibility(View.VISIBLE);
                     linearLayoutOro.setVisibility(View.VISIBLE);
                     linearLayoutMedallas.setVisibility(View.VISIBLE);
-                }
+                }*/
             }
 
             @Override
@@ -144,7 +194,6 @@ public class PerfilUsuario extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(PerfilUsuario.this,EditarPerfil.class);
-
                 startActivity(intent);
             }
         });

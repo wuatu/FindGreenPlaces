@@ -27,14 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Clases.AtractivoTuristico;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.MeGustaImagen;
-import Clases.Referencias;
-import Clases.SpacePhoto;
-import Clases.SubirPuntos;
-import Clases.Usuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Models.MeGustaImagen;
+import Clases.Utils.Referencias;
+import Clases.Models.SpacePhoto;
+import Clases.Utils.SubirPuntos;
+import Clases.Models.Usuario;
 
 /**
  * Created by Chike on 2/12/2017.

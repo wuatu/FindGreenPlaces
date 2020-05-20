@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
@@ -17,11 +16,11 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import Clases.AtractivoTuristico;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Referencias;
-import Clases.Usuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class SetDescripcionAtractivoTuristico extends AppCompatActivity {
     Usuario usuario;

@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Models;
 
 public class ConocesEsteLugar {
     String id;

@@ -11,36 +11,48 @@
         android:id="@+id/as"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textViewNombre"
+        <LinearLayout
+            android:id="@+id/linearLayoutNombreApellido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:text="Nombre"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_marginBottom="2dp"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textViewNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Nombre"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
-        <TextView
-            android:id="@+id/textViewApellido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Apellido"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            <TextView
+                android:id="@+id/textViewApellido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apellido"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
+            android:gravity="right|center"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/botonPuntos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
                 android:onClick="showPopup"
-                android:src="@drawable/ic_action_more_vert" />
+                android:src="@drawable/dot2" />
         </LinearLayout>
 
     </LinearLayout>

@@ -31,8 +31,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import Clases.IdUsuario;
-import Clases.Referencias;
+import java.util.Date;
+
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
 
 public class FotoPerfil extends AppCompatActivity {
     private static String PREFS_KEY = "mispreferencias";
@@ -102,8 +105,8 @@ public class FotoPerfil extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==GALLERY_INTENT && resultCode==RESULT_OK){
-            progressDialog.setTitle("Subiendo Foto");
-            progressDialog.setMessage("Subiendo Foto a Base de Datos!");
+            progressDialog.setTitle("Subiendo");
+            progressDialog.setMessage("Subiendo foto");
             progressDialog.setCancelable(true);
             progressDialog.show();
             //item_photo = data.getParcelableArrayListExtra("item_photo");
@@ -130,6 +133,13 @@ public class FotoPerfil extends AppCompatActivity {
                         guardarValorString(FotoPerfil.this,URL,urlImagen);
                         mDatabase.child(Referencias.USUARIO).
                                 child(IdUsuario.getIdUsuario()).child("urlFotoPerfil").setValue(urlImagen);
+
+                        String id=mDatabase.child(Referencias.USUARIOFOTODEPERFIL).
+                                child(IdUsuario.getIdUsuario()).push().getKey();
+                        Imagen imagen=new Imagen(id,urlImagen,new Date().toString(),"no",IdUsuario.getIdUsuario(),IdUsuario.getNombreUsuario() +" "+IdUsuario.getApellidoUsuario(),"0","0","0","true");
+                        mDatabase.child(Referencias.USUARIOFOTODEPERFIL).
+                                child(IdUsuario.getIdUsuario()).child(id).setValue(imagen);
+
                         Log.v("descargar",urlImagen);
                         Glide.with(FotoPerfil.this)
                                 .load(urlImagen)

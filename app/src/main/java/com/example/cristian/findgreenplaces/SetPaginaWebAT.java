@@ -4,7 +4,7 @@ package com.example.cristian.findgreenplaces;
         import android.content.DialogInterface;
         import android.content.Intent;
         import android.graphics.Color;
-        import androidx.annotation.NonNull;
+
         import androidx.appcompat.app.AppCompatActivity;
         import android.os.Bundle;
         import androidx.appcompat.widget.Toolbar;
@@ -18,12 +18,12 @@ package com.example.cristian.findgreenplaces;
 
         import java.util.ArrayList;
 
-        import Clases.AtractivoTuristico;
-        import Clases.Contribucion;
-        import Clases.IdUsuario;
-        import Clases.Imagen;
-        import Clases.Referencias;
-        import Clases.Usuario;
+        import Clases.Models.AtractivoTuristico;
+        import Clases.Models.Contribucion;
+        import Clases.Utils.IdUsuario;
+        import Clases.Models.Imagen;
+        import Clases.Utils.Referencias;
+        import Clases.Models.Usuario;
 
 public class SetPaginaWebAT extends AppCompatActivity {
     Button buttonAceptar;

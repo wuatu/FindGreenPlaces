@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,19 +22,19 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Imagen;
-import Clases.Referencias;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
 import Fragment.VisualizarAtractivoTuristicoFragment;
 import Fragment.ComentariosATFrafment;
 import Fragment.FotosATFragment;
 
 public class VisualizarAtractivoTuristico extends AppCompatActivity{
-    BottomNavigationView navigation;
+    public BottomNavigationView navigation;
     private TextView mTextMessage;
     Fragment fragmentComentariosAT;
     Fragment fragmentVisualizaAT;
-    Fragment fragmentFotosAT;
+    public Fragment fragmentFotosAT;
     FragmentTransaction transaction;
     AtractivoTuristico atractivoTuristico;
     ArrayList<Imagen> imagenes;
@@ -40,18 +42,33 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
     FirebaseDatabase database;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    creaFragmentViualizacionAT();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            creaFragmentViualizacionAT();
+                        }
+                    },500);
                     return true;
                 case R.id.navigation_dashboard:
-                    creaFragmentComentarios();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            creaFragmentComentarios();
+                        }
+                    },500);
                     return true;
                 case R.id.navigation_notifications:
-                    creaFragmentFotos();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            creaFragmentFotos();
+                        }
+                    },500);
+
                     return true;
 
             }
@@ -69,9 +86,9 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         args.putSerializable("atractivoTuristico", atractivoTuristico);
         args.putSerializable("imagenes",imagenes);
 
-        fragmentVisualizaAT=new VisualizarAtractivoTuristicoFragment();
         fragmentVisualizaAT.setArguments(args);
         transaction=getFragmentManager().beginTransaction();
+
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentVisualizaAT); // give your fragment container id in first parameter
         transaction.commit();
 
@@ -80,6 +97,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
         fragmentFotosAT=new FotosATFragment();
         fragmentFotosAT.setArguments(args);
+        navigation.setVisibility(View.VISIBLE);
     }
 
 
@@ -98,7 +116,13 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         args.putSerializable("imagenes",imagenes);
 
         transaction=getFragmentManager().beginTransaction();
-        transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentComentariosAT); // give your fragment container id in first parameter
+        if(fragmentComentariosAT==null){
+            Log.v("fragment","fragment null");
+        }
+        transaction
+                .replace(
+                        R.id.linearLayoutFragmentVisualizarAtractivoTuristico,
+                        fragmentComentariosAT); // give your fragment container id in first parameter
         //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();
         //finish();
@@ -119,19 +143,21 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_atractivo_turistico);
+
         atractivoTuristico= ((AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico"));
         //imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
         imagenes=new ArrayList<>();
         database=FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+        fragmentVisualizaAT=new VisualizarAtractivoTuristicoFragment();
         getImagenesAtractivoTuristico();
         int contadorVisualizaciones=Integer.valueOf(atractivoTuristico.getContadorVisualizaciones())+1;
         atractivoTuristico.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
         //textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
         mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).child(Referencias.CONTADORVISUALIZACIONES).setValue(String.valueOf(contadorVisualizaciones));
 
-
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setVisibility(View.GONE);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     }

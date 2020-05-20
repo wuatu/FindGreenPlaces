@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 
-import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,12 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Categoria;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Categoria;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
 
 public class SetCategoriasAtractivoTuristico extends AppCompatActivity {
     DatabaseReference mDatabase;

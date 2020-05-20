@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Models;
 
 import android.content.Context;
 import android.widget.Button;

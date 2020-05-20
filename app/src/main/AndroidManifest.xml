@@ -2,11 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cristian.findgreenplaces">
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
+
     <application
         android:name=".FindGreenPlacesApp"
         android:allowBackup="true"
@@ -15,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VisualizacionDeImagen"></activity>
+        <activity android:name=".PerfilUsuarioOtro"></activity>
+        <activity android:name=".VisualizacionDeImagen" />
         <activity android:name=".Informacion" />
         <activity android:name=".AcercaDe" />
         <!--
@@ -38,7 +35,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DialogoVisualizarAtractivoTuristico"
             android:label="@string/title_activity_visualizar_atractivo_turistico"
@@ -81,11 +77,9 @@
         <activity
             android:name=".SetCalificacionAtractivoTuristico"
             android:label="Cambiar Calificación" />
-
         <activity
             android:name=".SetCategoriasAtractivoTuristico"
             android:label="Actualizar Categorias" />
-
         <activity
             android:name=".VisualizarContribucionAtractivoTuristico"
             android:label="Atractivos Turísticos Contribuidos" />
@@ -113,10 +107,9 @@
             android:name=".Buscar_Maps"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SetNombreAT" />
-
         <activity android:name=".EditarPerfil" />
-
         <activity android:name=".OlvidoContrasena" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBDiWRE59WyyFv3_puecdU-ASBIZInBzic" />
@@ -126,6 +119,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"
@@ -141,14 +135,13 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />

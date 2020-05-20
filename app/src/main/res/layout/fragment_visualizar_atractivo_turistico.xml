@@ -35,6 +35,23 @@
             android:gravity="right"
             android:orientation="horizontal">
 
+
+
+                <TextView
+                    android:id="@+id/textViewTituloAT2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="Titulo"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+
+
             <ImageView
                 android:id="@+id/imageViewReportar"
                 android:layout_width="20dp"
@@ -112,19 +129,20 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="50dp"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/imageViewIr"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:src="@drawable/indicaciones" />
 
@@ -140,9 +158,32 @@
                             android:text="Indicaciones" />
 
                     </LinearLayout>
-
                 </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
 
+                        <ImageView
+                            android:id="@+id/imageViewContribuir"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/compartir2" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Contribuir" />
+                        </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -157,24 +198,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10sp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewTituloAT2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Titulo"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,26 +208,7 @@
                 android:layout_gravity="left"
                 android:layout_marginBottom="0dp"
                 android:gravity="left"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/contenedorMegustaEIr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
-
+                android:orientation="horizontal"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -210,11 +217,13 @@
 
                 <!--Descripcion-->
                 <LinearLayout
+                    android:id="@+id/linearLayoutDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20px"
-                    android:orientation="vertical">
-
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:minHeight="50dp">
                     <TextView
                         android:id="@+id/textViewDescripcion"
                         android:layout_width="match_parent"
@@ -223,14 +232,26 @@
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textViewDescripcionAT"
+                    <ImageView
+                        android:id="@+id/descripcionMasImageView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/mas"
+                        android:layout_gravity="right">
+                    </ImageView>
+                    <LinearLayout
+                        android:id="@+id/linearLayoutDescripcionExpanded"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Descripción"
-                        android:textColor="@color/com_facebook_button_background_color_focused_disabled"
-                        android:textSize="14sp" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textViewDescripcionAT"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Descripción"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -243,10 +264,13 @@
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Tips de viaje-->
                 <LinearLayout
+                    android:id="@+id/linearLayoutRecomendaciones"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20px"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:minHeight="50dp">
 
                     <TextView
                         android:id="@+id/textViewTips"
@@ -256,15 +280,26 @@
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textViewTipsAT"
+                    <ImageView
+                        android:id="@+id/recomendacionesMasImageView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/mas"
+                        android:layout_gravity="right">
+                    </ImageView>
+                    <LinearLayout
+                        android:id="@+id/linearLayoutRecomendacionesExtended"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Recomendaciones"
-                        android:textColor="@color/com_facebook_button_background_color_focused_disabled"
-                        android:textSize="14sp" />
-
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textViewTipsAT"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Recomendaciones"
+                            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <!--fin tips de viaje-->
@@ -276,9 +311,12 @@
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
 
                 <LinearLayout
+                    android:id="@+id/linearLayoutInformacion"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:minHeight="60dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -286,8 +324,16 @@
                         android:layout_marginBottom="5dp"
                         android:text="Información Adicional"
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                        android:textSize="18sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/InformacionMasImageView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/mas"
+                        android:layout_gravity="right">
+                    </ImageView>
 
                     <LinearLayout
                         android:id="@+id/linearLatyoutInformacionAdicional"
@@ -407,6 +453,7 @@
                         <!--fin redes sociales-->
                     </LinearLayout>
                     <!--Fin linearlayout contenedor informacion adicional-->
+                    <!--
                     <TextView
                         android:id="@+id/textViewAñadirInformacionAdicional"
                         android:layout_width="match_parent"
@@ -416,6 +463,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+                        -->
                 </LinearLayout>
 
                 <View
@@ -426,11 +474,15 @@
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Categorias-->
                 <LinearLayout
+                    android:id="@+id/linearLatyoutCategoriasExpanded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20px"
-                    android:orientation="vertical">
-
+                    android:clickable="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:minHeight="50dp"
+                    >
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="match_parent"
@@ -439,6 +491,14 @@
                         android:textColor="@color/common_google_signin_btn_text_dark_focused"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/categoriasMasImageView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/mas"
+                        android:layout_gravity="right">
+                    </ImageView>
 
                     <LinearLayout
                         android:id="@+id/linearLatyoutCategorias"
@@ -459,36 +519,122 @@
                             tagview:textPaddingRight="8dp"
                             tagview:textPaddingTop="5dp" />
                     </LinearLayout>
-
                 </LinearLayout>
-                <!--Fin categoria-->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
-
-                <TextView
-                    android:id="@+id/textViewSugerirCambio"
+                <!--Fin categoria-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:text="Contribuir"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutLike"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:padding="10dp">
+
+
+                            <ImageView
+                                android:id="@+id/imageViewLike"
+                                android:layout_width="30dp"
+                                android:layout_height="20dp"
+                                android:layout_marginRight="5dp"
+                                android:src="@drawable/likeoff"
+                                android:tag="likeoff" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Me gusta" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="right"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="Visualizaciones" />
+
+                                <TextView
+                                    android:id="@+id/textViewVisualizacion"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="28" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="Me gusta" />
+
+                                <TextView
+                                    android:id="@+id/contadorLikes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center"
+                                    android:text="100" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 <!--Calificar-->
                 <LinearLayout
                     android:id="@+id/linearLayoutLoConoces"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="20px"
@@ -590,10 +736,12 @@
 
                         <RatingBar
                             android:id="@+id/rating2"
-                            style="@android:style/Widget.DeviceDefault.Light.RatingBar"
+                            style="@style/Widget.AppCompat.RatingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:numStars="5" />
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:stepSize="0.1" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -699,105 +847,6 @@
                         android:layout_marginBottom="5dp"
                         android:background="@color/com_facebook_button_login_silver_background_color_pressed" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:id="@+id/linearLayoutLike"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:padding="10dp">
-
-
-                            <ImageView
-                                android:id="@+id/imageViewLike"
-                                android:layout_width="30dp"
-                                android:layout_height="20dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/likeoff"
-                                android:tag="likeoff" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="Me gusta" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="right"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:gravity="center"
-                                    android:text="Visualizaciones" />
-
-                                <TextView
-                                    android:id="@+id/textViewVisualizacion"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:gravity="center"
-                                    android:text="28" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="right"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:gravity="center"
-                                    android:text="Me gusta" />
-
-                                <TextView
-                                    android:id="@+id/contadorLikes"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:gravity="center"
-                                    android:text="100" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
 

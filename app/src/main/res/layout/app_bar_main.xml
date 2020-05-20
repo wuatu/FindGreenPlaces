@@ -74,6 +74,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_bg"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/textView30"
@@ -94,6 +95,7 @@
         android:layout_marginRight="73dp"
         android:layout_marginBottom="36dp"
         android:background="@drawable/dialog_bg"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <TextView

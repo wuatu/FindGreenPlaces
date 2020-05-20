@@ -3,7 +3,7 @@ package com.example.cristian.findgreenplaces;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
@@ -25,8 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Imagen;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Imagen;
 
 public class DialogoVisualizarAtractivoTuristico extends AppCompatActivity implements Serializable {
 

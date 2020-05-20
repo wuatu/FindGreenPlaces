@@ -2,8 +2,8 @@ package Interfaz;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Imagen;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Imagen;
 
 public interface OnGetDataListenerImagenes {
     void onSuccess(ArrayList<Imagen> imagenes,AtractivoTuristico atractivoTuristico);

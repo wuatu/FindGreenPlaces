@@ -19,15 +19,32 @@
             android:layout_height="wrap_content"></include>
 
     </com.google.android.material.appbar.AppBarLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewTituloAT2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Titulo"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,17 +67,6 @@
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="10dp">
-
-
-            <TextView
-                android:id="@+id/textViewTituloAT2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Titulo"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textSize="24sp"
-                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="135dp"
@@ -122,61 +128,85 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/editTextComentar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="top"
-                        android:hint="Comentar"
-                        android:includeFontPadding="false"
-                        android:inputType="textAutoComplete|textMultiLine|textCapSentences"
-                        android:maxLines="8"
-                        android:singleLine="false"
-                        android:overScrollMode="always"
-                        android:scrollbarStyle="insideInset"
-                        android:scrollbars="vertical"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/contenedorBotonesAC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-
-
-            android:layout_margin="10dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonCancelar"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_button_bg"
-                android:text="Cancelar"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
-
-
-            <Button
-                android:id="@+id/buttonEnviarCalificacion"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_button_green"
-                android:text="Aceptar"
-                android:textStyle="bold" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="@drawable/my_custom_background"
+        app:layout_constraintTop_toBottomOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editTextComentar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="Comentar"
+                    android:includeFontPadding="false"
+                    android:inputType="textAutoComplete|textMultiLine|textCapSentences"
+                    android:maxLines="8"
+                    android:singleLine="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="bottom"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/buttonEnviarCalificacion"
+                android:layout_width="wrap_content"
+                android:text="Publicar"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_height="35dp"
+                android:background="@drawable/my_button_green">
+
+            </Button>
+            <!--<ImageView
+                android:id="@+id/imageViewEnviar"
+                android:layout_width="27dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/enviar" />
+
+
+            <TextView
+                android:id="@+id/imageViewEnviar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Publicar"
+                android:textColor="@android:color/white"></TextView>
+                    -->
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
 </LinearLayout>

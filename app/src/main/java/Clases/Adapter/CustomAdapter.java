@@ -1,4 +1,4 @@
-package Clases;
+package Clases.Adapter;
 
 import android.content.Context;
 import android.view.View;

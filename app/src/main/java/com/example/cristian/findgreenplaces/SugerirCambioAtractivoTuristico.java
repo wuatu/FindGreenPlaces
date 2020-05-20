@@ -28,13 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Clases.AtractivoTuristico;
-import Clases.Categoria;
-import Clases.Contribucion;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
-import Clases.SubirPuntos;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Categoria;
+import Clases.Models.Contribucion;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
 
 public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
     ArrayList<Categoria> categoriasNuevas=new ArrayList<>();
@@ -417,12 +417,13 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
         });
     }
     private void getImagenesAtractivoTuristico(){
-        Glide.with(SugerirCambioAtractivoTuristico.this)
-                .load(imagenes.get(0).getUrl())
-                .fitCenter()
-                .centerCrop()
-                .into(imageView);
-
+        if(imagenes.size()>0) {
+            Glide.with(SugerirCambioAtractivoTuristico.this)
+                    .load(imagenes.get(0).getUrl())
+                    .fitCenter()
+                    .centerCrop()
+                    .into(imageView);
+        }
     }
 
     @Override

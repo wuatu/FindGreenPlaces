@@ -17,7 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -79,10 +79,10 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-import Clases.AtractivoTuristico;
-import Clases.CustomAdapter;
-import Clases.IdUsuario;
-import Clases.Referencias;
+import Clases.Models.AtractivoTuristico;
+import Clases.Adapter.CustomAdapter;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
 
 
 public class MenuPrincipal extends AppCompatActivity
@@ -189,6 +189,7 @@ public class MenuPrincipal extends AppCompatActivity
         LocationManager locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             AlertNoGps();
+
         }
 
         if(!isOnlineNet()){
@@ -667,8 +668,10 @@ public class MenuPrincipal extends AppCompatActivity
                 //.setIcon(R.drawable.aporte)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(getIntent());
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)

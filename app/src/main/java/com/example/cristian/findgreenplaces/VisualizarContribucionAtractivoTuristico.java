@@ -22,12 +22,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Clases.AdapterListViewContribucionAtractivoTuristico;
-import Clases.AtractivoTuristico;
-import Clases.GetImagenes;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
+import Clases.Adapter.AdapterListViewContribucionAtractivoTuristico;
+import Clases.Models.AtractivoTuristico;
+import Clases.Utils.GetImagenes;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
 import Interfaz.OnGetDataListenerAtractivoTuristico;
 import Interfaz.OnGetDataListenerImagenes;
 

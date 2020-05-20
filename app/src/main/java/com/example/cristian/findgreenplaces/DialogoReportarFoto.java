@@ -17,12 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Clases.AtractivoTuristico;
+import Clases.Models.AtractivoTuristico;
 
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
-import Clases.Usuario;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class DialogoReportarFoto extends AppCompatActivity {
 
@@ -50,11 +50,26 @@ public class DialogoReportarFoto extends AppCompatActivity {
         TextView textViewReportar=findViewById(R.id.textViewReportar);
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
         imagen=((Imagen)getIntent().getSerializableExtra("imagen"));
+        TextView textViewEliminar=findViewById(R.id.textViewEliminar);
+        LinearLayout linearLayoutEliminar=findViewById(R.id.linearLayoutEliminar);
+        if(!imagen.getIdUsuario().equalsIgnoreCase(IdUsuario.getIdUsuario())){
+            textViewEliminar.setVisibility(View.GONE);
+            linearLayoutEliminar.setVisibility(View.GONE);
+        }
+
+        textViewEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).removeValue();
+                Toast.makeText(DialogoReportarFoto.this,"La imagen ha sido eliminada  ",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DialogoReportarFoto.this,"La foto ha sido reportada  ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogoReportarFoto.this,"La imagen ha sido reportada  ",Toast.LENGTH_SHORT).show();
                 //consulta para ver cuantos reportes tiene
                 int contadorReportes=Integer.valueOf(imagen.getContadorReportes())+1;
                 if(contadorReportes>=10){

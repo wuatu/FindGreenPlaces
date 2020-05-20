@@ -21,8 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,13 +44,13 @@ import com.vansuita.pickimage.listeners.IPickResult;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Clases.AdapterListViewComentarioAT;
-import Clases.AtractivoTuristico;
-import Clases.Comentario;
-import Clases.ComentarioMeGusta;
-import Clases.IdUsuario;
-import Clases.Imagen;
-import Clases.Referencias;
+import Clases.Adapter.AdapterListViewComentarioAT;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Models.ComentarioMeGusta;
+import Clases.Utils.IdUsuario;
+import Clases.Models.Imagen;
+import Clases.Utils.Referencias;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +61,7 @@ import Clases.Referencias;
  * create an instance of this fragment.
  */
 public class ComentariosATFrafment extends android.app.Fragment implements View.OnClickListener {
-    ImageView imageViewEnviar;
+    Button imageViewEnviar;
     EditText editTextComentar;
     ArrayList<Imagen> imagenes;
     AtractivoTuristico atractivoTuristico;
@@ -239,7 +239,10 @@ public class ComentariosATFrafment extends android.app.Fragment implements View.
         switch (item.getItemId()) {
             case R.id.camara:
                 //PickImageDialog.build(new PickSetup()).show((FragmentActivity) FotosATFragment.this.getActivity());
-                PickImageDialog.build(new PickSetup().setSystemDialog(false))
+                PickImageDialog.build(new PickSetup()
+                        .setTitle("Selecciona una opción")
+                        .setSystemDialog(true)
+                )
                         .setOnPickResult(new IPickResult() {
                             @Override
                             public void onPickResult(PickResult r) {

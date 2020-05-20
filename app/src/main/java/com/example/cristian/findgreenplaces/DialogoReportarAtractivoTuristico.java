@@ -18,11 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Clases.AtractivoTuristico;
-import Clases.Comentario;
-import Clases.IdUsuario;
-import Clases.Referencias;
-import Clases.Usuario;
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
+import Clases.Models.Usuario;
 
 public class DialogoReportarAtractivoTuristico extends AppCompatActivity {
     Comentario comentario;

@@ -1,19 +1,21 @@
-package Clases;
+package Clases.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.cristian.findgreenplaces.DialogoReportarComentario;
+import com.example.cristian.findgreenplaces.PerfilUsuario;
+import com.example.cristian.findgreenplaces.PerfilUsuarioOtro;
 import com.example.cristian.findgreenplaces.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,13 +24,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Comentario;
+import Clases.Models.ComentarioMeGusta;
+import Clases.Utils.IdUsuario;
+import Clases.Utils.Referencias;
+import Clases.Utils.SubirPuntos;
+
 public class AdapterListViewComentarioAT extends BaseAdapter implements Serializable{
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference mDatabase=database.getReference();
     String comentarioMeGusta;
     Context context;
     ArrayList<Comentario> comentarios;
-    HashMap<String,ComentarioMeGusta> comentarioMeGustas;
+    HashMap<String, ComentarioMeGusta> comentarioMeGustas;
     AtractivoTuristico atractivoTuristico;
     View view;
 
@@ -157,6 +166,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
         final ImageView imageViewLike=(ImageView)convertView.findViewById(R.id.imageViewLike);
         final ImageView imageViewDislike=(ImageView)convertView.findViewById(R.id.imageViewDislike);
         final ImageView imageViewBotonPuntos=(ImageView)convertView.findViewById(R.id.botonPuntos);
+        final LinearLayout linearLayoutNombreApellido=(LinearLayout)convertView.findViewById(R.id.linearLayoutNombreApellido);
 
         nombre.setText(comentarios.get(position).getNombreUsuario());
         apellido.setText(comentarios.get(position).getApellidoUsuario());
@@ -166,7 +176,7 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
         imageViewLike.setImageResource((comentarios.get(position).getImageViewLike()));
         imageViewDislike.setImageResource((comentarios.get(position).getImageViewDislike()));
         imageViewBotonPuntos.setTag(comentarios.get(position).getId());
-
+        linearLayoutNombreApellido.setTag(comentarios.get(position).getId());
         //Log.v("leyla", comentarios.get(position).getImageViewLike().getTag()+"TTT");
 
             if (comentarioMeGustas.get(comentarios.get(position).getId()) != null) {
@@ -290,7 +300,16 @@ public class AdapterListViewComentarioAT extends BaseAdapter implements Serializ
 
             }
         });
-
+        linearLayoutNombreApellido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Comentario comentario1=comentarios.get(position);
+                comentario1.getIdUsuario();
+                Intent intent = new Intent(context, PerfilUsuarioOtro.class);
+                intent.putExtra("comentario", (Comentario)comentario1);
+                context.startActivity(intent);
+            }
+        });
 
         imageViewBotonPuntos.setOnClickListener(new View.OnClickListener() {
             @Override
