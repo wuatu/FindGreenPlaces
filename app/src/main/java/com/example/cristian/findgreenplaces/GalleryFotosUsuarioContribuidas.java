@@ -3,10 +3,12 @@ package com.example.cristian.findgreenplaces;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -20,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +42,7 @@ import Clases.Models.SpacePhoto;
  * Created by Chike on 2/12/2017.
  */
 
-public class SpaceGalleryActivity extends AppCompatActivity {
+public class GalleryFotosUsuarioContribuidas extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase= database.getReference();
     ArrayList<Imagen> imagenes=new ArrayList<>();
@@ -88,7 +93,7 @@ public class SpaceGalleryActivity extends AppCompatActivity {
                         }
                     }
                     Log.v("taza",String.valueOf(getSpacePhotos.length));
-                    SpaceGalleryActivity.ImageGalleryAdapter adapter = new SpaceGalleryActivity.ImageGalleryAdapter(SpaceGalleryActivity.this, getSpacePhotos);
+                    GalleryFotosUsuarioContribuidas.ImageGalleryAdapter adapter = new GalleryFotosUsuarioContribuidas.ImageGalleryAdapter(GalleryFotosUsuarioContribuidas.this, getSpacePhotos);
                     recyclerView.setAdapter(adapter);
                 }
             }
@@ -148,10 +153,10 @@ public class SpaceGalleryActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ImageGalleryAdapter.MyViewHolder holder, int position) {
-            SpacePhoto spacePhoto = mSpacePhotos[position];
+            final SpacePhoto spacePhoto = mSpacePhotos[position];
             ImageView imageView = holder.mPhotoImageView;
 
-            CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(SpaceGalleryActivity.this);
+            CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(GalleryFotosUsuarioContribuidas.this);
             circularProgressDrawable.setStrokeWidth(5f);
             circularProgressDrawable.setCenterRadius(30f);
             circularProgressDrawable.start();
@@ -159,6 +164,19 @@ public class SpaceGalleryActivity extends AppCompatActivity {
             Glide.with(mContext)
                     .load(spacePhoto.getUrl())
                     .placeholder(circularProgressDrawable)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Log.v("fotoError",spacePhoto.getTitle());
+                            Log.v("fotoError",spacePhoto.getUrl());
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
                     .into(imageView);
         }
 
