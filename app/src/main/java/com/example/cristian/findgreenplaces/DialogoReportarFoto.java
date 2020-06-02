@@ -2,6 +2,10 @@ package com.example.cristian.findgreenplaces;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -50,6 +54,8 @@ public class DialogoReportarFoto extends AppCompatActivity {
         TextView textViewReportar=findViewById(R.id.textViewReportar);
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
         imagen=((Imagen)getIntent().getSerializableExtra("imagen"));
+        position=(int)getIntent().getSerializableExtra("position");
+
         TextView textViewEliminar=findViewById(R.id.textViewEliminar);
         LinearLayout linearLayoutEliminar=findViewById(R.id.linearLayoutEliminar);
         if(!imagen.getIdUsuario().equalsIgnoreCase(IdUsuario.getIdUsuario())){
@@ -60,9 +66,25 @@ public class DialogoReportarFoto extends AppCompatActivity {
         textViewEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).removeValue();
-                Toast.makeText(DialogoReportarFoto.this,"La imagen ha sido eliminada  ",Toast.LENGTH_SHORT).show();
-                finish();
+                new AlertDialog.Builder(DialogoReportarFoto.this)
+                        .setTitle("Eliminar imagen")
+                        .setMessage("Esta seguro que quiere eliminar esta imagen?")
+                        //.setIcon(R.drawable.aporte)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mDatabase.child(Referencias.IMAGENES).child(imagen.getIdAtractivo()).child(imagen.getId()).removeValue();
+                                mDatabase.child(Referencias.IMAGENESCONTRIBUIDAS).child(IdUsuario.getIdUsuario()).child(imagen.getId()).removeValue();
+                                Toast.makeText(DialogoReportarFoto.this,"La imagen ha sido eliminada",Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK, new Intent().putExtra("imagen", imagen).putExtra("position",position));
+                                finish();
+                            }
+                        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).show();
             }
         });
 

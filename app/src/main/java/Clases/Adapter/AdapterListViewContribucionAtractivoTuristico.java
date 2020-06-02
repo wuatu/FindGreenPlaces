@@ -7,9 +7,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
+import com.bumptech.glide.Glide;
 import com.example.cristian.findgreenplaces.R;
 
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import Clases.Models.AtractivoTuristico;
 
 public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter implements Serializable {
     Context context;
+    CircularProgressDrawable circularProgressDrawable;
     ArrayList<AtractivoTuristico> atractivoTuristicos;
     public AdapterListViewContribucionAtractivoTuristico(Context context, ArrayList<AtractivoTuristico> atractivoTuristicos) {
         this.context=context;
@@ -66,9 +71,25 @@ public class AdapterListViewContribucionAtractivoTuristico extends BaseAdapter i
         TextView nombre=(TextView)convertView.findViewById(R.id.textViewTitulo);
         TextView ciudad=(TextView)convertView.findViewById(R.id.textViewCiudad);
         TextView comuna=(TextView)convertView.findViewById(R.id.textViewComuna);
+        TextView descripcion=(TextView)convertView.findViewById(R.id.textViewDescripcion);
         nombre.setText(atractivoTuristicos.get(position).getNombre());
         ciudad.setText(atractivoTuristicos.get(position).getCiudad());
         comuna.setText(atractivoTuristicos.get(position).getComuna());
+        descripcion.setText(atractivoTuristicos.get(position).getDescripcion());
+        ImageView imagen=(ImageView)convertView.findViewById(R.id.imageViewMiniFotoAtractivoTuristico);
+
+        circularProgressDrawable=new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
+
+        Glide.with(context)
+                .load(atractivoTuristicos.get(position).getUrlFoto())
+                .centerCrop()
+                .placeholder(circularProgressDrawable)
+                .into(imagen);
+
+
         return convertView;
     }
     public void showPopup(View v) {

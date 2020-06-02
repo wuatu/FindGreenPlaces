@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,9 +151,14 @@ public class SpaceGalleryActivity extends AppCompatActivity {
             SpacePhoto spacePhoto = mSpacePhotos[position];
             ImageView imageView = holder.mPhotoImageView;
 
+            CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(SpaceGalleryActivity.this);
+            circularProgressDrawable.setStrokeWidth(5f);
+            circularProgressDrawable.setCenterRadius(30f);
+            circularProgressDrawable.start();
+
             Glide.with(mContext)
                     .load(spacePhoto.getUrl())
-                    .placeholder(R.drawable.ic_cloud_off_red)
+                    .placeholder(circularProgressDrawable)
                     .into(imageView);
         }
 

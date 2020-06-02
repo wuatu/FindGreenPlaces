@@ -8,8 +8,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -904,7 +904,7 @@ public class VisualizarAtractivoTuristicoFragment extends Fragment implements Vi
                 imageUrl[i]=imagenes.get(i).getUrl();
             }
             ViewPager viewPager=view.findViewById(R.id.view_pager);
-            final AdapterSliderVisualizacionDeFotos adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotos(VisualizarAtractivoTuristicoFragment.this.getActivity().getApplicationContext(),imageUrl,(VisualizarAtractivoTuristico) VisualizarAtractivoTuristicoFragment.this.getActivity());
+            final AdapterSliderVisualizacionDeFotos adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotos(VisualizarAtractivoTuristicoFragment.this.getContext(),imageUrl,(VisualizarAtractivoTuristico) VisualizarAtractivoTuristicoFragment.this.getActivity());
             viewPager.setAdapter(adapterSliderVisualizacionDeFotos);
         }
     }

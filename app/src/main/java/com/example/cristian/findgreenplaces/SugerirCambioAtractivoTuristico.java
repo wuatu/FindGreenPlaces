@@ -26,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import Clases.Models.AtractivoTuristico;
@@ -34,6 +37,7 @@ import Clases.Models.Contribucion;
 import Clases.Utils.IdUsuario;
 import Clases.Models.Imagen;
 import Clases.Utils.Referencias;
+import Clases.Utils.Storage;
 import Clases.Utils.SubirPuntos;
 
 public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
@@ -277,6 +281,12 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
                         startActivityForResult(intent,NOMBRE);
                     }
+                    if(Integer.parseInt(nivel) > 3){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetNombreAT.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivityForResult(intent,TIPS);
+                    }
 
                 }
             }
@@ -304,6 +314,12 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
                         startActivityForResult(intent,DESCRIPCION);
                     }
+                    if(Integer.parseInt(nivel) > 3){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetDescripcionAtractivoTuristico.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivityForResult(intent,TIPS);
+                    }
 
                 }
             }
@@ -326,6 +342,12 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                         }
                     }
                     if(nivel.equals("2") || nivel.equals("3")){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivityForResult(intent,TIPS);
+                    }
+                    if(Integer.parseInt(nivel) > 3){
                         Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetTipsDeViaje.class);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
@@ -359,7 +381,12 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
                         intent.putExtra("categorias", categorias);
                         startActivityForResult(intent,CATEGORIAS);
                     }
-
+                    if(Integer.parseInt(nivel) > 3){
+                        Intent intent = new Intent(SugerirCambioAtractivoTuristico.this, SetCategoriasAtractivoTuristico.class);
+                        intent.putExtra("imagenes", imagenes);
+                        intent.putExtra("atractivoTuristico", atractivoTuristico);
+                        startActivityForResult(intent,TIPS);
+                    }
                 }
             }
         });
@@ -428,6 +455,12 @@ public class SugerirCambioAtractivoTuristico extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            boolean isFilePresent = Storage.isFilePresent(this, "jsonAtractivoTuristicos.json");
+            if(isFilePresent) {
+                Storage.deleteFile(this,"jsonAtractivoTuristicos.json");
+            }
+        }
         if (requestCode == NOMBRE && resultCode == RESULT_OK) {
             String nombre = data.getStringExtra("nombre");
             Contribucion contribucion = (Contribucion) data.getSerializableExtra("contribucion");

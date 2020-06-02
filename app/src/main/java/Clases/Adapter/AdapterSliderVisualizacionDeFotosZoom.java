@@ -42,12 +42,11 @@ import java.util.ArrayList;
 
 public class AdapterSliderVisualizacionDeFotosZoom extends PagerAdapter {
     private Context context;
-    private String[] imageUrls;
-    VisualizarAtractivoTuristico activity;
+    private ArrayList<String> imageUrls;
     private int positionImage=0;
     ImageView imageViewImage=null;
 
-    public AdapterSliderVisualizacionDeFotosZoom(Context context, String[] imageUrls) {
+    public AdapterSliderVisualizacionDeFotosZoom(Context context, ArrayList<String> imageUrls) {
         this.context = context;
         this.imageUrls = imageUrls;
     }
@@ -63,7 +62,7 @@ public class AdapterSliderVisualizacionDeFotosZoom extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return imageUrls.length;
+        return imageUrls.size();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class AdapterSliderVisualizacionDeFotosZoom extends PagerAdapter {
         imageViewImage = new ImageView(context);
         imageViewImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         Glide.with(context)
-                .load(imageUrls[position])
+                .load(imageUrls.get(position))
                 .centerCrop()
                 .into(imageViewImage);
         container.addView(imageViewImage);

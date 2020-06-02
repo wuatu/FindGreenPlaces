@@ -65,20 +65,23 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link FotosATFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FotosATFragment extends android.app.Fragment {
+public class FotosATFragment extends Fragment{
     CircularProgressDrawable circularProgressDrawable;
     private static final int MY_PERMISSIONS_REQUEST_CAMARA = 1;
     ArrayList<Imagen> imagenes;
     AtractivoTuristico atractivoTuristico;
     private ListView lista;
-    private Adapter adapter;
+    private FotosATFragment.ImageGalleryAdapter adapter;
     ArrayList<Comentario> model;
     View view;
-    DatabaseReference mDatabase;
-    private final int FOTO=0;
-    private static final int IMAGENES = 1;
     FirebaseDatabase database;
+    DatabaseReference mDatabase;
+    private final int FOTO=2;
+    private static final int IMAGENES = 10;
+    ArrayList<MeGustaImagen> meGustaImagens;
+
     public RecyclerView recyclerView;
+    ArrayList<String> getSpacePhotos;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -162,17 +165,18 @@ public class FotosATFragment extends android.app.Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_images);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        SpacePhoto[] getSpacePhotos=new SpacePhoto[imagenes.size()];
+        getSpacePhotos=new ArrayList<>();
+
 
         int i=0;
         for (Imagen imagen:imagenes){
             if(imagen.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
                 SpacePhoto a = new SpacePhoto(imagen.getUrl(), imagen.getId().toString());
-                getSpacePhotos[i] = a;
+                getSpacePhotos.add(a.getUrl());
                 i++;
             }
         }
-        FotosATFragment.ImageGalleryAdapter adapter = new FotosATFragment.ImageGalleryAdapter(view.getContext(), getSpacePhotos);
+        adapter = new FotosATFragment.ImageGalleryAdapter(FotosATFragment.this.getContext(), getSpacePhotos);
         recyclerView.setAdapter(adapter);
     }
 
@@ -237,10 +241,13 @@ public class FotosATFragment extends android.app.Fragment {
 
     public class ImageGalleryAdapter extends RecyclerView.Adapter<FotosATFragment.ImageGalleryAdapter.MyViewHolder>  {
 
+        private ArrayList<String> mSpacePhotos;
+        private Context mContext;
+
         @Override
         public FotosATFragment.ImageGalleryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            Context context = parent.getContext();
+            Context context = mContext;
             LayoutInflater inflater = LayoutInflater.from(context);
 
             // Inflate the layout
@@ -253,18 +260,18 @@ public class FotosATFragment extends android.app.Fragment {
 
         @Override
         public void onBindViewHolder(FotosATFragment.ImageGalleryAdapter.MyViewHolder holder, int position) {
-            SpacePhoto spacePhoto = mSpacePhotos[position];
+            String spacePhoto = mSpacePhotos.get(position);
             ImageView imageView = holder.mPhotoImageView;
 
             Glide.with(mContext)
-                    .load(spacePhoto.getUrl())
+                    .load(spacePhoto)
                     .placeholder(circularProgressDrawable)
                     .into(imageView);
         }
 
         @Override
         public int getItemCount() {
-            return (mSpacePhotos.length);
+            return (mSpacePhotos.size());
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -283,7 +290,7 @@ public class FotosATFragment extends android.app.Fragment {
                 mDatabase.child(Referencias.FOTOMEGUSTA).child(IdUsuario.getIdUsuario()).child(atractivoTuristico.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ArrayList<MeGustaImagen> meGustaImagens=new ArrayList<>();
+                        meGustaImagens=new ArrayList<>();
                         for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                             if (dataSnapshot1.exists()) {
                                     Log.v("llegue",dataSnapshot1.getKey());
@@ -293,12 +300,13 @@ public class FotosATFragment extends android.app.Fragment {
                             }
                         }
                         int position = getAdapterPosition();
-                        Intent intent = new Intent(mContext, VisualizacionDeImagen.class);
+                        Intent intent = new Intent(FotosATFragment.this.getContext(), VisualizacionDeImagen.class);
                         intent.putExtra("atractivoTuristico", atractivoTuristico);
                         intent.putExtra("imagenes", imagenes);
                         intent.putExtra("meGustaImagens", meGustaImagens);
                         intent.putExtra("position", position);
                         startActivityForResult(intent,IMAGENES);
+                        Log.v("sizestringiagenes",String.valueOf(imagenes.size()));
                     }
 
                     @Override
@@ -306,23 +314,12 @@ public class FotosATFragment extends android.app.Fragment {
 
                     }
                 });
-                /*int position = getAdapterPosition();
-                if(position != RecyclerView.NO_POSITION) {
-                    SpacePhoto spacePhoto = mSpacePhotos[position];
-
-                    Intent intent = new Intent(mContext, SpacePhotoActivity.class);
-                    intent.putExtra(SpacePhotoActivity.EXTRA_SPACE_PHOTO, spacePhoto);
-                    intent.putExtra("atractivoTuristico", atractivoTuristico);
-                    intent.putExtra("imagen", imagenes.get(position));
-                    startActivity(intent);
-                }*/
             }
         }
 
-        private SpacePhoto[] mSpacePhotos;
-        private Context mContext;
 
-        public ImageGalleryAdapter(Context context, SpacePhoto[] spacePhotos) {
+
+        public ImageGalleryAdapter(Context context, ArrayList<String> spacePhotos) {
             mContext = context;
             mSpacePhotos = spacePhotos;
         }
@@ -374,8 +371,7 @@ public class FotosATFragment extends android.app.Fragment {
             iniciaGaleria();
         }
         if (requestCode == IMAGENES && resultCode == RESULT_OK) {
-            ArrayList<Imagen> imagens=(ArrayList<Imagen>) data.getSerializableExtra("imagenes");
-            imagenes=imagens;
+
         }
 
     }

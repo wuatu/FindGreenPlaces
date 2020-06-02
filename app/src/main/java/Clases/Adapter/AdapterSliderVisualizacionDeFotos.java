@@ -1,7 +1,6 @@
 package Clases.Adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,16 +9,22 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.example.cristian.findgreenplaces.R;
 import com.example.cristian.findgreenplaces.VisualizacionDeImagen;
 import com.example.cristian.findgreenplaces.VisualizarAtractivoTuristico;
+
+import Clases.Models.AtractivoTuristico;
+import Clases.Models.Imagen;
+import Clases.Models.MeGustaImagen;
 import Fragment.FotosATFragment;
 
 import java.util.ArrayList;
@@ -30,6 +35,9 @@ public class AdapterSliderVisualizacionDeFotos extends PagerAdapter {
     VisualizarAtractivoTuristico activity;
     private int positionImage=0;
     ImageView imageViewImage=null;
+    ArrayList<Imagen> imagenes;
+    AtractivoTuristico atractivoTuristico;
+    MeGustaImagen meGustaImagens;
 
     public AdapterSliderVisualizacionDeFotos(Context context, String[] imageUrls) {
         this.context = context;
@@ -40,6 +48,15 @@ public class AdapterSliderVisualizacionDeFotos extends PagerAdapter {
         this.context = context;
         this.imageUrls = imageUrls;
         this.activity=activity;
+    }
+
+    public AdapterSliderVisualizacionDeFotos(Context context, String[] imageUrls, VisualizarAtractivoTuristico activity, AtractivoTuristico atractivoTuristico, ArrayList<Imagen> imagens, MeGustaImagen meGustaImagen) {
+        this.context = context;
+        this.imageUrls = imageUrls;
+        this.activity=activity;
+        this.atractivoTuristico=atractivoTuristico;
+        this.imagenes=imagens;
+        this.meGustaImagens=meGustaImagen;
     }
 
     public ImageView getImageViewImage() {
@@ -73,23 +90,25 @@ public class AdapterSliderVisualizacionDeFotos extends PagerAdapter {
         imageViewImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //activity.creaFragmentFotos();
-                activity.navigation.setSelectedItemId(R.id.navigation_notifications);
-                FotosATFragment fotosATFragment=(FotosATFragment)activity.fragmentFotosAT;
-                /*fotosATFragment.onViewCreated();
-                fotosATFragment.iniciaGaleria();
-                if(fotosATFragment==null){
-                    Log.v("soynull","soynull");
-                } else{
-                    Log.v("soynull","Nosoynull");
-                }*/
+
+
+                //activity.navigation.setSelectedItemId(R.id.navigation_notifications);
+                //final FotosATFragment fragment=(FotosATFragment) activity.creaFragmentFotos();
+
+
+
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((FotosATFragment) activity.fragmentFotosAT).recyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
+                       // fragment.recyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
+                  //      FotosATFragment fotosATFragment=(FotosATFragment) activity.fragmentFotosAT;
+
+                //((FotosATFragment) activity.fragmentFotosAT).recyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
 
                     }
                 },900);
+
             }
 
         });

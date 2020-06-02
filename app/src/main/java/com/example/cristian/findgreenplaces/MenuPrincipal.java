@@ -145,17 +145,19 @@ public class MenuPrincipal extends AppCompatActivity
         setContentView(R.layout.activity_buscar_maps);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE);
-
         }
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
-
             }
         });
+        /*
+        banner de publicidad
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        */
+
 
         imageViewIr=findViewById(R.id.imageViewIr);
         atractivosTuristicosTemp= new ArrayList<>();
@@ -189,11 +191,9 @@ public class MenuPrincipal extends AppCompatActivity
         LocationManager locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             AlertNoGps();
-
         }
 
         if(!isOnlineNet()){
-
             muestraMensajeSinConexion();
             quitaMensajes2();
         }
@@ -1320,7 +1320,7 @@ public class MenuPrincipal extends AppCompatActivity
             Intent intent=new Intent(MenuPrincipal.this,VisualizarContribucionAtractivoTuristico.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            Intent intent=new Intent(MenuPrincipal.this,SpaceGalleryActivity.class);
+            Intent intent=new Intent(MenuPrincipal.this, GalleryFotosUsuarioContribuidas.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {

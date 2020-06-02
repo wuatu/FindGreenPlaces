@@ -351,7 +351,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>,
     }
 
     private void ejecutarMainActivity() {
-        Intent intent=new Intent(Login.this,MenuPrincipal.class);
+        Intent intent=new Intent(Login.this,MainActivity.class);
         startActivity(intent);
         finish();
     }

@@ -113,9 +113,10 @@ public class Buscar_Maps extends AppCompatActivity
 
             }
         });
-        mAdView = findViewById(R.id.adView);
+        //banner de publicidad
+/*        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
 
         busqueda= ((String) getIntent().getStringExtra("busqueda"));
         linearLayoutFocus = findViewById(R.id.layoutfocus);
@@ -640,7 +641,7 @@ public class Buscar_Maps extends AppCompatActivity
             Intent intent=new Intent(Buscar_Maps.this,VisualizarContribucionAtractivoTuristico.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            Intent intent=new Intent(Buscar_Maps.this,SpaceGalleryActivity.class);
+            Intent intent=new Intent(Buscar_Maps.this, GalleryFotosUsuarioContribuidas.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {

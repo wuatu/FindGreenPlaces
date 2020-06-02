@@ -43,19 +43,7 @@ public class OlvidoContrasena extends AppCompatActivity {
         buttonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(OlvidoContrasena.this)
-                        .setTitle("Información")
-                        .setMessage("Seguro Quieres Cancelar?")
-                        //.setIcon(R.drawable.aporte)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(OlvidoContrasena.this, MenuPrincipal.class);
-                                startActivity(intent);
-
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                finish();
             }
         });
 

@@ -1,11 +1,12 @@
 package com.example.cristian.findgreenplaces;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 
 import android.os.Handler;
 import android.util.Log;
@@ -36,8 +37,8 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
     Fragment fragmentVisualizaAT;
     public Fragment fragmentFotosAT;
     FragmentTransaction transaction;
-    AtractivoTuristico atractivoTuristico;
-    ArrayList<Imagen> imagenes;
+    public AtractivoTuristico atractivoTuristico;
+    public ArrayList<Imagen> imagenes;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -87,7 +88,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         args.putSerializable("imagenes",imagenes);
 
         fragmentVisualizaAT.setArguments(args);
-        transaction=getFragmentManager().beginTransaction();
+        transaction= (FragmentTransaction) getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentVisualizaAT); // give your fragment container id in first parameter
         transaction.commit();
@@ -103,7 +104,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
 
 
     public void creaFragmentViualizacionAT(){
-        transaction=getFragmentManager().beginTransaction();
+       transaction=getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentVisualizaAT); // give your fragment container id in first parameter
         //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();
@@ -115,7 +116,7 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         args.putSerializable("atractivoTuristico", atractivoTuristico);
         args.putSerializable("imagenes",imagenes);
 
-        transaction=getFragmentManager().beginTransaction();
+        transaction=getSupportFragmentManager().beginTransaction();
         if(fragmentComentariosAT==null){
             Log.v("fragment","fragment null");
         }
@@ -127,17 +128,18 @@ public class VisualizarAtractivoTuristico extends AppCompatActivity{
         transaction.commit();
         //finish();
     }
-    public void creaFragmentFotos(){
+    public Fragment creaFragmentFotos(){
         Bundle args = new Bundle();
         // envio el atractivo turistico serialzable al fragment
         args.putSerializable("atractivoTuristico", atractivoTuristico);
         args.putSerializable("imagenes",imagenes);
 
-        transaction=getFragmentManager().beginTransaction();
+        transaction=getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.linearLayoutFragmentVisualizarAtractivoTuristico,fragmentFotosAT); // give your fragment container id in first parameter
         //transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();
         //finish();
+        return  fragmentFotosAT;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

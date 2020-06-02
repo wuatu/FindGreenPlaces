@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PerfilUsuarioOtro"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" />
+        <activity android:name=".PerfilUsuarioOtro" />
         <activity android:name=".VisualizacionDeImagen" />
         <activity android:name=".Informacion" />
         <activity android:name=".AcercaDe" />
@@ -39,6 +42,10 @@
             android:name=".DialogoVisualizarAtractivoTuristico"
             android:label="@string/title_activity_visualizar_atractivo_turistico"
             android:theme="@style/AppTheme.CustomTheme" />
+        <activity
+            android:name=".DialogoBusquedaPorCategorias"
+            android:theme="@style/AppTheme.CustomTheme2">
+        </activity>
         <activity
             android:name=".DialogoReportarComentario"
             android:theme="@style/AppTheme.CustomTheme2" />
@@ -95,7 +102,7 @@
         <activity android:name=".FotoPerfil" />
         <activity android:name=".PerfilUsuario" />
         <activity android:name=".Login" />
-        <activity android:name=".SpaceGalleryActivity" />
+        <activity android:name=".GalleryFotosUsuarioContribuidas" />
         <activity android:name=".SpacePhotoActivity" />
         <activity android:name=".SetTipsDeViaje" />
         <activity android:name=".SetDescripcionAtractivoTuristico" />
@@ -138,9 +145,9 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

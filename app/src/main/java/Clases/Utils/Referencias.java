@@ -44,6 +44,18 @@ public class Referencias implements Serializable {
     public static final String CONOCESESTELUGAR="conocesEsteLugar";
     public static final String VISIBLE="visible";
     public static final String INVISIBLE="invisible";
+    public static final String IMAGENESCONTRIBUIDAS = "imagenesContribuidas";
+    public static final String  ATRACTIVOTURISTICOTAG= "Atractivo turístico";
+    public static final String  RESTAURANT= "Restaurant";
+    public static final String  ALOJAMIENTO= "Alojamiento";
+    public static final String  BALNEARIO= "Balneario";
+    public static final String  PANORAMA= "Panorama";
+    public static final String  DEPORTE= "Deporte";
+        public static final String  MUSEO= "Museo";
+    public static final String  MONUMENTO= "Monumento";
+    public static final String  VERTODO= "Ver todo";
+
+
 
 
     public static final String NOMBRE = "nombre";

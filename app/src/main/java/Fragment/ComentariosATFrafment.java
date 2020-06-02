@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,7 +61,7 @@ import Clases.Utils.Referencias;
  * Use the {@link ComentariosATFrafment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ComentariosATFrafment extends android.app.Fragment implements View.OnClickListener {
+public class ComentariosATFrafment extends Fragment implements View.OnClickListener {
     Button imageViewEnviar;
     EditText editTextComentar;
     ArrayList<Imagen> imagenes;

@@ -1,9 +1,12 @@
 package Clases.Models;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
     String id;
+    @Expose
     String nombre;
     String apellido;
     String email;
@@ -18,6 +21,21 @@ public class Usuario implements Serializable {
     String nombreNivel;
 
     public Usuario(String id,String nombre, String apellido, String email, int dia, int mes, int año, String password,String nivel, String puntos, String contribuciones, String nombreNivel) {
+        this.id=id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.dia = dia;
+        this.mes = mes;
+        this.año = año;
+        this.password = password;
+        this.nivel=nivel;
+        this.puntos=puntos;
+        this.contribuciones=contribuciones;
+        this.nombreNivel=nombreNivel;
+    }
+
+    public Usuario(String id,String nombre, String apellido, String email, String password,String nivel, String puntos, String contribuciones, String nombreNivel) {
         this.id=id;
         this.nombre = nombre;
         this.apellido = apellido;

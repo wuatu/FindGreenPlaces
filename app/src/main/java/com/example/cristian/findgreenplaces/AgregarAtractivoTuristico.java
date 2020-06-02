@@ -20,6 +20,9 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.cunoraz.tagview.Utils;
+import com.example.cristian.findgreenplaces.ui.notifications.NotificationsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -85,7 +88,9 @@ import java.util.Locale;
 import Clases.Models.AtractivoTuristico;
 import Clases.Models.Categoria;
 import Clases.Models.Contribucion;
+import Clases.Utils.HideKeyboard;
 import Clases.Utils.IdUsuario;
+import Clases.Utils.LimpiarAcentos;
 import Clases.Utils.Referencias;
 import Clases.Utils.SubirPuntos;
 import Clases.Models.Usuario;
@@ -98,9 +103,11 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     public ArrayList<AtractivoTuristico> atractivosTuristicosTemp;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
+    String categoriasTag[];
     String[] regions;
     Address currentAddres;
     DatabaseReference mDatabase;
+    private static int BUSQUEDA=0;
     FirebaseDatabase database;
     StorageReference mStorageReference;
     Button addCategoria;
@@ -109,6 +116,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     LinearLayout contenedorCategoria;
     Marker currentMarker;
     ArrayList<AtractivoTuristico> atractivoTuristicos;
+    boolean categoriaCreated=false;
     //LinearLayout contenedorTresCategorias;
     int i=0;
     int contadorCategorias=0;
@@ -169,6 +177,17 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
             AlertNoGps();
 
         }
+
+        categoriasTag=new String[]{Referencias.ATRACTIVOTURISTICOTAG,
+                Referencias.ATRACTIVOTURISTICOTAG,
+                Referencias.RESTAURANT,
+                Referencias.ALOJAMIENTO,
+                Referencias.BALNEARIO,
+                Referencias.PANORAMA,
+                Referencias.DEPORTE,
+                Referencias.MUSEO,
+                Referencias.MONUMENTO,
+                Referencias.VERTODO};
 
         urlImagen="";
         regions = getResources().getStringArray(R.array.region_array);
@@ -290,12 +309,13 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                     keys.add(key);
                 }
                 // Arreglo con las regiones
+                /*
                 String[] regions=new String[keys.size()];
                 int i=0;
                 for(String string : keys){
                     regions[i]=string;
                     i++;
-                }
+                }*/
                 // Le pasamos las regiones al adaptador
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(AgregarAtractivoTuristico.this, android.R.layout.simple_list_item_1, regions);
                 // finalmente le asignamos el adaptador a nuestro elemento
@@ -319,6 +339,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         contenedorAddAT=(LinearLayout) findViewById(R.id.contenedorAddAtractivoT);
         contenedorCategoria=(LinearLayout) findViewById(R.id.contenedorCategorias);
         addCategoria= (Button) findViewById(R.id.buttonaddCategoria);
+        addCategoria.setText("Seleccionar");
 
 
     }
@@ -369,6 +390,27 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BUSQUEDA && resultCode == RESULT_OK) {
+            String textoABuscar = data.getStringExtra("busqueda");
+            if(textoABuscar!=null && !textoABuscar.equalsIgnoreCase("")) {
+                tituloCategoria.setVisibility(View.VISIBLE);
+                String sX = "   x";
+                String stringLimpio = MenuPrincipal.limpiarAcentos(textoABuscar);
+                String sCategoria = stringLimpio;
+                Categoria categoria = new Categoria(stringLimpio);
+                categorias.add(categoria);
+                sCategoria = sCategoria.concat(sX);
+                Tag tag = new Tag(sCategoria);
+                tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                tagGroup.addTag(tag);
+                contadorCategorias++;
+                textViewCategoria.setText("");
+                if (categorias.size() > 0) {
+                    categoriaCreated = true;
+                    addCategoria.setText("AÑADIR");
+                }
+            }
+        }
         if(requestCode==GALLERY_INTENT && resultCode==RESULT_OK){
             urlImagen=data.getStringExtra("imagen");
 
@@ -418,28 +460,42 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         addCategoria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HideKeyboard.hideKeyboard(AgregarAtractivoTuristico.this);
                 //textViewCategoria= (AutoCompleteTextView) findViewById(R.id.autocomplete_region);
-
-                if(!textViewCategoria.getText().toString().isEmpty())
-                {
-                    tituloCategoria.setVisibility(View.VISIBLE);
-                    String sX="   x";
-                    String stringLimpio=MenuPrincipal.limpiarAcentos(textViewCategoria.getText().toString());
-                    String sCategoria=stringLimpio;
-                    Categoria categoria=new Categoria(stringLimpio);
-                    categorias.add(categoria);
-                    sCategoria=sCategoria.concat(sX);
-                    Tag tag=new Tag(sCategoria);
-                    tag.layoutColor = getResources().getColor(R.color.colorPrimary);
-                    tagGroup.addTag(tag);
-                    contadorCategorias++;
-                    textViewCategoria.setText("");
-
+                categoriaCreated = false;
+                for(Categoria categoria: categorias) {
+                    for (int i=0; i < categoriasTag.length; i++) {
+                        String limpiaAcentos=LimpiarAcentos.limpiarAcentos(categoriasTag[i]);
+                        if (categoria.getEtiqueta().equalsIgnoreCase(limpiaAcentos)) {
+                            categoriaCreated = true;
+                            break;
+                        }
+                    }
                 }
-                else {
-                    Snackbar.make(v, "Debe Agregar al Menos una Categoria", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+
+                if (!categoriaCreated) {
+                    Intent intent = new Intent(AgregarAtractivoTuristico.this, DialogoBusquedaPorCategorias.class);
+                    startActivityForResult(intent, BUSQUEDA);
                 }
+                if (categorias.size() > 0){
+                    if (!textViewCategoria.getText().toString().isEmpty()) {
+                        tituloCategoria.setVisibility(View.VISIBLE);
+                        String sX = "   x";
+                        String stringLimpio = MenuPrincipal.limpiarAcentos(textViewCategoria.getText().toString());
+                        String sCategoria = stringLimpio;
+                        Categoria categoria = new Categoria(stringLimpio);
+                        categorias.add(categoria);
+                        sCategoria = sCategoria.concat(sX);
+                        Tag tag = new Tag(sCategoria);
+                        tag.layoutColor = getResources().getColor(R.color.colorPrimary);
+                        tagGroup.addTag(tag);
+                        contadorCategorias++;
+                        textViewCategoria.setText("");
+                    } else {
+                        Snackbar.make(v, "Debe Agregar al Menos una Categoria", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+            }
             }
         });
         //set click listener
@@ -449,6 +505,9 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 tagGroup.remove(i);
                 contadorCategorias--;
                 categorias.remove(i);
+                if(categorias.size()==0){
+                    addCategoria.setText("Seleccionar");
+                }
             }
         });
         //set delete listener
@@ -688,9 +747,7 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                             //.setIcon(R.drawable.aporte)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(AgregarAtractivoTuristico.this, MenuPrincipal.class);
-                                    startActivity(intent);
-
+                                    finish();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null)
@@ -709,27 +766,29 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
         try {
             addresses=geocoder.getFromLocation(lat,lng,1);
             //addres=addresses.get(0).getAddressLine(0);
-            ciudad=addresses.get(0).getLocality();//curico
-            //city=addresses.get(0).getCountryName();//Chile
-            region=addresses.get(0).getAdminArea();//Region
-            if(addresses.get(0).getThoroughfare()!=null ){
-                if((!addresses.get(0).getThoroughfare().equalsIgnoreCase("null") && !addresses.get(0).getThoroughfare().equalsIgnoreCase("Unnamed Road"))){
-                    direccion=addresses.get(0).getThoroughfare()+" ";
+            if(addresses!=null && addresses.size()>0) {
+                ciudad = addresses.get(0).getLocality();//curico
+                //city=addresses.get(0).getCountryName();//Chile
+                region = addresses.get(0).getAdminArea();//Region
+                if (addresses.get(0).getThoroughfare() != null) {
+                    if ((!addresses.get(0).getThoroughfare().equalsIgnoreCase("null") && !addresses.get(0).getThoroughfare().equalsIgnoreCase("Unnamed Road"))) {
+                        direccion = addresses.get(0).getThoroughfare() + " ";
+                    }
                 }
-            }
-            if(addresses.get(0).getFeatureName()!=null){
-                if((!addresses.get(0).getFeatureName().equalsIgnoreCase("null") && !addresses.get(0).getFeatureName().equalsIgnoreCase("Unnamed Road"))) {
-                    direccion= direccion+addresses.get(0).getFeatureName();
+                if (addresses.get(0).getFeatureName() != null) {
+                    if ((!addresses.get(0).getFeatureName().equalsIgnoreCase("null") && !addresses.get(0).getFeatureName().equalsIgnoreCase("Unnamed Road"))) {
+                        direccion = direccion + addresses.get(0).getFeatureName();
+                    }
                 }
+                if (direccion == "") {
+                    direccion = "Sin dirección";
+                }
+                textViewCiudad.setText(ciudad);
+                textViewComuna.setText(region);
+                textViewDireccion.setText(direccion);
+                this.direccion.setText(direccion);
+                this.latlon.setText(lat + ", " + lng);
             }
-             if(direccion=="") {
-                direccion ="Sin dirección";
-            }
-            textViewCiudad.setText(ciudad);
-            textViewComuna.setText(region);
-            textViewDireccion.setText(direccion);
-            this.direccion.setText(direccion);
-            this.latlon.setText(lat+", "+lng);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -1056,5 +1115,6 @@ public class AgregarAtractivoTuristico extends AppCompatActivity implements Navi
                 .setNegativeButton(android.R.string.no, null)
                 .show();
     }
+
 
 }

@@ -7,11 +7,14 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.ResultReceiver;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 
 import Clases.Adapter.AdapterSliderVisualizacionDeFotosZoom;
 import Clases.Models.AtractivoTuristico;
+import Clases.Models.Contribucion;
 import Clases.Utils.IdUsuario;
 import Clases.Models.Imagen;
 import Clases.Models.MeGustaImagen;
@@ -29,7 +33,7 @@ public class VisualizacionDeImagen extends AppCompatActivity {
     DatabaseReference mDatabase;
     FirebaseDatabase database;
     AtractivoTuristico atractivoTuristico;
-    Imagen imagen;
+
     TextView textViewNombre;
     TextView textViewFecha;
     TextView textViewNLike;
@@ -39,10 +43,12 @@ public class VisualizacionDeImagen extends AppCompatActivity {
     ImageView imageViewReportar;
     ArrayList<Imagen> imagenes;
     ArrayList<MeGustaImagen> meGustaImagens;
-    String imageUrl[];
+    ArrayList<String> imageUrl;
     String imageLike[];
     String urlMayor;
     int mayor=0;
+    private static final int IMAGENES=0;
+    AdapterSliderVisualizacionDeFotosZoom adapterSliderVisualizacionDeFotos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +63,9 @@ public class VisualizacionDeImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         database= FirebaseDatabase.getInstance();
         mDatabase=database.getReference();
+        int position=(getIntent().getIntExtra("position",0));
         imagenes=((ArrayList<Imagen>)getIntent().getSerializableExtra("imagenes"));
+        textViewVisualizaciones=findViewById(R.id.textViewVisualizacion);
         meGustaImagens=((ArrayList<MeGustaImagen>)getIntent().getSerializableExtra("meGustaImagens"));
 
         atractivoTuristico=((AtractivoTuristico)getIntent().getSerializableExtra("atractivoTuristico"));
@@ -71,10 +79,12 @@ public class VisualizacionDeImagen extends AppCompatActivity {
 
         }
 
-        int position=(getIntent().getIntExtra("position",0));
+
+        Log.v("posicion",String.valueOf(position));
 
         //ver las imagenes que tienen like
-        imageUrl =new String[imagenes.size()];
+        //imageUrl =new String[imagenes.size()];
+        imageUrl =new ArrayList<>();
         imageLike =new String[imagenes.size()];
         for(int i=0;i<imagenes.size();i++){
             for(MeGustaImagen meGustaImagen: meGustaImagens){
@@ -84,19 +94,19 @@ public class VisualizacionDeImagen extends AppCompatActivity {
                     break;
                 }
             }
-            imageUrl[i]=imagenes.get(i).getUrl();
+            imageUrl.add(imagenes.get(i).getUrl());
         }
 
         imageViewReportar=findViewById(R.id.imageViewReportar);
         textViewNombre=findViewById(R.id.textViewNombre);
         textViewFecha=findViewById(R.id.textViewFecha);
         textViewNLike=findViewById(R.id.textViewNLike);
-        textViewVisualizaciones=findViewById(R.id.textViewVisualizacion);
+
         imageViewLike=findViewById(R.id.imageViewLike);
         linearLayoutLike=findViewById(R.id.linearLayoutLike);
-
         ViewPager viewPager=findViewById(R.id.view_pager);
-        AdapterSliderVisualizacionDeFotosZoom adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotosZoom(this,imageUrl);
+
+        adapterSliderVisualizacionDeFotos=new AdapterSliderVisualizacionDeFotosZoom(this,imageUrl);
         viewPager.setAdapter(adapterSliderVisualizacionDeFotos);
         pintaImagenes(position);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -118,7 +128,34 @@ public class VisualizacionDeImagen extends AppCompatActivity {
         viewPager.setCurrentItem(position);
     }
 
+
+    public void contadorDeVisualizaciones(final int position){
+        //contador de visualizaciones
+        DatabaseReference databaseReference=mDatabase.child(Referencias.IMAGENES)
+                .child(imagenes.get(position)
+                .getIdAtractivo())
+                .child(imagenes.get(position).getId());
+        String key=databaseReference.getKey();
+        Imagen imagen=new Imagen(key,
+                imagenes.get(position).getUrl(),
+                imagenes.get(position).getFecha(),
+                imagenes.get(position).getIdAtractivo(),
+                imagenes.get(position).getIdUsuario(),
+                imagenes.get(position).getNombreUsuario(),
+                imagenes.get(position).getContadorLike(),
+                imagenes.get(position).getContadorVisualizaciones(),
+                imagenes.get(position).getContadorReportes(),
+                imagenes.get(position).getVisible());
+        int contadorVisualizaciones=Integer.valueOf(imagen.getContadorVisualizaciones())+1;
+        imagen.setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
+        //comento la linea 152 y funciona perfe ahi se cae
+        databaseReference.setValue(imagen);
+        textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
+    }
+
     public void pintaImagenes(final int position){
+        contadorDeVisualizaciones(position);
+        //textViewVisualizaciones.setText(imagenes.get(position).getContadorVisualizaciones());
         textViewNombre.setText(imagenes.get(position).getNombreUsuario() );
         textViewFecha.setText(imagenes.get(position).getFecha());
         textViewNLike.setText(imagenes.get(position).getContadorLike());
@@ -129,15 +166,6 @@ public class VisualizacionDeImagen extends AppCompatActivity {
             imageViewLike.setImageResource(R.drawable.likeoff);
             imageViewLike.setTag(R.drawable.likeoff);
         }
-
-        //contador de visualizaciones
-        textViewVisualizaciones.setText(imagenes.get(position).getContadorVisualizaciones());
-        int contadorVisualizaciones=Integer.valueOf(imagenes.get(position).getContadorVisualizaciones())+1;
-        textViewVisualizaciones.setText(String.valueOf(contadorVisualizaciones));
-        imagenes.get(position).setContadorVisualizaciones(String.valueOf(contadorVisualizaciones));
-        mDatabase.child(Referencias.IMAGENES).
-                child(imagenes.get(position).getIdAtractivo()).
-                child(imagenes.get(position).getId()).setValue(imagenes.get(position));
 
         linearLayoutLike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,9 +190,6 @@ public class VisualizacionDeImagen extends AppCompatActivity {
                     }
                     textViewNLike.setText(String.valueOf(contadorLike));
                     imagenes.get(position).setContadorLike(String.valueOf(contadorLike));
-                    mDatabase.child(Referencias.IMAGENES).
-                            child(imagenes.get(position).getIdAtractivo()).
-                            child(imagenes.get(position).getId()).setValue(imagenes.get(position));
                     setResult(RESULT_OK, new Intent().putExtra("imagenes", imagenes));
                     SubirPuntos.aumentaPuntosOtrosUsuarios(VisualizacionDeImagen.this,imagenes.get(position).getIdUsuario(),1);
                 }
@@ -178,7 +203,6 @@ public class VisualizacionDeImagen extends AppCompatActivity {
                         contadorLike=contadorLike-1;
                         textViewNLike.setText(String.valueOf(contadorLike));
                         imagenes.get(position).setContadorLike(String.valueOf(contadorLike));
-                        mDatabase.child(Referencias.IMAGENES).child(imagenes.get(position).getIdAtractivo()).child(imagenes.get(position).getId()).setValue(imagenes.get(position));
                         setResult(RESULT_OK, new Intent().putExtra("imagenes", imagenes));
                     }
                     SubirPuntos.disminuyePuntosOtrosUsuarios(VisualizacionDeImagen.this,imagenes.get(position).getIdUsuario(),1);
@@ -192,7 +216,8 @@ public class VisualizacionDeImagen extends AppCompatActivity {
                     Intent intent = new Intent(VisualizacionDeImagen.this, DialogoReportarFoto.class);
                     intent.putExtra("atractivoTuristico", atractivoTuristico);
                     intent.putExtra("imagen", imagenes.get(position));
-                    startActivity(intent);
+                    intent.putExtra("position",position);
+                    startActivityForResult(intent,IMAGENES);
                 }
 
             }
@@ -201,8 +226,16 @@ public class VisualizacionDeImagen extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        setResult(RESULT_OK,
+                new Intent().putExtra("imagenes", imagenes).
+                        putExtra("meGustaImagens",meGustaImagens));
         finish();
         onBackPressed();
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 }

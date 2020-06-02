@@ -3,6 +3,10 @@ package com.example.cristian.findgreenplaces;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -47,6 +51,36 @@ public class DialogoReportarAtractivoTuristico extends AppCompatActivity {
         TextView textViewReportar=findViewById(R.id.textViewReportar);
         atractivoTuristico= (AtractivoTuristico) getIntent().getSerializableExtra("atractivoTuristico");
 
+        TextView textViewEliminar=findViewById(R.id.textViewEliminar);
+        LinearLayout linearLayoutEliminar=findViewById(R.id.linearLayoutEliminar);
+        if(!atractivoTuristico.getIdUsuario().equalsIgnoreCase(IdUsuario.getIdUsuario())){
+            textViewEliminar.setVisibility(View.GONE);
+            linearLayoutEliminar.setVisibility(View.GONE);
+        }
+
+        textViewEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(DialogoReportarAtractivoTuristico.this)
+                        .setTitle("Eliminar Atractivo Turístico")
+                        .setMessage("Esta seguro que quiere eliminar un atractivo turístico?")
+                        //.setIcon(R.drawable.aporte)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico.getId()).removeValue();
+                                Toast.makeText(DialogoReportarAtractivoTuristico.this,"El atractivo turistico ha sido eliminado",Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .show();
+            }
+        });
 
         textViewReportar.setOnClickListener(new View.OnClickListener() {
             @Override

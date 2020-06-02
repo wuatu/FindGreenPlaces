@@ -9,6 +9,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -145,11 +147,16 @@ public class SpacePhotoActivity extends AppCompatActivity {
             }
         });
 
+        CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(SpacePhotoActivity.this);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
 
         Glide.with(this)
         .load(spacePhoto.getUrl())
         .asBitmap()
         .error(R.drawable.cargando)
+                .placeholder(circularProgressDrawable)
         .listener(new RequestListener<String, Bitmap>() {
 
             @Override

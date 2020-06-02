@@ -14,9 +14,13 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,12 +35,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import Clases.Adapter.AdapterListViewContribucionAtractivoTuristico;
+import Clases.Models.AtractivoTuristico;
 import Clases.Models.Comentario;
+import Clases.Utils.GetImagenes;
 import Clases.Utils.IdUsuario;
 import Clases.Models.Imagen;
 import Clases.Models.MeGustaImagen;
 import Clases.Utils.Referencias;
 import Clases.Models.Usuario;
+import Interfaz.OnGetDataListenerAtractivoTuristico;
+import Interfaz.OnGetDataListenerImagenes;
 
 public class PerfilUsuario extends AppCompatActivity {
     FirebaseDatabase database;
@@ -52,6 +61,9 @@ public class PerfilUsuario extends AppCompatActivity {
     LinearLayout linearLayoutOro;
     ArrayList<Imagen> imagenes;
     private static final int IMAGENES = 1;
+    ListView lista;
+    Adapter adapter;
+    ArrayList<AtractivoTuristico> atractivoTuristicos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +84,8 @@ public class PerfilUsuario extends AppCompatActivity {
         linearLayoutPlata=findViewById(R.id.LayoutPlata);
         linearLayoutOro=findViewById(R.id.LayoutOro);
         imagenes=new ArrayList();
+        atractivoTuristicos=new ArrayList();
+
         //barra circular
         progressBar=findViewById(R.id.progressBar1);
         showProgress(true);
@@ -197,6 +211,19 @@ public class PerfilUsuario extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        query(new OnGetDataListenerAtractivoTuristico() {
+            @Override
+            public void onSuccess(AtractivoTuristico atractivoTuristico) {
+                startVisualizarAtractivoTuristico(atractivoTuristico);
+            }
+            @Override
+            public void onStart() {
+            }
+            @Override
+            public void onFailure() {
+            }
+        });
     }
     public static class CircleTransform extends BitmapTransformation {
         public CircleTransform(Context context) {
@@ -250,6 +277,83 @@ public class PerfilUsuario extends AppCompatActivity {
             // and hide the relevant UI components.
             progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void query(final OnGetDataListenerAtractivoTuristico listener) {
+        listener.onStart();
+        mDatabase.child(Referencias.CONTRIBUCIONES).child(IdUsuario.getIdUsuario()).child(Referencias.ATRACTIVOTURISTICO).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //atractivoTuristicos.removeAll(atractivoTuristicos);
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    AtractivoTuristico atractivoTuristico2 = dataSnapshot1.getValue(AtractivoTuristico.class);
+                    mDatabase.child(Referencias.ATRACTIVOTURISTICO).child(atractivoTuristico2.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            AtractivoTuristico atractivoTuristico = dataSnapshot.getValue(AtractivoTuristico.class);
+                            if (atractivoTuristico != null) {
+                                if (atractivoTuristico.getVisible().equalsIgnoreCase(Referencias.VISIBLE)) {
+                                    atractivoTuristicos.add(atractivoTuristico);
+                                }
+                                adapter = new AdapterListViewContribucionAtractivoTuristico(PerfilUsuario.this, atractivoTuristicos);
+                                lista = (ListView) findViewById(R.id.listViewVisualizarAtractivoTuristico);
+                                lista.setAdapter((ListAdapter) adapter);
+                                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        try {
+                                            AtractivoTuristico atractivoTuristico = (AtractivoTuristico) adapter.getItem(position);
+                                            listener.onSuccess(atractivoTuristico);
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+                //Log.v("atractivoo",String.valueOf(atractivoTuristicos.size()));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onFailure();
+            }
+        });
+    }
+
+    public void startVisualizarAtractivoTuristico(AtractivoTuristico atractivoTuristico){
+        Log.v("atractivoooo",atractivoTuristico.getId());
+        GetImagenes getImagenes=new GetImagenes();
+        getImagenes.getImagenesAtractivoTuristico(atractivoTuristico, new OnGetDataListenerImagenes() {
+            @Override
+            public void onSuccess(ArrayList<Imagen> imagenes,AtractivoTuristico atractivoTuristico1) {
+                Log.v("atractivoooo",String.valueOf(imagenes.size()));
+                Intent intent=new Intent(getApplicationContext(),VisualizarAtractivoTuristico.class);
+                intent.putExtra("atractivoTuristico", atractivoTuristico1);
+                intent.putExtra("imagenes",imagenes);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
     }
 
     @Override

@@ -32,9 +32,6 @@ public class Registrar extends AppCompatActivity {
     TextView textViewNombre;
     TextView textViewApellido;
     TextView textViewEmail;
-    TextView textViewDia;
-    TextView textViewMes;
-    TextView textViewAño;
     EditText textViewPassword;
     TextView getTextViewPassword2;
     DatabaseReference mDatabase;
@@ -58,9 +55,6 @@ public class Registrar extends AppCompatActivity {
         textViewNombre=findViewById(R.id.nombre);
         textViewApellido=findViewById(R.id.apellido);
         textViewEmail=findViewById(R.id.email);
-        textViewDia=findViewById(R.id.dia);
-        textViewMes=findViewById(R.id.mes);
-        textViewAño=findViewById(R.id.año);
         textViewPassword=findViewById(R.id.password);
         getTextViewPassword2=findViewById(R.id.password2);
         database=FirebaseDatabase.getInstance();
@@ -103,9 +97,6 @@ public class Registrar extends AppCompatActivity {
         final String nombre =textViewNombre.getText().toString();
         final String apellido = textViewApellido.getText().toString();
         final String email = textViewEmail.getText().toString();
-        final String dia = textViewDia.getText().toString();
-        final String mes = textViewMes.getText().toString();
-        final String año = textViewAño.getText().toString();
         String password = textViewPassword.getText().toString();
         String password2 = getTextViewPassword2.getText().toString();
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -132,33 +123,6 @@ public class Registrar extends AppCompatActivity {
             focusView=textViewApellido;
             cancel=true;
         }
-        if(TextUtils.isEmpty(dia)){
-            textViewDia.setError("Ingrese dia");
-            focusView=textViewDia;
-            cancel=true;
-        }else if(!isNumeric(dia)){
-            textViewDia.setError("Ingrese valores numericos");
-            focusView=textViewDia;
-            cancel=true;
-        }
-        if(TextUtils.isEmpty(mes) ){
-            textViewMes.setError("Ingrese mes");
-            focusView=textViewMes;
-            cancel=true;
-        }else if(!isNumeric(mes)){
-            textViewMes.setError("Ingrese valores numericos");
-            focusView=textViewMes;
-            cancel=true;
-        }
-        if(TextUtils.isEmpty(año)){
-            textViewAño.setError("Ingrese año");
-            focusView=textViewAño;
-            cancel=true;
-        }else if(!isNumeric(año)){
-            textViewAño.setError("Ingrese valores numericos");
-            focusView=textViewAño;
-            cancel=true;
-        }
         if(TextUtils.isEmpty(password2)){
             getTextViewPassword2.setError("Ingrese password");
             focusView=getTextViewPassword2;
@@ -176,7 +140,7 @@ public class Registrar extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         String userId=task.getResult().getUser().getUid();
-                        Usuario usuario=new Usuario(userId,nombre,apellido,email,Integer.parseInt(dia),Integer.parseInt(mes),Integer.parseInt(año),"","0","0","0",Referencias.PRINCIPIANTE);
+                        Usuario usuario=new Usuario(userId,nombre,apellido,email,"","0","0","0",Referencias.PRINCIPIANTE);
                         mDatabase.child("usuario").child(userId).setValue(usuario);
                         Toast.makeText(Registrar.this,"Usuario creado con exito!",Toast.LENGTH_SHORT).show();
                         ejecutarLoginActivity();
